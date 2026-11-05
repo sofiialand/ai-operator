@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Як проходить тиждень · Gold</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef1f4;--cream:#f4efe7;--card:rgba(255,255,255,.72);--card-solid:#fbfaf7;--line:rgba(21,16,12,.09);--line-2:rgba(21,16,12,.16);--ink:#15100c;--ink-2:#0b0c0e;--text-mid:rgba(21,16,12,.68);--text-dim:rgba(21,16,12,.5);--gold:#fdd506;--gold-rgb:253,213,6;--cool-rgb:194,204,210;--shadow:0 1px 0 rgba(255,255,255,.8) inset,0 10px 30px rgba(21,16,12,.06);--display:"Inter Tight","Inter",system-ui,sans-serif;--sans:"Inter",system-ui,sans-serif;--mono:"JetBrains Mono",ui-monospace,monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+html[lang="uk"] .ru,html[lang="ru"] .uk{display:none!important}
+body{position:relative;background:var(--bg);color:var(--ink);font:400 15px/1.6 var(--sans);-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(760px 520px at 82% -6%,rgba(var(--gold-rgb),.16),transparent 70%),radial-gradient(820px 620px at 100% 100%,rgba(var(--cool-rgb),.55),transparent 70%),radial-gradient(640px 520px at 18% 70%,rgba(255,255,255,.7),transparent 70%)}
+.page{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:40px 32px 56px}
+
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:24px}
+.tier{display:inline-flex;align-items:center;padding:6px 14px;border-radius:999px;background:var(--gold);color:var(--ink);font:600 11px/1.2 var(--mono);letter-spacing:.1em;text-transform:uppercase;white-space:nowrap}
+#lang{flex:none;display:flex;gap:2px;padding:3px;border-radius:999px;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow)}
+#lang button{min-width:40px;min-height:30px;padding:0 10px;border:0;border-radius:999px;background:none;color:var(--text-mid);font:600 12px/1 var(--sans);cursor:pointer}
+#lang button[aria-pressed="true"]{background:var(--ink-2);color:var(--cream)}
+#lang button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+
+.section-title{font:700 clamp(30px,4.6vw,48px)/1.06 var(--display);letter-spacing:-.03em;color:var(--ink);margin-bottom:12px}
+.section-desc{max-width:640px;font-size:16px;color:var(--text-mid);margin-bottom:32px}
+.card-title{display:flex;align-items:center;gap:8px;margin-bottom:20px;font:500 11px var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim)}
+.card-title:before{content:"";flex:none;width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 3px rgba(var(--gold-rgb),.25)}
+
+.tl{padding:28px 32px;background:var(--card);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px)}
+.tl-row{display:flex;gap:18px;position:relative;padding-bottom:24px}
+.tl-row:last-child{padding-bottom:0}
+.tl-row:not(:last-child):before{content:"";position:absolute;left:25px;top:56px;bottom:4px;width:1px;background:var(--line-2)}
+.tl-badge{width:51px;height:51px;border-radius:50%;flex-shrink:0;z-index:1;display:flex;align-items:center;justify-content:center;background:var(--gold);color:var(--ink);font:600 11px var(--mono)}
+.tl-title{font:700 19px/1.25 var(--display);letter-spacing:-.02em;color:var(--ink);margin-bottom:6px;padding-top:12px}
+.tl-body{font-size:14.5px;color:var(--text-mid);line-height:1.6}
+.tl-list{list-style:none;display:grid;gap:6px;margin-top:8px}
+.tl-list li{padding:9px 14px;border-radius:12px;background:var(--card-solid);border:1px solid var(--line);color:var(--ink);font-size:14px;line-height:1.45}
+.tl-time{margin-top:10px;font:500 11.5px/1.5 var(--mono);letter-spacing:.02em;color:var(--ink)}
+
+.highlight{margin:12px 0;padding:18px 22px;border-radius:18px;background:var(--ink-2);color:var(--cream);font:600 clamp(17px,2.1vw,21px)/1.3 var(--display);letter-spacing:-.015em;box-shadow:0 14px 34px rgba(21,16,12,.18)}
+.highlight strong{padding:0 .14em;border-radius:6px;background:var(--gold);color:var(--ink);font-weight:600;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.note{padding:14px 18px;border-radius:16px;background:rgba(var(--cool-rgb),.35);border:1px solid rgba(var(--cool-rgb),.9);font-size:14.5px;line-height:1.55;color:var(--text-mid)}
+@media (max-width:640px){.page{padding:20px 16px 40px}.tl{padding:20px 16px;border-radius:18px}.tl-row{gap:12px}.tl-badge{width:44px;height:44px;font-size:10px}.tl-row:not(:last-child):before{left:22px;top:48px}.tl-title{font-size:17px;padding-top:10px}}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="top">
+    <span class="tier">Тариф Gold</span>
+    <div id="lang" role="group" aria-label="Мова / Язык"><button type="button" data-lang="uk" aria-pressed="true">UA</button><button type="button" data-lang="ru" aria-pressed="false">RU</button></div>
+  </div>
+
+  <div class="section-title"><span class="uk">Тебе чекають 10&nbsp;тижнів і 11&nbsp;модулів.</span><span class="ru">Тебя ждут 10&nbsp;недель и 11&nbsp;модулей.</span></div>
+  <p class="section-desc"><span class="uk">За цей час ти опануєш усіх 7&nbsp;агентів, кожен&nbsp;– після свого модуля.</span><span class="ru">За это время ты освоишь всех 7&nbsp;агентов, каждого&nbsp;– после своего модуля.</span></p>
+
+  <div class="card-title"><span class="uk">Як проходить тиждень</span><span class="ru">Как проходит неделя</span></div>
+  <div class="tl">
+    <div class="tl-row">
+      <div class="tl-badge">Пн</div>
+      <div>
+        <div class="tl-title"><span class="uk">Понеділок: новий модуль</span><span class="ru">Понедельник: новый модуль</span></div>
+        <div class="tl-body">
+          <div><span class="uk">Сюди приходить відеоінструкція, а в тиждень агента&nbsp;– і сам агент. Встановлюєш його за кроками за один вечір.</span><span class="ru">Сюда приходит видеоинструкция, а в неделю агента&nbsp;– и сам агент. Ставишь его по шагам за один вечер.</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-badge">Вт–Ср</div>
+      <div>
+        <div class="tl-title"><span class="uk">Вівторок&nbsp;– середа: практика</span><span class="ru">Вторник&nbsp;– среда: практика</span></div>
+        <div class="tl-body">
+          <div><span class="uk">Тестируй матеріали модуля на своїх завданнях</span><span class="ru">Тестируй материалы модуля на своих заданиях</span></div>
+          <ul class="tl-list"><li><span class="uk">Виконуй практичні завдання</span><span class="ru">Выполняй практические задания</span></li><li><span class="uk">Якщо щось не виходить, пиши запитання у ком'юніті</span><span class="ru">Если что-то не получается, пиши вопросы в комьюнити</span></li><li><span class="uk">Пиши куратору, якщо потрібна допомога чи зворотний зв'язок</span><span class="ru">Пиши куратору, если нужна помощь или обратная связь</span></li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-badge">Q&amp;A</div>
+      <div>
+        <div class="tl-title"><span class="uk">Друга половина тижня: Q&amp;A</span><span class="ru">Вторая половина недели: Q&amp;A</span></div>
+        <div class="tl-body">
+          <div><span class="uk">Онлайн-розбір твоїх результатів і відповіді на запитання.</span><span class="ru">Онлайн-разбор твоих результатов и ответы на вопросы.</span></div>
+          <div class="tl-time"><span><span class="uk">День і час повідомимо заздалегідь.</span><span class="ru">День и время сообщим заранее.</span></span></div>
+        </div>
+      </div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-badge">4×</div>
+      <div>
+        <div class="tl-title"><span class="uk">Стратегічні сесії</span><span class="ru">Стратегические сессии</span></div>
+        <div class="tl-body">
+          <div><span class="uk">За 10&nbsp;тижнів пройдуть 4&nbsp;групові сесії, на них ми розбираємо твій проєкт.</span><span class="ru">За 10&nbsp;недель пройдут 4&nbsp;групповые сессии, на них мы разбираем твой проект.</span></div>
+          <div class="tl-time"><span><span class="uk">Дати надішлемо окремо.</span><span class="ru">Даты пришлем отдельно.</span></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="highlight"><span class="uk">Кожен тиждень&nbsp;– <strong>новий рівень</strong>, нові смисли й прокачування нових навичок</span><span class="ru">Каждая неделя&nbsp;– <strong>новый уровень</strong>, новые смыслы и прокачка новых навыков</span></div>
+
+  <div class="note"><span><span class="uk">Якщо не встигнеш на онлайн-ефір, запис чекатиме в особистому кабінеті наступного дня.</span><span class="ru">Если не успеешь на онлайн эфир, запись будет ждать в личном кабинете на следующий день.</span></span></div>
+</div>
+<script>
+(function(){
+  var root=document.documentElement,titles={uk:'Як проходить тиждень · Gold',ru:'Как проходит неделя · Gold'};
+  var langs=[].slice.call(document.querySelectorAll('[data-lang]'));
+  function store(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v);}catch(e){return null;}}
+  function setLang(l,keep){
+    root.lang=l;document.title=titles[l];
+    langs.forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.lang===l));});
+    if(keep)store('week-gold-lang',l);
+  }
+  langs.forEach(function(b){b.addEventListener('click',function(){setLang(b.dataset.lang,true);});});
+  var q=new URLSearchParams(location.search).get('lang');
+  setLang(q==='ru'||q==='uk'?q:(store('week-gold-lang')==='ru'?'ru':'uk'));
+})();
+</script>
+</body>
+</html>
