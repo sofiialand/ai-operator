@@ -32,5 +32,21 @@ html[lang="uk"] .ru,html[lang="ru"] .uk{display:none}
 <script>
 if(new URLSearchParams(location.search).get('lang')==='ru')document.documentElement.lang='ru';
 </script>
+<script>
+/* Сообщает платформе высоту содержимого, чтобы фрейм был без пустого места и обрезки */
+(function(){
+  if(window.parent===window)return;
+  var box=document.querySelector('.links'),last=0;
+  function send(){
+    var h=Math.ceil(box.getBoundingClientRect().height);
+    if(h&&h!==last){last=h;window.parent.postMessage({kovchegHeight:h},'*');}
+  }
+  send();
+  addEventListener('load',send);
+  addEventListener('resize',send);
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(send);
+  if(window.ResizeObserver)new ResizeObserver(send).observe(box);
+})();
+</script>
 </body>
 </html>
