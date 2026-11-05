@@ -116,5 +116,21 @@ body{position:relative;background:var(--bg);color:var(--ink);font:400 15px/1.6 v
   setLang(q==='ru'||q==='uk'?q:(store('week-gold-lang')==='ru'?'ru':'uk'));
 })();
 </script>
+<script>
+/* Сообщает платформе высоту содержимого, чтобы фрейм был без пустого места и обрезки */
+(function(){
+  if(window.parent===window)return;
+  var box=document.querySelector('.page'),last=0;
+  function send(){
+    var h=Math.ceil(box.getBoundingClientRect().height);
+    if(h&&h!==last){last=h;window.parent.postMessage({kovchegHeight:h},'*');}
+  }
+  send();
+  addEventListener('load',send);
+  addEventListener('resize',send);
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(send);
+  if(window.ResizeObserver)new ResizeObserver(send).observe(box);
+})();
+</script>
 </body>
 </html>
