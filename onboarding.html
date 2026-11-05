@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Онбординг AI-Оператор</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef1f4;--cream:#f4efe7;--card:rgba(255,255,255,.72);--card-solid:#fbfaf7;--line:rgba(21,16,12,.09);--line-2:rgba(21,16,12,.16);--ink:#15100c;--ink-2:#0b0c0e;--text:#15100c;--text-mid:rgba(21,16,12,.68);--text-dim:rgba(21,16,12,.46);--gold:#fdd506;--gold-deep:#e6be00;--gold-rgb:253,213,6;--cool:#c2ccd2;--cool-rgb:194,204,210;--shadow:0 1px 0 rgba(255,255,255,.8) inset,0 10px 30px rgba(21,16,12,.06);--sidebar-w:280px;--display:"Inter Tight","Inter",system-ui,sans-serif;--sans:"Inter",system-ui,sans-serif;--mono:"JetBrains Mono",ui-monospace,monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--text);font:400 15px/1.6 var(--sans);-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(760px 520px at 82% -6%,rgba(var(--gold-rgb),.16),transparent 70%),radial-gradient(820px 620px at 100% 100%,rgba(var(--cool-rgb),.55),transparent 70%),radial-gradient(640px 520px at 18% 70%,rgba(255,255,255,.7),transparent 70%)}
+html[lang="uk"] .ru,html[lang="ru"] .uk{display:none!important}
+[hidden]{display:none!important}
+button{font:inherit;color:inherit}
+button:focus-visible,summary:focus-visible,input:focus-visible+.box{outline:2px solid var(--ink);outline-offset:2px}
+.hl{padding:0 .16em;border-radius:6px;background:var(--gold);color:var(--ink);-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.layout{position:relative;z-index:1;min-height:100vh}
+.main{margin-left:var(--sidebar-w);padding:48px 56px 64px}
+.wrap{max-width:860px;margin:0 auto}
+
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:var(--sidebar-w);z-index:200;background:rgba(246,247,249,.78);border-right:1px solid var(--line);-webkit-backdrop-filter:blur(26px) saturate(150%);backdrop-filter:blur(26px) saturate(150%);display:flex;flex-direction:column;padding:20px 12px;overflow-y:auto}
+.sidebar-brand{padding:0 8px 20px;border-bottom:1px solid var(--line)}
+.topnav{display:inline-flex;align-items:center;padding:3px;border-radius:12px;background:var(--ink-2);box-shadow:0 8px 20px rgba(21,16,12,.18);font-size:12px;font-weight:700;white-space:nowrap;color:var(--cream)}
+.topnav-on{padding:6px 11px;border-radius:9px;background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.06));box-shadow:inset 0 1px 0 rgba(255,255,255,.18)}
+.topnav-beam{width:2px;height:18px;margin:0 8px;border-radius:2px;background:var(--gold)}
+.topnav-off{padding:6px 11px 6px 0;color:rgba(244,239,231,.5)}
+.sidebar-sub{margin-top:16px;font-size:12.5px;color:var(--text-mid)}
+.sidebar-progress{margin-top:12px;height:3px;border-radius:3px;background:var(--line);overflow:hidden}
+.sidebar-progress i{display:block;height:100%;background:linear-gradient(90deg,var(--cool),var(--gold-deep));transition:width .3s ease}
+.sidebar-nav{padding-top:12px;display:flex;flex-direction:column;gap:4px}
+.nav-group{margin:14px 12px 4px;font:500 10px var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--text-dim)}
+.nav-item{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:8px 12px;border-radius:12px;font-size:13.5px;font-weight:500;line-height:1.3;color:var(--text-mid);background:none;border:1px solid transparent;cursor:pointer;transition:background .2s,color .2s}
+.nav-item:hover{background:rgba(255,255,255,.7);color:var(--text)}
+.nav-item.active{background:var(--ink-2);color:var(--cream);box-shadow:0 8px 20px rgba(21,16,12,.16)}
+.nav-num{width:24px;height:24px;flex:none;border-radius:50%;display:grid;place-items:center;font:500 10px var(--mono);color:var(--text-dim);background:rgba(255,255,255,.8);border:1px solid var(--line-2)}
+.nav-item.seen .nav-num{color:var(--ink);border-color:var(--gold-deep)}
+.nav-item.active .nav-num{background:var(--gold);color:var(--ink);border-color:var(--gold);font-weight:600}
+.sidebar-foot{margin-top:auto;padding:20px 8px 0;font:500 10.5px/1.5 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim)}
+.menu-btn{display:none;position:fixed;top:14px;left:16px;z-index:210;align-items:center;gap:8px;padding:9px 14px;border-radius:12px;background:var(--ink-2);color:var(--cream);border:0;box-shadow:0 8px 20px rgba(21,16,12,.2);font:600 13px var(--sans);cursor:pointer}
+.menu-btn>span:first-child{display:block;width:14px;height:1.5px;background:currentColor;box-shadow:0 -4px 0 currentColor,0 4px 0 currentColor}
+.menu-btn b{font:500 11px var(--mono);color:var(--gold);letter-spacing:.08em}
+.overlay{display:none;position:fixed;inset:0;background:rgba(21,16,12,.35);z-index:190;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+
+#lang{position:fixed;top:14px;right:16px;z-index:210;display:flex;gap:2px;padding:3px;border-radius:999px;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px)}
+#lang button{min-width:40px;min-height:30px;padding:0 10px;border:0;border-radius:999px;background:none;color:var(--text-mid);font:600 12px/1 var(--sans);cursor:pointer}
+#lang button[aria-pressed="true"]{background:var(--ink-2);color:var(--cream)}
+
+.glass{position:relative;background:var(--card);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px)}
+.hero{padding:12px 0 32px;margin-bottom:32px;border-bottom:1px solid var(--line)}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font:500 11px var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim)}
+.eyebrow:before{content:"";flex:none;width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 3px rgba(var(--gold-rgb),.25)}
+.hero-title{font:700 clamp(40px,6.6vw,72px)/1.02 var(--display);letter-spacing:-.03em;margin:16px 0 0;color:var(--ink)}
+.hero-sub{display:block;margin-top:12px;font-size:clamp(20px,2.6vw,28px);line-height:1.25;letter-spacing:-.02em;font-weight:600;color:var(--text-mid)}
+.hero-lead{margin-top:20px;max-width:620px;font-size:16px;color:var(--text-mid)}
+.hero-facts{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:28px}
+.fact{padding:16px 18px;border-radius:16px;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow)}
+.fact-k{font:500 10.5px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim)}
+.fact-v{margin-top:8px;font-size:14px;font-weight:600;line-height:1.45}
+
+.bar{display:flex;align-items:center;gap:12px;padding:8px;border-radius:999px;margin-bottom:20px}
+.arrow{flex:none;width:38px;height:38px;border-radius:50%;border:0;background:var(--ink-2);color:var(--cream);font-size:16px;cursor:pointer;display:grid;place-items:center;transition:transform .2s}
+.arrow:hover{transform:translateY(-1px)}
+.arrow:disabled{opacity:.2;cursor:default;transform:none}
+.track{flex:1;display:flex;gap:4px;min-width:0}
+.track button{flex:1;height:22px;border:0;background:none;padding:0;cursor:pointer;position:relative}
+.track button:before{content:"";position:absolute;left:0;right:0;top:50%;height:3px;transform:translateY(-50%);border-radius:3px;background:var(--line-2);transition:background .3s}
+.track button.seen:before{background:rgba(21,16,12,.45)}
+.track button.on:before{background:var(--gold);height:6px;box-shadow:0 0 0 1px var(--gold-deep)}
+.count{flex:none;font:500 12px var(--mono);letter-spacing:.08em;color:var(--text-mid);padding-right:10px}
+.count b{color:var(--ink);font-weight:600}
+
+.step{padding:32px;display:grid;gap:20px;animation:in .45s cubic-bezier(.22,.61,.36,1)}
+@keyframes in{from{opacity:0;transform:translateY(14px)}}
+.step h2{font:700 clamp(28px,3.8vw,40px)/1.08 var(--display);letter-spacing:-.03em;margin-top:-8px;color:var(--ink)}
+.step h4{margin-top:4px;font:500 11px var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--ink)}
+.grid3{display:grid;gap:12px;grid-template-columns:repeat(3,minmax(0,1fr))}
+.card{padding:20px;border-radius:16px;background:var(--card-solid);border:1px solid var(--line);display:grid;gap:8px;align-content:start}
+.card h3{font:700 17px/1.3 var(--display);letter-spacing:-.02em}
+.card p{font-size:14px;line-height:1.55;color:var(--text-mid)}
+.ic{width:44px;height:44px;padding:11px;margin-bottom:4px;border-radius:12px;background:var(--ink-2);fill:none;stroke:var(--gold);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.tip,.why{padding:16px 18px;border-radius:16px;font-size:14.5px;line-height:1.65;color:var(--text-mid)}
+.tip b,.res b{display:block;margin-bottom:6px;font:600 10.5px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink)}
+.tip{background:rgba(var(--cool-rgb),.35);border:1px solid rgba(var(--cool-rgb),.9)}
+.why{background:rgba(var(--gold-rgb),.16);border:1px solid rgba(var(--gold-rgb),.55);color:var(--ink);font-weight:500}
+
+.do{list-style:none;display:grid;gap:10px;counter-reset:d}
+.do li{counter-increment:d;position:relative;padding:16px 18px 16px 62px;border-radius:16px;background:var(--card-solid);border:1px solid var(--line);font-weight:600;font-size:15px;line-height:1.5}
+.do li:before{content:counter(d,decimal-leading-zero);position:absolute;left:16px;top:13px;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font:600 10.5px var(--mono);background:var(--gold);color:var(--ink)}
+.do li small{display:block;margin-top:4px;font-weight:400;font-size:14px;line-height:1.6;color:var(--text-mid)}
+
+.logic{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:12px;align-items:stretch}
+.logic article{padding:20px;border-radius:16px;background:var(--card-solid);border:1px solid var(--line)}
+.logic .hot{background:var(--ink-2);border-color:var(--ink-2);color:var(--cream)}
+.logic .k{display:block;margin-bottom:10px;font:500 10.5px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim)}
+.logic .hot .k{color:var(--gold)}
+.logic h3{margin-bottom:12px;font:700 20px/1.25 var(--display);letter-spacing:-.02em}
+.logic ul{list-style:none;display:grid;gap:6px;font-size:14px}
+.arr{align-self:center;font-size:22px}
+
+.level{display:grid;gap:12px}
+.level+.level{margin-top:12px;padding-top:24px;border-top:1px solid var(--line)}
+.path{display:flex;gap:16px;align-items:flex-start}
+.big{flex:none;width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font:700 22px var(--display);color:var(--cream);background:var(--ink-2)}
+.path strong{display:block;font:700 18px/1.3 var(--display);letter-spacing:-.02em}
+.path p{margin-top:2px;font-size:14px;color:var(--text-mid)}
+.faq{display:grid;gap:8px}
+.faq details{border-radius:16px;background:var(--card-solid);border:1px solid var(--line);transition:border-color .2s,box-shadow .2s}
+.faq details[open]{border-color:rgba(var(--gold-rgb),.7);box-shadow:0 10px 30px rgba(var(--gold-rgb),.12)}
+.faq summary{list-style:none;cursor:pointer;padding:12px 16px;display:flex;align-items:center;gap:12px;font:700 15px/1.35 var(--display);letter-spacing:-.01em}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary span{flex:1}
+.faq summary i{flex:none;min-width:30px;font:600 10.5px var(--mono);font-style:normal;color:var(--text-dim)}
+.faq summary:after{content:"+";flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line-2);font:400 17px/1 var(--sans);transition:transform .2s,background .2s}
+.faq details[open] summary:after{transform:rotate(45deg);background:var(--gold);border-color:var(--gold)}
+.faq details p{padding:0 16px 12px;font-size:14px;line-height:1.55;color:var(--text-mid)}
+.faq .res{color:var(--ink);font-weight:500}
+
+.setbox{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.segs{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-bottom:12px;padding:3px;border-radius:999px;background:var(--card-solid);border:1px solid var(--line)}
+.seg{min-height:36px;border:0;border-radius:999px;background:none;font-weight:600;font-size:13px;color:var(--text-mid);cursor:pointer;transition:background .2s,color .2s}
+.seg.on{background:var(--ink-2);color:var(--cream)}
+.stats{list-style:none}
+.stats li{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:10px 2px;border-bottom:1px solid var(--line);font-size:14px;color:var(--text-mid)}
+.stats b{flex:none;font:700 20px var(--display);letter-spacing:-.02em;color:var(--ink)}
+.right{padding:20px;border-radius:16px;background:var(--card-solid);border:1px solid var(--line)}
+.right h3{margin-bottom:12px;font:700 17px/1.3 var(--display);letter-spacing:-.02em}
+.right>p{margin-top:14px;font-size:13px;line-height:1.5;color:var(--text-mid)}
+.chips{list-style:none;display:flex;flex-wrap:wrap;gap:6px}
+.chip{padding:5px 11px;border-radius:999px;background:var(--gold);font-size:13px;font-weight:600;transition:background .2s,color .2s}
+[data-active="bronze"] .l2,[data-active="bronze"] .l3,[data-active="silver"] .l3{background:rgba(21,16,12,.06);color:var(--text-dim)}
+
+.pack{display:grid;grid-template-columns:minmax(0,1fr) 180px;gap:12px;align-items:stretch}
+.list{display:grid;gap:10px}
+.chk{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:16px;background:var(--card-solid);border:1px solid var(--line);cursor:pointer;transition:border-color .2s,background .2s}
+.chk input{position:absolute;opacity:0;width:0;height:0}
+.box{flex:none;display:grid;place-items:center;width:24px;height:24px;border-radius:8px;border:1.5px solid var(--line-2);background:#fff;transition:background .15s,border-color .15s}
+.box:after{content:"";width:11px;height:6px;margin-top:-2px;border-left:2px solid var(--ink);border-bottom:2px solid var(--ink);transform:rotate(-45deg) scale(0);transition:transform .15s}
+.chk input:checked+.box{background:var(--gold);border-color:var(--gold)}
+.chk input:checked+.box:after{transform:rotate(-45deg) scale(1)}
+.chk:has(input:checked){border-color:rgba(var(--gold-rgb),.7);background:rgba(var(--gold-rgb),.08)}
+.txt b{display:block;font-size:15px;font-weight:600;line-height:1.35}
+.txt small{display:block;margin-top:2px;font-size:13px;line-height:1.45;color:var(--text-mid)}
+.meter{display:flex;flex-direction:column;justify-content:center;padding:20px;border-radius:18px;background:var(--ink-2);color:var(--cream);box-shadow:0 14px 34px rgba(21,16,12,.18)}
+.meter b{font:700 40px/1 var(--display);letter-spacing:-.03em}
+.meter p{margin:8px 0 16px;font-size:13px;color:rgba(244,239,231,.6)}
+.meter .bar{display:block;height:6px;padding:0;margin:0;border-radius:3px;background:rgba(244,239,231,.14);overflow:hidden}
+.meter .bar i{display:block;width:0;height:100%;background:var(--gold);transition:width .3s}
+
+.nav{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-top:8px;border-top:1px solid var(--line);margin-top:4px}
+.nav>:only-child{margin-left:auto}
+.btn{display:inline-flex;align-items:center;gap:12px;padding:8px 8px 8px 20px;border-radius:999px;border:0;background:var(--ink-2);color:var(--cream);font:700 14px var(--sans);text-align:left;cursor:pointer;transition:transform .2s,box-shadow .2s;margin-top:16px;box-shadow:0 10px 24px rgba(21,16,12,.16)}
+.btn:hover{transform:translateY(-1px);box-shadow:0 14px 30px rgba(21,16,12,.22)}
+.btn i{flex:none;width:30px;height:30px;border-radius:50%;background:var(--gold);color:var(--ink);display:grid;place-items:center;font-style:normal;font-size:15px}
+.btn-ghost{background:rgba(255,255,255,.6);color:var(--ink);border:1px solid var(--line-2);padding:12px 20px;box-shadow:none}
+.btn-ghost:hover{background:#fff;box-shadow:none}
+.foot{margin-top:40px;padding-top:20px;border-top:1px solid var(--line);font-size:12.5px;color:var(--text-dim)}
+
+@media (max-width:1100px){.main{padding:40px 32px 56px}}
+@media (max-width:900px){
+  .sidebar{transform:translateX(-100%);transition:transform .25s ease;box-shadow:22px 0 56px rgba(21,16,12,.18);background:rgba(246,247,249,.97)}
+  .sidebar.open{transform:none}
+  .overlay.open{display:block}
+  .menu-btn{display:inline-flex}
+  .main{margin-left:0;padding:72px 16px 48px}
+}
+@media (max-width:680px){
+  .hero-facts,.grid3,.setbox,.logic,.pack{grid-template-columns:minmax(0,1fr)}
+  .arr{transform:rotate(90deg);justify-self:center}
+}
+@media (max-width:560px){
+  .step{padding:22px 18px}
+  .bar{gap:8px}
+  .arrow{width:34px;height:34px}
+  .nav{flex-direction:column-reverse;align-items:stretch}
+  .nav .btn{justify-content:space-between}
+  .btn-ghost{justify-content:center}
+}
+@media (prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<button type="button" class="menu-btn" id="menu"><span></span><span class="uk">Меню</span><span class="ru">Меню</span><b id="menuNum"></b></button>
+<div id="lang" role="group" aria-label="Мова / Язык"><button type="button" data-lang="uk" aria-pressed="true">UA</button><button type="button" data-lang="ru" aria-pressed="false">RU</button></div>
+<div class="overlay" id="ov"></div>
+<div class="layout">
+  <aside class="sidebar" id="side">
+    <div class="sidebar-brand">
+      <span class="topnav"><span class="topnav-on">AI-Оператор</span><span class="topnav-beam"></span><span class="topnav-off"><span class="uk">Онбординг</span><span class="ru">Онбординг</span></span></span>
+      <p class="sidebar-sub"><span class="uk">Як проходить навчання</span><span class="ru">Как проходит обучение</span></p>
+      <div class="sidebar-progress"><i id="sideFill"></i></div>
+    </div>
+    <nav class="sidebar-nav"><p class="nav-group"><span class="uk">Як влаштовано</span><span class="ru">Как устроено</span></p><button type="button" class="nav-item" data-go="0"><span class="nav-num">01</span><span><span class="uk">Що це</span><span class="ru">Что это</span></span></button><button type="button" class="nav-item" data-go="1"><span class="nav-num">02</span><span><span class="uk">Логіка програми</span><span class="ru">Логика программы</span></span></button><button type="button" class="nav-item" data-go="2"><span class="nav-num">03</span><span><span class="uk">Де що знаходиться</span><span class="ru">Где что находится</span></span></button><button type="button" class="nav-item" data-go="3"><span class="nav-num">04</span><span><span class="uk">Після оплати</span><span class="ru">После оплаты</span></span></button><button type="button" class="nav-item" data-go="4"><span class="nav-num">05</span><span><span class="uk">Ритм тижня</span><span class="ru">Ритм недели</span></span></button><p class="nav-group"><span class="uk">Програма</span><span class="ru">Программа</span></p><button type="button" class="nav-item" data-go="5"><span class="nav-num">06</span><span><span class="uk">3 рівні та 11 модулів</span><span class="ru">3 уровня и 11 модулей</span></span></button><button type="button" class="nav-item" data-go="6"><span class="nav-num">07</span><span><span class="uk">Ваш набір</span><span class="ru">Ваш набор</span></span></button><p class="nav-group"><span class="uk">Навчання</span><span class="ru">Обучение</span></p><button type="button" class="nav-item" data-go="7"><span class="nav-num">08</span><span><span class="uk">Як проходять розбори</span><span class="ru">Как проходят разборы</span></span></button><button type="button" class="nav-item" data-go="8"><span class="nav-num">09</span><span><span class="uk">AI-Start Pack</span><span class="ru">AI-Start Pack</span></span></button><button type="button" class="nav-item" data-go="9"><span class="nav-num">10</span><span><span class="uk">Хто допоможе</span><span class="ru">Кто поможет</span></span></button><button type="button" class="nav-item" data-go="10"><span class="nav-num">11</span><span><span class="uk">Перші кроки</span><span class="ru">Первые шаги</span></span></button></nav>
+    <p class="sidebar-foot">Влад Ясько</p>
+  </aside>
+  <main class="main"><div class="wrap">
+    
+<header class="hero" id="hero">
+  <p class="eyebrow"><span class="uk">Онбординг · AI-Оператор</span><span class="ru">Онбординг · AI-Оператор</span></p>
+  <h1 class="hero-title"><span class="uk">Як проходить навчання</span><span class="ru">Как проходит обучение</span></h1>
+  <span class="hero-sub"><span class="uk"><span class="hl">Що робити</span> і в якому порядку</span><span class="ru"><span class="hl">Что делать</span> и в каком порядке</span></span>
+  <p class="hero-lead"><span class="uk">Платформа, ритм тижня, завдання, Q&amp;A і куди йти по допомогу.</span><span class="ru">Платформа, ритм недели, задания, Q&amp;A и куда идти за помощью.</span></p>
+  <div class="hero-facts">
+    <div class="fact"><p class="fact-k"><span class="uk">Де навчаєтеся</span><span class="ru">Где учитесь</span></p><p class="fact-v"><span class="uk">Платформа SendPulse і навчальний бот</span><span class="ru">Платформа SendPulse и учебный бот</span></p></div>
+    <div class="fact"><p class="fact-k"><span class="uk">Програма</span><span class="ru">Программа</span></p><p class="fact-v"><span class="uk">3 рівні та 11 модулів</span><span class="ru">3 уровня и 11 модулей</span></p></div>
+    <div class="fact"><p class="fact-k"><span class="uk">Старт</span><span class="ru">Старт</span></p><p class="fact-v"><span class="uk">Дату надішлемо в навчальний бот</span><span class="ru">Дату пришлем в учебный бот</span></p></div>
+  </div>
+</header>
+
+    <div class="glass bar"><button type="button" class="arrow" id="prev" aria-label="Назад">←</button><div class="track" id="track"></div><span class="count" id="count"></span><button type="button" class="arrow" id="next" aria-label="Далі">→</button></div>
+    <article class="glass step" data-step="0" hidden><p class="eyebrow"><span class="uk">Крок 01</span><span class="ru">Шаг 01</span> · <span class="uk">Як влаштовано</span><span class="ru">Как устроено</span></p><h2><span class="uk">Це доступ до AI-агентів і навичка ними керувати, а не курс</span><span class="ru">Это доступ к AI-агентам и навык ими управлять, а не курс</span></h2>
+      <div class="grid3"><article class="card in "><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8h12v10H6z"/><path d="M12 8V4"/><path d="M9 12h.01"/><path d="M15 12h.01"/><path d="M9 15h6"/></svg><h3><span class="uk">Агенти</span><span class="ru">Агенты</span></h3><p><span class="uk">Готовий стартовий набір під послуги, які купує бізнес.</span><span class="ru">Готовый стартовый набор под услуги, которые покупает бизнес.</span></p></article>
+      <article class="card in "><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 10v6"/><path d="M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg><h3><span class="uk">Навичка</span><span class="ru">Навык</span></h3><p><span class="uk">Влад навчає, як агенти влаштовані. Своїх ви зберете самі, і це залишиться з вами.</span><span class="ru">Влад учит, как агенты устроены. Своих вы соберете сами, и это останется с вами.</span></p></article>
+      <article class="card in "><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a4 4 0 100-8 4 4 0 000 8z"/><path d="M5 20c0-4 3-6 7-6s7 2 7 6"/></svg><h3><span class="uk">Куратор</span><span class="ru">Куратор</span></h3><p><span class="uk">Підкаже щодо матеріалів і допоможе з першим замовленням.</span><span class="ru">Подскажет по материалам и поможет с первым заказом.</span></p></article></div>
+      <p class="why"><span class="uk">Навчання розраховане на старт із нуля: спочатку база, потім складніше.</span><span class="ru">Обучение рассчитано на старт с нуля: сначала база, потом сложнее.</span></p><div class="nav"><button type="button" class="btn" data-go="1"><span><span class="uk">Далі: Логіка програми</span><span class="ru">Дальше: Логика программы</span></span><i>→</i></button></div></article><article class="glass step" data-step="1" hidden><p class="eyebrow"><span class="uk">Крок 02</span><span class="ru">Шаг 02</span> · <span class="uk">Як влаштовано</span><span class="ru">Как устроено</span></p><h2><span class="uk">Спочатку вчитеся надавати послугу, потім продавати її</span><span class="ru">Сначала учитесь оказывать услугу, потом продавать ее</span></h2>
+      <div class="logic">
+        <article><span class="k"><span class="uk">Рівні 1 і 2</span><span class="ru">Уровни 1 и 2</span></span><h3><span class="uk">Як надавати послугу</span><span class="ru">Как оказывать услугу</span></h3>
+        <ul><li><span class="uk">Дослідження ринку</span><span class="ru">Исследование рынка</span></li><li><span class="uk">Пропозиція і ціна</span><span class="ru">Предложение и цена</span></li><li><span class="uk">Сайт, контент і відео</span><span class="ru">Сайт, контент и видео</span></li></ul></article>
+        <span class="arr" aria-hidden="true">→</span>
+        <article class="hot"><span class="k"><span class="uk">Рівень 3</span><span class="ru">Уровень 3</span></span><h3><span class="uk">Як продати і знайти клієнтів</span><span class="ru">Как продать и найти клиентов</span></h3>
+        <ul><li><span class="uk">Реклама та AI-SEO</span><span class="ru">Реклама и AI-SEO</span></li><li><span class="uk">AI-продавець</span><span class="ru">AI-продавец</span></li><li><span class="uk">Пошук клієнтів і звʼязки</span><span class="ru">Поиск клиентов и связки</span></li></ul></article>
+      </div><div class="nav"><button type="button" class="btn btn-ghost" data-go="0"><span class="uk">Назад</span><span class="ru">Назад</span></button><button type="button" class="btn" data-go="2"><span><span class="uk">Далі: Де що знаходиться</span><span class="ru">Дальше: Где что находится</span></span><i>→</i></button></div></article><article class="glass step" data-step="2" hidden><p class="eyebrow"><span class="uk">Крок 03</span><span class="ru">Шаг 03</span> · <span class="uk">Як влаштовано</span><span class="ru">Как устроено</span></p><h2><span class="uk">Усе знаходиться у трьох місцях</span><span class="ru">Все находится в трех местах</span></h2>
+      <div class="grid3"><article class="card in "><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/><path d="M9 10h.01"/><path d="M15 10h.01"/></svg><h3><span class="uk">Навчальний бот</span><span class="ru">Учебный бот</span></h3><p><span class="uk">Розклад, що підготувати й важливі сповіщення. Зайвим не спамить.</span><span class="ru">Расписание, что подготовить и важные уведомления. Лишним не спамит.</span></p></article>
+      <article class="card in "><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18v14H3z"/><path d="M3 9h18"/></svg><h3><span class="uk">Платформа SendPulse</span><span class="ru">Платформа SendPulse</span></h3><p><span class="uk">Уроки й завдання. Доступ прийде листом на пошту.</span><span class="ru">Уроки и задания. Доступ придет письмом на почту.</span></p></article>
+      <article class="card in "><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h13v9H8l-5 4z"/><path d="M19 9h2v9l-3-2h-7v-1"/></svg><h3><span class="uk">Чат учасників</span><span class="ru">Чат участников</span></h3><p><span class="uk">Знайомства й живе спілкування. Заважає – вимкніть звук, важливе все одно прийде в бот.</span><span class="ru">Знакомства и живое общение. Мешает – выключите звук, важное все равно придет в бот.</span></p></article></div><div class="nav"><button type="button" class="btn btn-ghost" data-go="1"><span class="uk">Назад</span><span class="ru">Назад</span></button><button type="button" class="btn" data-go="3"><span><span class="uk">Далі: Після оплати</span><span class="ru">Дальше: После оплаты</span></span><i>→</i></button></div></article><article class="glass step" data-step="3" hidden><p class="eyebrow"><span class="uk">Крок 04</span><span class="ru">Шаг 04</span> · <span class="uk">Як влаштовано</span><span class="ru">Как устроено</span></p><h2><span class="uk">Що відбувається після оплати</span><span class="ru">Что происходит после оплаты</span></h2><ol class="do"><li><span class="uk">Повідомлення</span><span class="ru">Сообщение</span><small><span class="uk">Клієнтський сервіс пише вам і надсилає посилання на навчальний бот. Є запитання – відповідаєте просто на це повідомлення.</span><span class="ru">Клиентский сервис пишет вам и присылает ссылку на учебный бот. Есть вопросы – отвечаете прямо на это сообщение.</span></small></li><li><span class="uk">Навчальний бот</span><span class="ru">Учебный бот</span><small><span class="uk">У боті отримуєте розклад і перелік того, що підготувати до старту.</span><span class="ru">В боте получаете расписание и список того, что подготовить до старта.</span></small></li><li><span class="uk">Вступний урок</span><span class="ru">Вводный урок</span><small><span class="uk">Дивитеся відео від Влада: як побудована програма і з чого почати.</span><span class="ru">Смотрите видео от Влада: как устроена программа и с чего начать.</span></small></li><li><span class="uk">Платформа</span><span class="ru">Платформа</span><small><span class="uk">Відкривається доступ до платформи SendPulse з уроками й завданнями.</span><span class="ru">Открывается доступ к платформе SendPulse с уроками и заданиями.</span></small></li><li><span class="uk">Чат</span><span class="ru">Чат</span><small><span class="uk">Заходите в чат учасників: знайомитеся і спілкуєтеся ще до старту.</span><span class="ru">Заходите в чат участников: знакомитесь и общаетесь уже до старта.</span></small></li></ol><div class="nav"><button type="button" class="btn btn-ghost" data-go="2"><span class="uk">Назад</span><span class="ru">Назад</span></button><button type="button" class="btn" data-go="4"><span><span class="uk">Далі: Ритм тижня</span><span class="ru">Дальше: Ритм недели</span></span><i>→</i></button></div></article><article class="glass step" data-step="4" hidden><p class="eyebrow"><span class="uk">Крок 05</span><span class="ru">Шаг 05</span> · <span class="uk">Як влаштовано</span><span class="ru">Как устроено</span></p><h2><span class="uk">Кожен тиждень – три кроки</span><span class="ru">Каждая неделя – три шага</span></h2><ol class="do"><li><span class="uk">Урок</span><span class="ru">Урок</span><small><span class="uk">Новий модуль із покроковою інструкцією.</span><span class="ru">Новый модуль с пошаговой инструкцией.</span></small></li><li><span class="uk">Завдання</span><span class="ru">Задание</span><small><span class="uk">Впроваджуєте у свій проєкт або в навчальний.</span><span class="ru">Внедряете в свой проект или в учебный.</span></small></li><li><span class="uk">Q&amp;A</span><span class="ru">Q&amp;A</span><small><span class="uk">Здаєте роботу й отримуєте розбір на живому ефірі.</span><span class="ru">Сдаете работу и получаете разбор на живом эфире.</span></small></li></ol><div class="nav"><button type="button" class="btn btn-ghost" data-go="3"><span class="uk">Назад</span><span class="ru">Назад</span></button><button type="button" class="btn" data-go="5"><span><span class="uk">Далі: 3 рівні та 11 модулів</span><span class="ru">Дальше: 3 уровня и 11 модулей</span></span><i>→</i></button></div></article><article class="glass step" data-step="5" hidden><p class="eyebrow"><span class="uk">Крок 06</span><span class="ru">Шаг 06</span> · <span class="uk">Програма</span><span class="ru">Программа</span></p><h2><span class="uk">3 рівні та 11 модулів</span><span class="ru">3 уровня и 11 модулей</span></h2><section class="level"><div class="path"><span class="big">1</span><div><strong><span class="uk">Фундамент, маркетинг і сайти</span><span class="ru">Фундамент, маркетинг и сайты</span></strong><p><span class="uk">Першу послугу можна продавати</span><span class="ru">Первую услугу можно продавать</span></p></div></div><div class="faq"><details open><summary><i>M0</i><span><span class="uk">AI-стек (передвивчення)</span><span class="ru">AI-стек (предобучение)</span></span></summary><p><span class="uk">30+ нейромереж і робоче місце, де вони живуть разом</span><span class="ru">30+ нейросетей и рабочее место, где они живут вместе</span></p><p class="res"><b><span class="uk">Результат</span><span class="ru">Результат</span></b><span class="uk">Налаштоване робоче місце – перший результат уже першого вечора</span><span class="ru">Настроенное рабочее место – первый результат в первый же вечер</span></p></details><details><summary><i>M1</i><span><span class="uk">Свої AI-помічники</span><span class="ru">Свои AI-помощники</span></span></summary><p><span class="uk">Збираєте задачі, які AI робить за вас, і підключаєте його до пошти, календаря, Telegram і Drive</span><span class="ru">Собираете задачи, которые AI делает за вас, и подключаете его к почте, календарю, Telegram и Drive</span></p><p class="res"><b><span class="uk">Результат</span><span class="ru">Результат</span></b><span class="uk">Перший помічник зібраний власноруч: запис дзвінка → список задач</span><span class="ru">Первый помощник собран своими руками: запись звонка → список задач</span></p></details><details><summary><i>M2</i><span><span class="uk">Deep Research</span><span class="ru">Deep Research</span></span></summary><p><span class="uk">Знаходите нішу, біль та ідею продукту на даних, а не на здогадках</span><span class="ru">Находите нишу, боль и идею продукта на данных, а не на догадках</span></p><p class="res"><b><span class="uk">Результат</span><span class="ru">Результат</span></b><span class="uk">Дослідження ринку та клієнтів за кілька годин: хто платить, за що і скільки</span><span class="ru">Исследование рынка и клиентов за пару часов: кто платит, за что и сколько</span></p></details><details><summary><i>M3</i><span><span class="uk">Маркетинг</span><span class="ru">Маркетинг</span></span></summary><p><span class="uk">Розбираєте нішу, аудиторію та конкурентів, призначаєте ціну й пакуєте продукт</span><span class="ru">Разбираете нишу, аудиторию и конкурентов, назначаете цену и упаковываете продукт</span></p><p class="res"><b><span class="uk">Результат</span><span class="ru">Результат</span></b><span class="uk">Продукт із ціною та пропозиція, від якої нерозумно відмовлятися</span><span class="ru">Продукт с ценой и предложение, от которого глупо отказаться</span></p></details><details><summary><i>M4</i><span><span class="uk">Сайти</span><span class="ru">Сайты</span></span></summary><p><span class="uk">Робите сайт, який веде відвідувача до заявки: опитувальник і подарунок за контакт</span><span class="ru">Делаете сайт, который ведет посетителя к заявке: опросник и подарок за контакт</span></p><p class="res"><b><span class="uk">Результат</span><span class="ru">Результат</span></b><span class="uk">Сайт, який приймає заявки</span><span class="ru">Сайт, который принимает заявки</span></p></details></div><p class="tip"><b><span class="uk">Агенти рівня</span><span class="ru">Агенты уровня</span></b><span class="uk">AI-сайти</span><span class="ru">AI-сайты</span></p></section><section class="level"><div class="path"><span class="big">2</span><div><strong><span class="uk">Контент-завод</span><span class="ru">Контент-завод</span></strong><p><span class="uk">Плюс три послуги: дизайн, відео й контент-завод</span><span class="ru">Плюс три услуги: дизайн, видео и контент-завод</span></p></div></div><div class="faq"><details><summary><i>M5</i><span><span class="uk">16 форматів контенту</span><span class="ru">16 форматов контента</span></span></summary><p><span class="uk">Reels, сторіс, пости, Telegram, Threads, Shorts, статті й каруселі</span><span class="ru">Reels, сторис, посты, Telegram, Threads, Shorts, статьи и карусели</span></p><p class="res"><b><span class="uk">Результат</span><span class="ru">Результат</span></b><span class="uk">16 форматів з одного файлу, у вашому стилі</span><span class="ru">16 форматов из одного файла, в вашем стиле</span></p></details><details><summary><i>M6</i><span><span class="uk">Відео, фото, голос, аватар</span><span class="ru">Видео, фото, голос, аватар</span></span></summary><p><span class="uk">Сценарій, зйомка без камери, клон вашого голосу й обличчя</span><span class="ru">Сценарий, съемка без камеры, клон вашего голоса и лица</span></p><p class="res"><b><span class="uk">Результат</span><span class="ru">Результат</span></b><span class="uk">Фото, ролики, каруселі й AI-аватар, що говорить, без фотографа і монтажера</span><span class="ru">Фото, ролики, карусели и говорящий AI-аватар без фотографа и монтажера</span></p></details><details><summary><i>M7</i><span><span class="uk">AI-монтаж</span><span class="ru">AI-монтаж</span></span></summary><p><span class="uk">Довге відео перетворюється на готові ролики під майданчики, за розкладом</span><span class="ru">Длинное видео превращается в готовые ролики под площадки, по расписанию</span></p><p class="res"><b><span class="uk">Результат</span><span class="ru">Результат</span></b><span class="uk">З одного ефіру – тиждень роликів без монтажера</span><span class="ru">Из одного эфира – неделя роликов без монтажера</span></p></details></div><p class="tip"><b><span class="uk">Агенти рівня</span><span class="ru">Агенты уровня</span></b><span class="uk">AI-дизайн, продажні AI-відео, контент-завод з AI-аватаром</span><span class="ru">AI-дизайн, продающие AI-видео, контент-завод с AI-аватаром</span></p></section><section class="level"><div class="path"><span class="big">3</span><div><strong><span class="uk">Залучення клієнтів та продажі</span><span class="ru">Привлечение клиентов и продажи</span></strong><p><span class="uk">Угода закривається без вас, клієнт залишається і платить знову</span><span class="ru">Сделка закрывается без вас, клиент остается и платит снова</span></p></div></div><div class="faq"><details><summary><i>M8</i><span><span class="uk">AI-таргетолог</span><span class="ru">AI-таргетолог</span></span></summary><p><span class="uk">Реклама: оголошення, креативи, оптимізація і звіти</span><span class="ru">Реклама: объявления, креативы, оптимизация и отчеты</span></p><p class="res"><b><span class="uk">Результат</span><span class="ru">Результат</span></b><span class="uk">Агент запускає кампанії, рахує, що працює, і звітує цифрами</span><span class="ru">Агент запускает кампании, считает, что работает, и отчитывается цифрами</span></p></details><details><summary><i>M9</i><span><span class="uk">AI-SEO</span><span class="ru">AI-SEO</span></span></summary><p><span class="uk">Бізнес знаходять у пошуку, на картах і у відповідях нейромереж</span><span class="ru">Бизнес находят в поиске, на картах и в ответах нейросетей</span></p><p class="res"><b><span class="uk">Результат</span><span class="ru">Результат</span></b><span class="uk">Люди приходять без платної реклами</span><span class="ru">Люди приходят без платной рекламы</span></p></details><details><summary><i>M10</i><span><span class="uk">AI-продавець</span><span class="ru">AI-продавец</span></span></summary><p><span class="uk">Живе в Telegram, WhatsApp та Instagram, відповідає голосом і текстом</span><span class="ru">Живет в Telegram, WhatsApp и Instagram, отвечает голосом и текстом</span></p><p class="res"><b><span class="uk">Результат</span><span class="ru">Результат</span></b><span class="uk">Відповідає на заявки, знімає сумніви й доводить до оплати без вас</span><span class="ru">Отвечает на заявки, снимает сомнения и доводит до оплаты без вас</span></p></details><details><summary><i>M11</i><span><span class="uk">Пошук клієнтів і звʼязки</span><span class="ru">Поиск клиентов и связки</span></span></summary><p><span class="uk">Платні й безплатні способи знайти клієнтів, пакування себе та продовження клієнта</span><span class="ru">Платные и бесплатные способы найти клиентов, упаковка себя и продление клиента</span></p><p class="res"><b><span class="uk">Результат</span><span class="ru">Результат</span></b><span class="uk">Звʼязка «що, кому, як» і клієнт, який платить знову</span><span class="ru">Связка «что, кому, как» и клиент, который платит снова</span></p></details></div><p class="tip"><b><span class="uk">Агенти рівня</span><span class="ru">Агенты уровня</span></b><span class="uk">AI-таргет, AI-SEO, AI-продавець</span><span class="ru">AI-таргет, AI-SEO, AI-продавец</span></p></section><div class="nav"><button type="button" class="btn btn-ghost" data-go="4"><span class="uk">Назад</span><span class="ru">Назад</span></button><button type="button" class="btn" data-go="6"><span><span class="uk">Далі: Ваш набір</span><span class="ru">Дальше: Ваш набор</span></span><i>→</i></button></div></article><article class="glass step" data-step="6" hidden><p class="eyebrow"><span class="uk">Крок 07</span><span class="ru">Шаг 07</span> · <span class="uk">Програма</span><span class="ru">Программа</span></p><h2><span class="uk">Що відкривається у вашому наборі</span><span class="ru">Что открывается в вашем наборе</span></h2><div class="setbox in" data-root="set" data-active="bronze"><div class="left"><div class="segs"><button type="button" class="seg on" data-g="set" data-v="bronze" aria-pressed="true">Bronze</button><button type="button" class="seg" data-g="set" data-v="silver" aria-pressed="false">Silver</button><button type="button" class="seg" data-g="set" data-v="gold" aria-pressed="false">Gold</button></div><ul class="stats" data-p="set" data-v="bronze"><li><span><span class="uk">Модулі</span><span class="ru">Модули</span></span><b>М0-М4</b></li><li><span><span class="uk">Тижнів навчання й живих розборів</span><span class="ru">Недель обучения и живых разборов</span></span><b>4</b></li><li><span><span class="uk">Послуг у прайсі</span><span class="ru">Услуг в прайсе</span></span><b>1</b></li><li><span><span class="uk">AI-агентів</span><span class="ru">AI-агентов</span></span><b>1</b></li><li><span><span class="uk">Готових задач під ваші послуги</span><span class="ru">Готовых задач под ваши услуги</span></span><b>16</b></li></ul><ul class="stats" data-p="set" data-v="silver" hidden><li><span><span class="uk">Модулі</span><span class="ru">Модули</span></span><b>М0-М7</b></li><li><span><span class="uk">Тижнів навчання й живих розборів</span><span class="ru">Недель обучения и живых разборов</span></span><b>6</b></li><li><span><span class="uk">Послуг у прайсі</span><span class="ru">Услуг в прайсе</span></span><b>4</b></li><li><span><span class="uk">AI-агентів</span><span class="ru">AI-агентов</span></span><b>4</b></li><li><span><span class="uk">Готових задач під ваші послуги</span><span class="ru">Готовых задач под ваши услуги</span></span><b>33</b></li></ul><ul class="stats" data-p="set" data-v="gold" hidden><li><span><span class="uk">Модулі</span><span class="ru">Модули</span></span><b>М0-М11</b></li><li><span><span class="uk">Тижнів навчання й живих розборів</span><span class="ru">Недель обучения и живых разборов</span></span><b>10</b></li><li><span><span class="uk">Послуг у прайсі</span><span class="ru">Услуг в прайсе</span></span><b>7</b></li><li><span><span class="uk">AI-агентів</span><span class="ru">AI-агентов</span></span><b>7</b></li><li><span><span class="uk">Готових задач під ваші послуги</span><span class="ru">Готовых задач под ваши услуги</span></span><b>98</b></li></ul></div><div class="right"><h3><span class="uk">Які агенти відкриваються</span><span class="ru">Какие агенты открываются</span></h3><ul class="chips"><li class="chip l1"><span class="uk">AI-сайти</span><span class="ru">AI-сайты</span></li><li class="chip l2"><span class="uk">AI-дизайн</span><span class="ru">AI-дизайн</span></li><li class="chip l2"><span class="uk">Продажні AI-відео</span><span class="ru">Продающие AI-видео</span></li><li class="chip l2"><span class="uk">Контент-завод з AI-аватаром</span><span class="ru">Контент-завод с AI-аватаром</span></li><li class="chip l3"><span class="uk">AI-таргет</span><span class="ru">AI-таргет</span></li><li class="chip l3"><span class="uk">AI-SEO</span><span class="ru">AI-SEO</span></li><li class="chip l3"><span class="uk">AI-продавець</span><span class="ru">AI-продавец</span></li></ul><p><span class="uk">Агенти відкриваються після модулів свого рівня. Кожен рівень – завершений продукт.</span><span class="ru">Агенты открываются после модулей своего уровня. Каждый уровень – законченный продукт.</span></p></div></div><div class="nav"><button type="button" class="btn btn-ghost" data-go="5"><span class="uk">Назад</span><span class="ru">Назад</span></button><button type="button" class="btn" data-go="7"><span><span class="uk">Далі: Як проходять розбори</span><span class="ru">Дальше: Как проходят разборы</span></span><i>→</i></button></div></article><article class="glass step" data-step="7" hidden><p class="eyebrow"><span class="uk">Крок 08</span><span class="ru">Шаг 08</span> · <span class="uk">Навчання</span><span class="ru">Обучение</span></p><h2><span class="uk">Як проходять розбори</span><span class="ru">Как проходят разборы</span></h2><ol class="do"><li><span class="uk">Завдання після кожного уроку</span><span class="ru">Задание после каждого урока</span><small><span class="uk">Для вашого проєкту або навчального.</span><span class="ru">Для вашего проекта или учебного.</span></small></li><li><span class="uk">Здаєте на платформі</span><span class="ru">Сдаете на платформе</span><small><span class="uk">До початку Q&amp;A.</span><span class="ru">До начала Q&amp;A.</span></small></li><li><span class="uk">Влад розбирає на Q&amp;A</span><span class="ru">Влад разбирает на Q&amp;A</span><small><span class="uk">Часті помилки й ваші запитання.</span><span class="ru">Частые ошибки и ваши вопросы.</span></small></li></ol>
+      <p class="tip"><b><span class="uk">Важливо про формат</span><span class="ru">Важно про формат</span></b><span class="uk">Здане завдання не гарантує особистий розбір на ефірі. Мінімум: ви побачите часті помилки на прикладі чужих робіт.</span><span class="ru">Сданное задание не гарантирует личный разбор на эфире. Минимум: вы увидите частые ошибки на примере чужих работ.</span></p>
+      <h4><span class="uk">На чому робити завдання</span><span class="ru">На чем делать задания</span></h4>
+      <div class="grid3"><article class="card in "><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V9l8-5 8 5v11"/><path d="M10 20v-6h4v6"/></svg><h3><span class="uk">Свій бізнес</span><span class="ru">Свой бизнес</span></h3><p><span class="uk">Є проєкт – працюєте на ньому.</span><span class="ru">Есть проект – работаете на нем.</span></p></article>
+      <article class="card in "><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14v16H5z"/><path d="M9 9h6"/><path d="M9 13h6"/></svg><h3><span class="uk">Навчальний проєкт</span><span class="ru">Учебный проект</span></h3><p><span class="uk">Немає проєкту – вигадайте його.</span><span class="ru">Нет проекта – придумайте его.</span></p></article>
+      <article class="card in "><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 11a3 3 0 100-6 3 3 0 000 6z"/><path d="M3 20c0-3 3-5 6-5s6 2 6 5"/><path d="M16 5a3 3 0 010 6"/><path d="M18 15c2 .6 3 2.500 3 5"/></svg><h3><span class="uk">З іншим учасником</span><span class="ru">С другим участником</span></h3><p><span class="uk">Можна обʼєднатися з тим, у кого є бізнес.</span><span class="ru">Можно объединиться с тем, у кого есть бизнес.</span></p></article></div><div class="nav"><button type="button" class="btn btn-ghost" data-go="6"><span class="uk">Назад</span><span class="ru">Назад</span></button><button type="button" class="btn" data-go="8"><span><span class="uk">Далі: AI-Start Pack</span><span class="ru">Дальше: AI-Start Pack</span></span><i>→</i></button></div></article><article class="glass step" data-step="8" hidden><p class="eyebrow"><span class="uk">Крок 09</span><span class="ru">Шаг 09</span> · <span class="uk">Навчання</span><span class="ru">Обучение</span></p><h2><span class="uk">Як підготуватися і які нейронки потрібні</span><span class="ru">Как подготовиться и какие нейронки нужны</span></h2><div class="pack in"><div class="list"><label class="chk"><input type="checkbox" data-c="0"><span class="box" aria-hidden="true"></span><span class="txt"><b><span class="uk">Встановіть Claude</span><span class="ru">Установите Claude</span></b><small><span class="uk">Для 90% задач його вистачає. Підписка від 20 $ на місяць.</span><span class="ru">Для 90% задач хватает его. Подписка от 20 $ в месяц.</span></small></span></label><label class="chk"><input type="checkbox" data-c="1"><span class="box" aria-hidden="true"></span><span class="txt"><b><span class="uk">Інші нейромережі поки не оплачуйте</span><span class="ru">Другие нейросети пока не оплачивайте</span></b><small><span class="uk">Що й коли підключити, скажемо на уроках.</span><span class="ru">Что и когда подключить, скажем на уроках.</span></small></span></label><label class="chk"><input type="checkbox" data-c="2"><span class="box" aria-hidden="true"></span><span class="txt"><b><span class="uk">Пройдіть навчальний бот</span><span class="ru">Пройдите учебный бот</span></b><small><span class="uk">Там розклад і всі важливі сповіщення.</span><span class="ru">Там расписание и все важные уведомления.</span></small></span></label><label class="chk"><input type="checkbox" data-c="3"><span class="box" aria-hidden="true"></span><span class="txt"><b><span class="uk">Подивіться вступний урок</span><span class="ru">Посмотрите вводный урок</span></b><small><span class="uk">Після нього зрозуміло, що робити і в якому порядку.</span><span class="ru">После него понятно, что делать и в каком порядке.</span></small></span></label></div><aside class="meter"><b id="cnt">0 / 4</b><p><span class="uk">готово до старту</span><span class="ru">готово к старту</span></p><div class="bar"><i id="fill"></i></div></aside></div><div class="nav"><button type="button" class="btn btn-ghost" data-go="7"><span class="uk">Назад</span><span class="ru">Назад</span></button><button type="button" class="btn" data-go="9"><span><span class="uk">Далі: Хто допоможе</span><span class="ru">Дальше: Кто поможет</span></span><i>→</i></button></div></article><article class="glass step" data-step="9" hidden><p class="eyebrow"><span class="uk">Крок 10</span><span class="ru">Шаг 10</span> · <span class="uk">Навчання</span><span class="ru">Обучение</span></p><h2><span class="uk">До кого звертатися по допомогу</span><span class="ru">К кому идти за помощью</span></h2>
+      <div class="grid3"><article class="card in "><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a4 4 0 100-8 4 4 0 000 8z"/><path d="M5 20c0-4 3-6 7-6s7 2 7 6"/></svg><h3><span class="uk">Куратор</span><span class="ru">Куратор</span></h3><p><span class="uk">Запитання щодо матеріалів і навчання пишіть у чат групи.</span><span class="ru">Вопросы по материалам и обучению пишите в чат группы.</span></p></article>
+      <article class="card in "><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13a8 8 0 0116 0"/><path d="M4 13v4h3v-5H4"/><path d="M20 13v4h-3v-5h3"/><path d="M17 17c0 2-2 3-4 3"/></svg><h3><span class="uk">Клієнтський сервіс</span><span class="ru">Клиентский сервис</span></h3><p><span class="uk">Доступи й організаційні питання: відповідайте на його повідомлення.</span><span class="ru">Доступы и организационные вопросы: отвечайте на его сообщение.</span></p></article>
+      <article class="card in "><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4l2.500 5 5.500.8-4 3.900.9 5.500-4.900-2.600-4.900 2.600.9-5.500-4-3.900 5.500-.8z"/></svg><h3><span class="uk">Рейтинг учасників</span><span class="ru">Рейтинг участников</span></h3><p><span class="uk">Бали за завдання й анкети бачать усі. Лідерів чекають подарунки від команди.</span><span class="ru">Баллы за задания и анкеты видны всем. Лидеров ждут подарки от команды.</span></p></article></div><div class="nav"><button type="button" class="btn btn-ghost" data-go="8"><span class="uk">Назад</span><span class="ru">Назад</span></button><button type="button" class="btn" data-go="10"><span><span class="uk">Далі: Перші кроки</span><span class="ru">Дальше: Первые шаги</span></span><i>→</i></button></div></article><article class="glass step" data-step="10" hidden><p class="eyebrow"><span class="uk">Крок 11</span><span class="ru">Шаг 11</span> · <span class="uk">Навчання</span><span class="ru">Обучение</span></p><h2><span class="uk">Що зробити після цього уроку</span><span class="ru">Что сделать после этого урока</span></h2><ol class="do"><li><span class="uk">Пройдіть навчальний бот</span><span class="ru">Пройдите учебный бот</span><small><span class="uk">Там розклад і що підготувати.</span><span class="ru">Там расписание и что подготовить.</span></small></li><li><span class="uk">Зайдіть у чат учасників</span><span class="ru">Зайдите в чат участников</span><small><span class="uk">Знайомтеся ще до старту.</span><span class="ru">Знакомьтесь уже до старта.</span></small></li><li><span class="uk">Встановіть Claude</span><span class="ru">Установите Claude</span><small><span class="uk">Підписка від 20 $ на місяць.</span><span class="ru">Подписка от 20 $ в месяц.</span></small></li><li><span class="uk">Перевірте доступ до платформи</span><span class="ru">Проверьте доступ к платформе</span><small><span class="uk">Немає доступу – напишіть клієнтському сервісу.</span><span class="ru">Нет доступа – напишите клиентскому сервису.</span></small></li></ol><div class="nav"><button type="button" class="btn btn-ghost" data-go="9"><span class="uk">Назад</span><span class="ru">Назад</span></button></div></article>
+  </div></main>
+</div>
+<script>
+(function(){
+  var root=document.documentElement,steps=[].slice.call(document.querySelectorAll('.step')),N=steps.length,cur=0;
+  var hero=document.getElementById('hero'),track=document.getElementById('track'),count=document.getElementById('count');
+  var prev=document.getElementById('prev'),next=document.getElementById('next'),fill=document.getElementById('sideFill');
+  var side=document.getElementById('side'),ov=document.getElementById('ov'),menuNum=document.getElementById('menuNum');
+  var items=[].slice.call(document.querySelectorAll('.nav-item'));
+  function store(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v);}catch(e){return null;}}
+  var seen=(store('onb-op-seen')||'').split(',').filter(Boolean).map(Number);
+  steps.forEach(function(s,i){var b=document.createElement('button');b.type='button';b.setAttribute('aria-label',String(i+1));b.addEventListener('click',function(){show(i);});track.appendChild(b);});
+  var dots=[].slice.call(track.children);
+  function pad(n){return (n<10?'0':'')+n;}
+  function show(n,keep){
+    cur=Math.max(0,Math.min(N-1,n));
+    if(seen.indexOf(cur)<0){seen.push(cur);store('onb-op-seen',seen.join(','));}
+    steps.forEach(function(s,i){s.hidden=i!==cur;});
+    hero.hidden=cur!==0;
+    dots.forEach(function(b,i){b.classList.toggle('on',i===cur);b.classList.toggle('seen',seen.indexOf(i)>-1&&i!==cur);});
+    items.forEach(function(b,i){b.classList.toggle('active',i===cur);b.classList.toggle('seen',seen.indexOf(i)>-1&&i!==cur);if(i===cur)b.setAttribute('aria-current','step');else b.removeAttribute('aria-current');});
+    count.innerHTML='<b>'+pad(cur+1)+'</b> / '+pad(N);
+    menuNum.textContent=pad(cur+1)+'/'+pad(N);
+    fill.style.width=((cur+1)/N*100)+'%';
+    prev.disabled=cur===0;next.disabled=cur===N-1;
+    side.classList.remove('open');ov.classList.remove('open');
+    try{history.replaceState(null,'','#'+(cur+1));}catch(e){}
+    if(!keep)window.scrollTo(0,0);
+  }
+  prev.addEventListener('click',function(){show(cur-1);});
+  next.addEventListener('click',function(){show(cur+1);});
+  document.addEventListener('click',function(e){
+    var go=e.target.closest('[data-go]');
+    if(go){show(+go.dataset.go);return;}
+    var b=e.target.closest('[data-g]');
+    if(b){
+      var g=b.dataset.g,v=b.dataset.v;
+      document.querySelectorAll('[data-g="'+g+'"]').forEach(function(x){var on=x===b;x.classList.toggle('on',on);x.setAttribute('aria-pressed',String(on));});
+      document.querySelectorAll('[data-p="'+g+'"]').forEach(function(p){p.hidden=p.dataset.v!==v;});
+      var r=document.querySelector('[data-root="'+g+'"]');if(r)r.dataset.active=v;
+    }
+  });
+  addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='PageDown')show(cur+1);
+    if(e.key==='ArrowLeft'||e.key==='PageUp')show(cur-1);
+    if(e.key==='Escape'){side.classList.remove('open');ov.classList.remove('open');}
+  });
+  document.getElementById('menu').addEventListener('click',function(){side.classList.add('open');ov.classList.add('open');});
+  ov.addEventListener('click',function(){side.classList.remove('open');ov.classList.remove('open');});
+
+  var boxes=[].slice.call(document.querySelectorAll('[data-c]')),saved=(store('onb-op-check')||'').split(',');
+  function meter(){
+    var done=boxes.filter(function(c){return c.checked;}).length;
+    document.getElementById('cnt').textContent=done+' / '+boxes.length;
+    document.getElementById('fill').style.width=(done/boxes.length*100)+'%';
+    store('onb-op-check',boxes.filter(function(c){return c.checked;}).map(function(c){return c.dataset.c;}).join(','));
+  }
+  boxes.forEach(function(c){c.checked=saved.indexOf(c.dataset.c)>-1;c.addEventListener('change',meter);});
+  meter();
+
+  var langs=[].slice.call(document.querySelectorAll('[data-lang]'));
+  function setLang(l,keep){
+    root.lang=l;
+    langs.forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.lang===l));});
+    if(keep)store('onb-op-lang',l);
+  }
+  langs.forEach(function(b){b.addEventListener('click',function(){setLang(b.dataset.lang,true);});});
+  var q=new URLSearchParams(location.search).get('lang');
+  setLang(q==='ru'||q==='uk'?q:(store('onb-op-lang')==='ru'?'ru':'uk'));
+  show((parseInt(location.hash.slice(1),10)||1)-1,true);
+})();
+</script>
+</body>
+</html>
