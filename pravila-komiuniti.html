@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="ru">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -44,7 +44,7 @@ h1{font:700 clamp(30px,4.6vw,48px)/1.06 var(--display);letter-spacing:-.03em;mar
 <main class="page">
   <div class="top">
     <p class="eyebrow"><span class="uk">Ком'юніті</span><span class="ru">Комьюнити</span></p>
-    <div id="lang" role="group" aria-label="Мова / Язык"><button type="button" data-lang="uk" aria-pressed="true">UA</button><button type="button" data-lang="ru" aria-pressed="false">RU</button></div>
+    <div id="lang" role="group" aria-label="Мова / Язык"><button type="button" data-lang="uk" aria-pressed="false">UA</button><button type="button" data-lang="ru" aria-pressed="true">RU</button></div>
   </div>
   <h1><span class="uk">Правила ком'юніті</span><span class="ru">Правила комьюнити</span></h1>
   <p class="lead"><span class="uk">Ми хочемо, щоб кожному з вас було комфортно у спільноті, тому тут діють прості домовленості:</span><span class="ru">Мы хотим, чтобы каждому из вас было комфортно в сообществе, поэтому здесь действуют простые договоренности:</span></p>
@@ -74,7 +74,7 @@ h1{font:700 clamp(30px,4.6vw,48px)/1.06 var(--display);letter-spacing:-.03em;mar
   }
   langs.forEach(function(b){b.addEventListener('click',function(){setLang(b.dataset.lang,true);});});
   var q=new URLSearchParams(location.search).get('lang');
-  setLang(q==='ru'||q==='uk'?q:(store('rules-lang')==='ru'?'ru':'uk'));
+  setLang(q==='ru'||q==='uk'?q:(store('rules-lang')==='uk'?'uk':'ru'));
 })();
 </script>
 <script>
