@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Правила ком'юніті</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#ffffff;--cream:#f4efe7;--card-solid:#fbfaf7;--line:rgba(21,16,12,.09);--line-2:rgba(21,16,12,.16);--ink:#15100c;--ink-2:#0b0c0e;--text-mid:rgba(21,16,12,.68);--text-dim:rgba(21,16,12,.5);--gold:#fdd506;--gold-rgb:253,213,6;--red-rgb:240,67,46;--shadow:0 1px 0 rgba(255,255,255,.8) inset,0 10px 30px rgba(21,16,12,.06);--display:"Inter Tight","Inter",system-ui,sans-serif;--sans:"Inter",system-ui,sans-serif;--mono:"JetBrains Mono",ui-monospace,monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+html[lang="uk"] .ru,html[lang="ru"] .uk{display:none!important}
+body{background:var(--bg);color:var(--ink);font:400 15px/1.6 var(--sans);-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden}
+.page{max-width:860px;margin:0 auto;padding:40px 32px 48px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:20px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font:500 11px var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim)}
+.eyebrow:before{content:"";flex:none;width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 3px rgba(var(--gold-rgb),.25)}
+#lang{flex:none;display:flex;gap:2px;padding:3px;border-radius:999px;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow)}
+#lang button{min-width:40px;min-height:30px;padding:0 10px;border:0;border-radius:999px;background:none;color:var(--text-mid);font:600 12px/1 var(--sans);cursor:pointer}
+#lang button[aria-pressed="true"]{background:var(--ink-2);color:var(--cream)}
+#lang button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+h1{font:700 clamp(30px,4.6vw,48px)/1.06 var(--display);letter-spacing:-.03em;margin-bottom:12px}
+.lead{max-width:680px;font-size:16px;color:var(--text-mid);margin-bottom:28px}
+h2{font:700 19px/1.25 var(--display);letter-spacing:-.02em;margin-bottom:16px}
+.rules{list-style:none;display:grid;gap:10px;counter-reset:r}
+.rules li{counter-increment:r;position:relative;padding:16px 20px 16px 66px;background:var(--card-solid);border:1px solid var(--line);border-radius:16px}
+.rules li:before{content:counter(r);position:absolute;left:18px;top:15px;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:var(--gold);color:var(--ink);font:600 13px var(--mono)}
+.rules b{display:block;margin-bottom:2px;font:700 16px/1.35 var(--display);letter-spacing:-.01em}
+.rules span span{font-size:14.5px;line-height:1.55;color:var(--text-mid)}
+.warn{margin-top:16px;padding:16px 20px;border-radius:16px;background:rgba(var(--red-rgb),.07);border:1px solid rgba(var(--red-rgb),.28);font-size:14.5px;line-height:1.55;font-weight:500}
+.foot{margin-top:14px;font-size:13px;line-height:1.5;color:var(--text-dim)}
+@media (max-width:560px){
+  .page{padding:20px 16px 32px}
+  .rules li{padding:14px 16px 14px 58px}
+  .rules li:before{left:14px;top:13px;width:30px;height:30px}
+}
+</style>
+</head>
+<body>
+<main class="page">
+  <div class="top">
+    <p class="eyebrow"><span class="uk">Ком'юніті</span><span class="ru">Комьюнити</span></p>
+    <div id="lang" role="group" aria-label="Мова / Язык"><button type="button" data-lang="uk" aria-pressed="true">UA</button><button type="button" data-lang="ru" aria-pressed="false">RU</button></div>
+  </div>
+  <h1><span class="uk">Правила ком'юніті</span><span class="ru">Правила комьюнити</span></h1>
+  <p class="lead"><span class="uk">Ми хочемо, щоб кожному з вас було комфортно у спільноті, тому тут діють прості правила.</span><span class="ru">Мы хотим, чтобы каждому из вас было комфортно в сообществе, поэтому здесь действуют простые правила.</span></p>
+
+  <h2><span class="uk">Наші домовленості, щоб тут було комфортно всім:</span><span class="ru">Наши договоренности, чтобы здесь было комфортно всем:</span></h2>
+  <ol class="rules">
+    <li><span class="uk"><b>Повага понад усе.</b><span>Спілкуємося на «ти», але без образ, грубощів і переходу на особистості. Сперечатися можна, принижувати не можна.</span></span><span class="ru"><b>Уважение превыше всего.</b><span>Общаемся на «ты», но без оскорблений, грубости и перехода на личности. Спорить можно, унижать нельзя.</span></span></li>
+    <li><span class="uk"><b>Без політики, релігії та інших тем, які сварять людей.</b><span>Ми тут заради AI і результатів.</span></span><span class="ru"><b>Без политики, религии и других тем, которые ссорят людей.</b><span>Мы здесь ради AI и результатов.</span></span></li>
+    <li><span class="uk"><b>Без реклами й спаму.</b><span>Не можна продавати свої послуги учасникам, кидати реферальні посилання, рекламу інших курсів і каналів. Розповідати про свої результати й кейси можна і треба.</span></span><span class="ru"><b>Без рекламы и спама.</b><span>Нельзя продавать свои услуги участникам, кидать реферальные ссылки, рекламу других курсов и каналов. Рассказывать о своих результатах и кейсах можно и нужно.</span></span></li>
+    <li><span class="uk"><b>Без непроханих повідомлень в особисті.</b><span>Не пиши учасникам з пропозиціями, якщо вони про це не просили.</span></span><span class="ru"><b>Без непрошеных сообщений в личку.</b><span>Не пиши участникам с предложениями, если они об этом не просили.</span></span></li>
+    <li><span class="uk"><b>Матеріали й доступи лишаються всередині.</b><span>Не передавай доступ до агентів і навчання іншим людям і не викладай матеріали за межами ком'юніті.</span></span><span class="ru"><b>Материалы и доступы остаются внутри.</b><span>Не передавай доступ к агентам и обучению другим людям и не выкладывай материалы за пределами комьюнити.</span></span></li>
+    <li><span class="uk"><b>Бережи чужі дані.</b><span>Перед тим як викласти скріншот, зафарбуй на ньому контакти клієнтів і особисту інформацію.</span></span><span class="ru"><b>Береги чужие данные.</b><span>Перед тем как выложить скриншот, закрась на нем контакты клиентов и личную информацию.</span></span></li>
+    <li><span class="uk"><b>Один меседж замість п'яти.</b><span>Сформулюй питання в одному повідомленні, а перед ним пошукай у чаті: можливо, відповідь уже є.</span></span><span class="ru"><b>Одно сообщение вместо пяти.</b><span>Сформулируй вопрос в одном сообщении, а перед этим поищи в чате: возможно, ответ уже есть.</span></span></li>
+  </ol>
+
+  <p class="warn"><span class="uk">За порушення спершу буде попередження, потім обмеження на повідомлення, а якщо порушення повторюються, учасника видаляють з чату.</span><span class="ru">За нарушения сначала будет предупреждение, потом ограничение на сообщения, а если нарушения повторяются, участника удаляют из чата.</span></p>
+  <p class="foot"><span class="uk">*Залишаючись у чаті, ви підтверджуєте свою згоду з правилами.</span><span class="ru">*Оставаясь в чате, вы подтверждаете свое согласие с правилами.</span></p>
+</main>
+<script>
+(function(){
+  var root=document.documentElement,titles={uk:"Правила ком'юніті",ru:'Правила комьюнити'};
+  var langs=[].slice.call(document.querySelectorAll('[data-lang]'));
+  function store(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v);}catch(e){return null;}}
+  function setLang(l,keep){
+    root.lang=l;document.title=titles[l];
+    langs.forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.lang===l));});
+    if(keep)store('rules-lang',l);
+  }
+  langs.forEach(function(b){b.addEventListener('click',function(){setLang(b.dataset.lang,true);});});
+  var q=new URLSearchParams(location.search).get('lang');
+  setLang(q==='ru'||q==='uk'?q:(store('rules-lang')==='ru'?'ru':'uk'));
+})();
+</script>
+<script>
+/* Сообщает платформе высоту содержимого, чтобы фрейм был без пустого места и обрезки */
+(function(){
+  if(window.parent===window)return;
+  var box=document.querySelector('.page'),last=0;
+  function send(){
+    var h=Math.ceil(box.getBoundingClientRect().height);
+    if(h&&h!==last){last=h;window.parent.postMessage({kovchegHeight:h},'*');}
+  }
+  send();
+  addEventListener('load',send);
+  addEventListener('resize',send);
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(send);
+  if(window.ResizeObserver)new ResizeObserver(send).observe(box);
+})();
+</script>
+</body>
+</html>
