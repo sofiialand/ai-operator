@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="ru">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -92,8 +92,8 @@ h2{font:700 19px/1.2 var(--display);letter-spacing:-.02em;margin-bottom:6px}
     <div class="top">
       <p class="eyebrow"><b><span class="uk">Онбординг</span><span class="ru">Онбординг</span></b></p>
       <div class="switch" role="group" aria-label="Мова / Язык">
-        <button type="button" data-set="uk" aria-pressed="true">UA</button>
-        <button type="button" data-set="ru" aria-pressed="false">RU</button>
+        <button type="button" data-set="uk" aria-pressed="false">UA</button>
+        <button type="button" data-set="ru" aria-pressed="true">RU</button>
       </div>
     </div>
     <h1><span class="uk">Що буде</span><span class="ru">Что будет</span></h1>
@@ -130,7 +130,7 @@ h2{font:700 19px/1.2 var(--display);letter-spacing:-.02em;margin-bottom:6px}
     buttons.forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.set===l));});
   }
   buttons.forEach(function(b){b.addEventListener('click',function(){setLang(b.dataset.set);});});
-  if(new URLSearchParams(location.search).get('lang')==='ru')setLang('ru');
+  setLang(new URLSearchParams(location.search).get('lang')==='uk'?'uk':'ru');
 })();
 </script>
 <script>
