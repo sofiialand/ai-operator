@@ -6,13 +6,14 @@
 <title>Материалы вводного урока</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700&family=Inter+Tight:wght@700&display=swap" rel="stylesheet">
 <style>
 :root{--ink:#0b0c0e;--ink-2:#15100c;--cream:#f4efe7;--gold:#fdd506}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{background:transparent}
 html[lang="uk"] .ru,html[lang="ru"] .uk{display:none}
 .links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-content:start;gap:12px;padding:8px 16px 28px;transition:min-height .22s cubic-bezier(.22,.61,.36,1)}
+h1{grid-column:1/-1;margin-bottom:8px;color:var(--ink-2);font:700 clamp(28px,3.6vw,44px)/1.05 "Inter Tight",Inter,system-ui,sans-serif;letter-spacing:-.03em}
 .btn{display:flex;align-items:center;gap:14px;min-height:92px;padding:14px 16px;border-radius:18px;font-family:Inter,system-ui,sans-serif;text-decoration:none;box-shadow:0 8px 16px rgba(21,16,12,.18);transition:transform .2s,box-shadow .2s}
 .btn:hover{transform:translateY(-1px);box-shadow:0 10px 16px rgba(21,16,12,.24)}
 .btn:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
@@ -34,7 +35,7 @@ html[lang="uk"] .ru,html[lang="ru"] .uk{display:none}
 .tip:before{content:"";position:absolute;top:40px;right:-6px;width:12px;height:12px;background:#fff;border-top:1px solid rgba(21,16,12,.08);border-right:1px solid rgba(21,16,12,.08);transform:rotate(45deg);border-top-right-radius:3px}
 .tip:after{content:"";position:absolute;top:0;bottom:0;right:-16px;width:16px}
 .tip.open{opacity:1;visibility:visible;pointer-events:auto;transform:none}
-.tip-in{position:relative;display:grid;gap:10px;max-height:calc(100vh - 18px);overflow-y:auto;padding:16px 18px;border-radius:18px}
+.tip-in{position:relative;display:grid;gap:10px;max-height:calc(100vh - var(--t,8px) - 10px);overflow-y:auto;padding:16px 18px;border-radius:18px}
 .tip-t{display:block;font-weight:700;font-size:15px;line-height:1.3}
 .tip em{font-style:normal;color:#5f5a52}
 .tip ul{list-style:none;display:grid;gap:6px}
@@ -51,7 +52,8 @@ html[lang="uk"] .ru,html[lang="ru"] .uk{display:none}
 </style>
 </head>
 <body>
-<nav class="links">
+<section class="links">
+  <h1><span class="uk">Матеріали воркшопу</span><span class="ru">Материалы воркшопа</span></h1>
   <a class="btn gold" href="https://sofiialand.github.io/ai-operator/onboarding.html" target="_blank" rel="noopener">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h18"/><path d="M5 4v11h14V4"/><path d="M12 15v3"/><path d="M8 21l4-3 4 3"/><path d="M9 11l2-2 2 1 2-3"/></svg>
     <span><b><span class="uk">Презентація</span><span class="ru">Презентация</span></b><small><span class="uk">Слайди уроку</span><span class="ru">Слайды урока</span></small></span>
@@ -74,7 +76,7 @@ html[lang="uk"] .ru,html[lang="ru"] .uk{display:none}
       </div></div>
     </div>
   </div>
-</nav>
+</section>
 <script>
 if(new URLSearchParams(location.search).get('lang')==='uk')document.documentElement.lang='uk';
 (function(){
@@ -82,7 +84,11 @@ if(new URLSearchParams(location.search).get('lang')==='uk')document.documentElem
   function set(on){
     tip.classList.toggle('open',on);btn.classList.toggle('on',on);btn.setAttribute('aria-expanded',String(on));
     /* Фрейм растет вместе с окном: высоту дальше сообщает скрипт ниже */
-    links.style.minHeight=on?(tip.firstElementChild.scrollHeight+38)+'px':'';
+    if(on){
+      var top=Math.round(info.parentNode.getBoundingClientRect().top),start=Math.round(links.getBoundingClientRect().top);
+      tip.style.top=top+'px';tip.style.setProperty('--t',top+'px');
+      links.style.minHeight=(top-start+tip.firstElementChild.scrollHeight+30)+'px';
+    }else{links.style.minHeight='';}
   }
   if(window.matchMedia&&matchMedia('(hover:hover)').matches){
     info.addEventListener('mouseenter',function(){set(true);});
