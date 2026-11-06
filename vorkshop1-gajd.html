@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Воркшоп №1 · AI-ассистенты</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef1f4;--cream:#f4efe7;--card:rgba(255,255,255,.72);--card-solid:#fbfaf7;--line:rgba(21,16,12,.09);--line-2:rgba(21,16,12,.16);--ink:#15100c;--ink-2:#0b0c0e;--text:#15100c;--text-mid:rgba(21,16,12,.68);--text-dim:rgba(21,16,12,.46);--gold:#fdd506;--gold-deep:#e6be00;--gold-rgb:253,213,6;--cool:#c2ccd2;--cool-rgb:194,204,210;--shadow:0 1px 0 rgba(255,255,255,.8) inset,0 10px 30px rgba(21,16,12,.06);--sidebar-w:280px;--display:"Inter Tight","Inter",system-ui,sans-serif;--sans:"Inter",system-ui,sans-serif;--mono:"JetBrains Mono",ui-monospace,monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--text);font:400 15px/1.6 var(--sans);-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(760px 520px at 82% -6%,rgba(var(--gold-rgb),.16),transparent 70%),radial-gradient(820px 620px at 100% 100%,rgba(var(--cool-rgb),.55),transparent 70%),radial-gradient(640px 520px at 18% 70%,rgba(255,255,255,.7),transparent 70%)}
+html[lang="uk"] .ru,html[lang="ru"] .uk{display:none!important}
+[hidden]{display:none!important}
+button{font:inherit;color:inherit}
+button:focus-visible,summary:focus-visible,input:focus-visible+.box{outline:2px solid var(--ink);outline-offset:2px}
+.hl{padding:0 .16em;border-radius:6px;background:var(--gold);color:var(--ink);-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.layout{position:relative;z-index:1;min-height:100vh}
+.main{margin-left:var(--sidebar-w);padding:48px 56px 64px}
+.wrap{max-width:860px;margin:0 auto}
+
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:var(--sidebar-w);z-index:200;background:rgba(246,247,249,.78);border-right:1px solid var(--line);-webkit-backdrop-filter:blur(26px) saturate(150%);backdrop-filter:blur(26px) saturate(150%);display:flex;flex-direction:column;padding:20px 12px;overflow-y:auto}
+.sidebar-brand{padding:0 8px 20px;border-bottom:1px solid var(--line)}
+.topnav{display:inline-flex;align-items:center;padding:3px;border-radius:12px;background:var(--ink-2);box-shadow:0 8px 20px rgba(21,16,12,.18);font-size:12px;font-weight:700;white-space:nowrap;color:var(--cream)}
+.topnav-on{padding:6px 11px;border-radius:9px;background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.06));box-shadow:inset 0 1px 0 rgba(255,255,255,.18)}
+.topnav-beam{width:2px;height:18px;margin:0 8px;border-radius:2px;background:var(--gold)}
+.topnav-off{padding:6px 11px 6px 0;color:rgba(244,239,231,.5)}
+.sidebar-sub{margin-top:16px;font-size:12.5px;color:var(--text-mid)}
+.sidebar-progress{margin-top:12px;height:3px;border-radius:3px;background:var(--line);overflow:hidden}
+.sidebar-progress i{display:block;height:100%;background:linear-gradient(90deg,var(--cool),var(--gold-deep));transition:width .3s ease}
+.sidebar-nav{padding-top:12px;display:flex;flex-direction:column;gap:4px}
+.nav-group{margin:14px 12px 4px;font:500 10px var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--text-dim)}
+.nav-item{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:8px 12px;border-radius:12px;font-size:13.5px;font-weight:500;line-height:1.3;color:var(--text-mid);background:none;border:1px solid transparent;cursor:pointer;transition:background .2s,color .2s}
+.nav-item:hover{background:rgba(255,255,255,.7);color:var(--text)}
+.nav-item.active{background:var(--ink-2);color:var(--cream);box-shadow:0 8px 20px rgba(21,16,12,.16)}
+.nav-num{width:24px;height:24px;flex:none;border-radius:50%;display:grid;place-items:center;font:500 10px var(--mono);color:var(--text-dim);background:rgba(255,255,255,.8);border:1px solid var(--line-2)}
+.nav-item.seen .nav-num{color:var(--ink);border-color:var(--gold-deep)}
+.nav-item.active .nav-num{background:var(--gold);color:var(--ink);border-color:var(--gold);font-weight:600}
+.sidebar-foot{margin-top:auto;padding:20px 8px 0;font:500 10.5px/1.5 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim)}
+.menu-btn{display:none;position:fixed;top:14px;left:16px;z-index:210;align-items:center;gap:8px;padding:9px 14px;border-radius:12px;background:var(--ink-2);color:var(--cream);border:0;box-shadow:0 8px 20px rgba(21,16,12,.2);font:600 13px var(--sans);cursor:pointer}
+.menu-btn>span:first-child{display:block;width:14px;height:1.5px;background:currentColor;box-shadow:0 -4px 0 currentColor,0 4px 0 currentColor}
+.menu-btn b{font:500 11px var(--mono);color:var(--gold);letter-spacing:.08em}
+.overlay{display:none;position:fixed;inset:0;background:rgba(21,16,12,.35);z-index:190;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+
+#lang{position:fixed;top:14px;right:16px;z-index:210;display:flex;gap:2px;padding:3px;border-radius:999px;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px)}
+#lang button{min-width:40px;min-height:30px;padding:0 10px;border:0;border-radius:999px;background:none;color:var(--text-mid);font:600 12px/1 var(--sans);cursor:pointer}
+#lang button[aria-pressed="true"]{background:var(--ink-2);color:var(--cream)}
+
+.glass{position:relative;background:var(--card);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px)}
+.hero{padding:12px 0 32px;margin-bottom:32px;border-bottom:1px solid var(--line)}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font:500 11px var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim)}
+.eyebrow:before{content:"";flex:none;width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 3px rgba(var(--gold-rgb),.25)}
+.hero-title{font:700 clamp(40px,6.6vw,72px)/1.02 var(--display);letter-spacing:-.03em;margin:16px 0 0;color:var(--ink)}
+.hero-sub{display:block;margin-top:12px;font-size:clamp(20px,2.6vw,28px);line-height:1.25;letter-spacing:-.02em;font-weight:600;color:var(--text-mid)}
+.hero-lead{margin-top:20px;max-width:620px;font-size:16px;color:var(--text-mid)}
+.hero-facts{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:28px}
+.fact{padding:16px 18px;border-radius:16px;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow)}
+.fact-k{font:500 10.5px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim)}
+.fact-v{margin-top:8px;font-size:14px;font-weight:600;line-height:1.45}
+
+.bar{display:flex;align-items:center;gap:12px;padding:8px;border-radius:999px;margin-bottom:20px}
+.arrow{flex:none;width:38px;height:38px;border-radius:50%;border:0;background:var(--ink-2);color:var(--cream);font-size:16px;cursor:pointer;display:grid;place-items:center;transition:transform .2s}
+.arrow:hover{transform:translateY(-1px)}
+.arrow:disabled{opacity:.2;cursor:default;transform:none}
+.track{flex:1;display:flex;gap:4px;min-width:0}
+.track button{flex:1;height:22px;border:0;background:none;padding:0;cursor:pointer;position:relative}
+.track button:before{content:"";position:absolute;left:0;right:0;top:50%;height:3px;transform:translateY(-50%);border-radius:3px;background:var(--line-2);transition:background .3s}
+.track button.seen:before{background:rgba(21,16,12,.45)}
+.track button.on:before{background:var(--gold);height:6px;box-shadow:0 0 0 1px var(--gold-deep)}
+.count{flex:none;font:500 12px var(--mono);letter-spacing:.08em;color:var(--text-mid);padding-right:10px}
+.count b{color:var(--ink);font-weight:600}
+
+.step{padding:32px;display:grid;gap:20px;animation:in .45s cubic-bezier(.22,.61,.36,1)}
+@keyframes in{from{opacity:0;transform:translateY(14px)}}
+.step h2{font:700 clamp(28px,3.8vw,40px)/1.08 var(--display);letter-spacing:-.03em;margin-top:-8px;color:var(--ink)}
+.step h4{margin-top:4px;font:500 11px var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--ink)}
+.grid3{display:grid;gap:12px;grid-template-columns:repeat(3,minmax(0,1fr))}
+.card{padding:20px;border-radius:16px;background:var(--card-solid);border:1px solid var(--line);display:grid;gap:8px;align-content:start}
+.card h3{font:700 17px/1.3 var(--display);letter-spacing:-.02em}
+.card p{font-size:14px;line-height:1.55;color:var(--text-mid)}
+.ic{width:44px;height:44px;padding:11px;margin-bottom:4px;border-radius:12px;background:var(--ink-2);fill:none;stroke:var(--gold);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.tip,.why{padding:16px 18px;border-radius:16px;font-size:14.5px;line-height:1.65;color:var(--text-mid)}
+.tip b,.res b{display:block;margin-bottom:6px;font:600 10.5px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink)}
+.tip{background:rgba(var(--cool-rgb),.35);border:1px solid rgba(var(--cool-rgb),.9)}
+.why{background:rgba(var(--gold-rgb),.16);border:1px solid rgba(var(--gold-rgb),.55);color:var(--ink);font-weight:500}
+
+.do{list-style:none;display:grid;gap:10px;counter-reset:d}
+.do li{counter-increment:d;position:relative;padding:16px 18px 16px 62px;border-radius:16px;background:var(--card-solid);border:1px solid var(--line);font-weight:600;font-size:15px;line-height:1.5}
+.do li:before{content:counter(d,decimal-leading-zero);position:absolute;left:16px;top:13px;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font:600 10.5px var(--mono);background:var(--gold);color:var(--ink)}
+.do li small{display:block;margin-top:4px;font-weight:400;font-size:14px;line-height:1.6;color:var(--text-mid)}
+
+.logic{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:12px;align-items:stretch}
+.logic article{padding:20px;border-radius:16px;background:var(--card-solid);border:1px solid var(--line)}
+.logic .hot{background:var(--ink-2);border-color:var(--ink-2);color:var(--cream)}
+.logic .k{display:block;margin-bottom:10px;font:500 10.5px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim)}
+.logic .hot .k{color:var(--gold)}
+.logic h3{margin-bottom:12px;font:700 20px/1.25 var(--display);letter-spacing:-.02em}
+.logic ul{list-style:none;display:grid;gap:6px;font-size:14px}
+.arr{align-self:center;font-size:22px}
+
+.level{display:grid;gap:12px}
+.level+.level{margin-top:12px;padding-top:24px;border-top:1px solid var(--line)}
+.path{display:flex;gap:16px;align-items:flex-start}
+.big{flex:none;width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font:700 22px var(--display);color:var(--cream);background:var(--ink-2)}
+.path strong{display:block;font:700 18px/1.3 var(--display);letter-spacing:-.02em}
+.path p{margin-top:2px;font-size:14px;color:var(--text-mid)}
+.faq{display:grid;gap:8px}
+.faq details{border-radius:16px;background:var(--card-solid);border:1px solid var(--line);transition:border-color .2s,box-shadow .2s}
+.faq details[open]{border-color:rgba(var(--gold-rgb),.7);box-shadow:0 10px 30px rgba(var(--gold-rgb),.12)}
+.faq summary{list-style:none;cursor:pointer;padding:12px 16px;display:flex;align-items:center;gap:12px;font:700 15px/1.35 var(--display);letter-spacing:-.01em}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary span{flex:1}
+.faq summary i{flex:none;min-width:30px;font:600 10.5px var(--mono);font-style:normal;color:var(--text-dim)}
+.faq summary:after{content:"+";flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line-2);font:400 17px/1 var(--sans);transition:transform .2s,background .2s}
+.faq details[open] summary:after{transform:rotate(45deg);background:var(--gold);border-color:var(--gold)}
+.faq details p{padding:0 16px 12px;font-size:14px;line-height:1.55;color:var(--text-mid)}
+.faq .res{color:var(--ink);font-weight:500}
+
+.setbox{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.segs{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-bottom:12px;padding:3px;border-radius:999px;background:var(--card-solid);border:1px solid var(--line)}
+.seg{min-height:36px;border:0;border-radius:999px;background:none;font-weight:600;font-size:13px;color:var(--text-mid);cursor:pointer;transition:background .2s,color .2s}
+.seg.on{background:var(--ink-2);color:var(--cream)}
+.stats{list-style:none}
+.stats li{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:10px 2px;border-bottom:1px solid var(--line);font-size:14px;color:var(--text-mid)}
+.stats b{flex:none;font:700 20px var(--display);letter-spacing:-.02em;color:var(--ink)}
+.right{padding:20px;border-radius:16px;background:var(--card-solid);border:1px solid var(--line)}
+.right h3{margin-bottom:12px;font:700 17px/1.3 var(--display);letter-spacing:-.02em}
+.right>p{margin-top:14px;font-size:13px;line-height:1.5;color:var(--text-mid)}
+.chips{list-style:none;display:flex;flex-wrap:wrap;gap:6px}
+.chip{padding:5px 11px;border-radius:999px;background:var(--gold);font-size:13px;font-weight:600;transition:background .2s,color .2s}
+[data-active="bronze"] .l2,[data-active="bronze"] .l3,[data-active="silver"] .l3{background:rgba(21,16,12,.06);color:var(--text-dim)}
+
+.pack{display:grid;grid-template-columns:minmax(0,1fr) 180px;gap:12px;align-items:stretch}
+.list{display:grid;gap:10px}
+.chk{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:16px;background:var(--card-solid);border:1px solid var(--line);cursor:pointer;transition:border-color .2s,background .2s}
+.chk input{position:absolute;opacity:0;width:0;height:0}
+.box{flex:none;display:grid;place-items:center;width:24px;height:24px;border-radius:8px;border:1.5px solid var(--line-2);background:#fff;transition:background .15s,border-color .15s}
+.box:after{content:"";width:11px;height:6px;margin-top:-2px;border-left:2px solid var(--ink);border-bottom:2px solid var(--ink);transform:rotate(-45deg) scale(0);transition:transform .15s}
+.chk input:checked+.box{background:var(--gold);border-color:var(--gold)}
+.chk input:checked+.box:after{transform:rotate(-45deg) scale(1)}
+.chk:has(input:checked){border-color:rgba(var(--gold-rgb),.7);background:rgba(var(--gold-rgb),.08)}
+.txt b{display:block;font-size:15px;font-weight:600;line-height:1.35}
+.txt small{display:block;margin-top:2px;font-size:13px;line-height:1.45;color:var(--text-mid)}
+.meter{display:flex;flex-direction:column;justify-content:center;padding:20px;border-radius:18px;background:var(--ink-2);color:var(--cream);box-shadow:0 14px 34px rgba(21,16,12,.18)}
+.meter b{font:700 40px/1 var(--display);letter-spacing:-.03em}
+.meter p{margin:8px 0 16px;font-size:13px;color:rgba(244,239,231,.6)}
+.meter .bar{display:block;height:6px;padding:0;margin:0;border-radius:3px;background:rgba(244,239,231,.14);overflow:hidden}
+.meter .bar i{display:block;width:0;height:100%;background:var(--gold);transition:width .3s}
+
+.nav{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-top:8px;border-top:1px solid var(--line);margin-top:4px}
+.nav>:only-child{margin-left:auto}
+.btn{display:inline-flex;align-items:center;gap:12px;padding:8px 8px 8px 20px;border-radius:999px;border:0;background:var(--ink-2);color:var(--cream);font:700 14px var(--sans);text-align:left;cursor:pointer;transition:transform .2s,box-shadow .2s;margin-top:16px;box-shadow:0 10px 24px rgba(21,16,12,.16)}
+.btn:hover{transform:translateY(-1px);box-shadow:0 14px 30px rgba(21,16,12,.22)}
+.btn i{flex:none;width:30px;height:30px;border-radius:50%;background:var(--gold);color:var(--ink);display:grid;place-items:center;font-style:normal;font-size:15px}
+.btn-ghost{background:rgba(255,255,255,.6);color:var(--ink);border:1px solid var(--line-2);padding:12px 20px;box-shadow:none}
+.btn-ghost:hover{background:#fff;box-shadow:none}
+.foot{margin-top:40px;padding-top:20px;border-top:1px solid var(--line);font-size:12.5px;color:var(--text-dim)}
+
+@media (max-width:1100px){.main{padding:40px 32px 56px}}
+@media (max-width:900px){
+  .sidebar{transform:translateX(-100%);transition:transform .25s ease;box-shadow:22px 0 56px rgba(21,16,12,.18);background:rgba(246,247,249,.97)}
+  .sidebar.open{transform:none}
+  .overlay.open{display:block}
+  .menu-btn{display:inline-flex}
+  .main{margin-left:0;padding:72px 16px 48px}
+}
+@media (max-width:680px){
+  .hero-facts,.grid3,.setbox,.logic,.pack{grid-template-columns:minmax(0,1fr)}
+  .arr{transform:rotate(90deg);justify-self:center}
+}
+@media (max-width:560px){
+  .step{padding:22px 18px}
+  .bar{gap:8px}
+  .arrow{width:34px;height:34px}
+  .nav{flex-direction:column-reverse;align-items:stretch}
+  .nav .btn{justify-content:space-between}
+  .btn-ghost{justify-content:center}
+}
+@media (prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+
+#lang button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.hero-title br{display:block}
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.pill{padding:5px 12px;border-radius:999px;background:#fff;border:1px solid var(--line);font-size:13px;font-weight:500;line-height:1.35}
+.section-header{margin-top:-8px}
+.step h2{margin:0}
+.sub{margin-top:8px;font-size:16px;line-height:1.5;color:var(--text-mid)}
+.step>p:not(.eyebrow){font-size:15px;line-height:1.65;color:var(--text-mid)}
+.step>p strong{color:var(--ink);font-weight:600}
+.step h3{margin-top:12px;font:700 20px/1.25 var(--display);letter-spacing:-.02em}
+.callout{padding:16px 18px;border-radius:16px;font-size:14.5px;line-height:1.6;background:rgba(var(--cool-rgb),.35);border:1px solid rgba(var(--cool-rgb),.9)}
+.callout.green,.callout.orange{background:rgba(var(--gold-rgb),.16);border-color:rgba(var(--gold-rgb),.55)}
+.callout.yellow{background:rgba(240,67,46,.07);border-color:rgba(240,67,46,.28)}
+.callout-body strong{display:block;margin-bottom:6px;font:700 15.5px/1.3 var(--display);letter-spacing:-.01em}
+.callout-body em{font-style:normal;font-weight:600}
+.card-grid,.platform-grid{display:grid;gap:16px;grid-template-columns:repeat(2,minmax(0,1fr))}
+.card-grid-3{display:grid;gap:16px;grid-template-columns:repeat(3,minmax(0,1fr))}
+.card-title{font:700 16px/1.3 var(--display);letter-spacing:-.01em}
+.card-body{font-size:14px;line-height:1.55;color:var(--text-mid)}
+.card .lnk{justify-self:start}
+.checklist{list-style:none;display:grid;gap:8px;font-size:14px;line-height:1.45;color:var(--text-mid)}
+.checklist li{position:relative;padding-left:16px}
+.checklist li:before{content:"";position:absolute;left:0;top:.5em;width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 1px var(--gold-deep)}
+.card ol{padding-left:18px;display:grid;gap:6px;font-size:14px;line-height:1.5;color:var(--text-mid)}
+.lnk{display:inline-flex;align-items:center;gap:8px;max-width:100%;padding:10px 16px;border-radius:999px;background:var(--ink-2);color:var(--cream);font:600 13.5px/1.3 var(--sans);text-decoration:none;transition:transform .2s}
+.lnk:hover{transform:translateY(-1px)}
+.tl{color:var(--ink);font-weight:600;text-decoration-color:var(--gold-deep);text-decoration-thickness:2px;text-underline-offset:3px;overflow-wrap:anywhere}
+.metaphor-card{display:grid;gap:12px;padding:18px;border-radius:16px;background:var(--card-solid);border:1px solid var(--line)}
+.metaphor-title{font:700 16px/1.3 var(--display);letter-spacing:-.01em;text-align:center}
+.metaphor-row{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:8px}
+.metaphor-item{padding:10px 6px;border-radius:12px;background:#fff;border:1px solid var(--line);font:700 14px/1.25 var(--display);text-align:center;overflow-wrap:anywhere}
+.metaphor-item small{display:block;margin-top:3px;font:500 11.5px var(--sans);color:var(--text-mid)}
+.metaphor-vs-label{font:500 10.5px var(--mono);color:var(--text-dim)}
+.table-wrap{border-radius:16px;background:var(--card-solid);border:1px solid var(--line);overflow:hidden}
+.tbl{width:100%;border-collapse:collapse;font-size:14px;line-height:1.5;color:var(--text-mid)}
+.tbl th{padding:12px 16px;text-align:left;font:500 10.5px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);border-bottom:1px solid var(--line)}
+.tbl td{padding:13px 16px;vertical-align:middle;border-bottom:1px solid var(--line)}
+.tbl tr:last-child td{border-bottom:0}
+.tbl td:first-child{font:700 14.5px/1.3 var(--display);color:var(--ink)}
+.tag{display:inline-block;padding:3px 10px;border-radius:999px;background:rgba(21,16,12,.07);font-size:12px;font-weight:600;line-height:1.4;color:var(--ink)}
+.tag-green{background:rgba(var(--gold-rgb),.45)}
+.prompt-block{padding:16px 18px;border-radius:14px;background:var(--ink-2);color:rgba(244,239,231,.86);font:500 13px/1.7 var(--mono);overflow-wrap:anywhere}
+.prompt-block .pc{color:rgba(244,239,231,.5)}
+.prompt-block .pl{color:var(--gold)}
+.kbd{padding:2px 7px;border-radius:7px;background:#fff;border:1px solid var(--line-2);font:500 12.5px var(--mono);color:var(--ink);white-space:nowrap}
+.sts{display:grid;gap:10px;counter-reset:s}
+.st{counter-increment:s;display:flex;gap:14px;align-items:flex-start;padding:14px 16px;border-radius:16px;background:var(--card-solid);border:1px solid var(--line)}
+.st-n{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--gold);color:var(--ink);font:600 12px var(--mono)}
+.st-n:before{content:counter(s)}
+.st-b{min-width:0;padding-top:3px}
+.st-t{font-size:15px;font-weight:600;line-height:1.45}
+.st-d{margin-top:3px;font-size:14px;line-height:1.55;color:var(--text-mid)}
+.skill-card{display:grid;gap:10px;padding:18px 20px;border-radius:16px;background:var(--card-solid);border:1px solid var(--line)}
+.skill-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.skill-name{font:700 17px/1.3 var(--display);letter-spacing:-.01em}
+.skill-role{margin-top:2px;font-size:13px;color:var(--text-mid)}
+.badge{flex:none;padding:3px 10px;border-radius:999px;background:var(--ink-2);color:var(--cream);font:500 11px var(--mono)}
+.skill-desc{font-size:14px;line-height:1.55;color:var(--text-mid)}
+.skill-footer,.platform-tags{display:flex;flex-wrap:wrap;gap:6px}
+.assignment{display:grid;gap:16px}
+.assignment-header h3{margin:0 0 4px}
+.assignment-header p{font-size:15px;color:var(--text-mid)}
+.assignment-body{display:grid;gap:12px}
+.level-card{display:grid;gap:6px;padding:18px 20px;border-radius:16px;background:var(--card-solid);border:1px solid var(--line)}
+.level-card:nth-child(2){background:rgba(var(--gold-rgb),.14);border-color:rgba(var(--gold-rgb),.6)}
+.level-card:nth-child(3){background:var(--ink-2);border-color:var(--ink-2);color:var(--cream)}
+.level-time{justify-self:start;padding:3px 10px;border-radius:999px;background:rgba(21,16,12,.07);font:500 11px var(--mono)}
+.level-card:nth-child(3) .level-time{background:rgba(244,239,231,.14)}
+.level-title{font:700 17px/1.3 var(--display);letter-spacing:-.01em}
+.level-items{font-size:14px;line-height:1.65;color:var(--text-mid)}
+.level-card:nth-child(3) .level-items{color:rgba(244,239,231,.82)}
+.platform-card{display:grid;gap:8px;align-content:start;padding:18px 20px;border-radius:16px;background:var(--card-solid);border:1px solid var(--line)}
+.platform-name{font:700 16px/1.3 var(--display);letter-spacing:-.01em}
+.platform-desc{font-size:14px;line-height:1.55;color:var(--text-mid)}
+.platform-link{display:inline-flex;margin-top:4px;color:var(--ink);font-size:14px;font-weight:600;text-decoration-color:var(--gold-deep);text-decoration-thickness:2px;text-underline-offset:3px}
+a:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.term{white-space:nowrap}
+.ti{display:inline-grid;place-items:center;width:15px;height:15px;margin-left:3px;padding:0;vertical-align:.08em;border:1px solid rgba(21,16,12,.28);border-radius:50%;background:transparent;color:rgba(21,16,12,.6);font:600 10px/1 Georgia,"Times New Roman",serif;font-style:italic;letter-spacing:0;text-transform:none;cursor:help;transition:background .2s,border-color .2s,color .2s,transform .2s}
+.ti:hover,.ti.on{background:var(--gold);border-color:var(--gold);color:var(--ink);transform:scale(1.15)}
+.ti:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.tag-accent .ti{border-color:rgba(21,16,12,.45);color:var(--ink)}
+.baf-card.next .ti,.moto-block .ti{border-color:rgba(244,239,231,.45);color:rgba(244,239,231,.85)}
+#tt{--ax:50%;position:fixed;left:0;top:0;z-index:300;width:min(320px,calc(100vw - 24px));padding:16px 18px 17px;border-radius:16px;background:var(--ink-2);color:var(--cream);box-shadow:0 2px 6px rgba(11,12,14,.2),0 20px 48px rgba(11,12,14,.34);font:400 14px/1.5 var(--sans);opacity:0;visibility:hidden;pointer-events:none;transform:translateY(8px) scale(.96);transform-origin:var(--ax) 100%;transition:opacity .22s cubic-bezier(.22,.61,.36,1),transform .22s cubic-bezier(.22,.61,.36,1),visibility .22s}
+#tt:after{content:"";position:absolute;left:var(--ax);bottom:-5px;width:12px;height:12px;margin-left:-6px;background:var(--ink-2);border-radius:2px;transform:rotate(45deg)}
+#tt.up{transform:translateY(-8px) scale(.96);transform-origin:var(--ax) 0}
+#tt.up:after{bottom:auto;top:-5px}
+#tt.open{opacity:1;visibility:visible;pointer-events:auto;transform:none}
+#tt b{display:block;margin-bottom:6px;color:var(--gold);font:700 15.5px/1.25 var(--display);letter-spacing:-.01em}
+#tt p{position:relative;z-index:1;color:rgba(244,239,231,.86)}
+@media (prefers-reduced-motion:reduce){.ti,#tt{transition:none}}
+.level-card:nth-child(3) .ti{border-color:rgba(244,239,231,.45);color:rgba(244,239,231,.85)}
+@media (max-width:760px){.card-grid,.card-grid-3,.platform-grid{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:560px){
+  .tbl thead{display:none}
+  .tbl,.tbl tbody,.tbl tr,.tbl td{display:block;width:100%}
+  .tbl tr{padding:12px 16px;border-bottom:1px solid var(--line)}
+  .tbl tr:last-child{border-bottom:0}
+  .tbl td{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:4px 0;border:0;text-align:right}
+  .tbl td:before{content:attr(data-k);flex:none;max-width:45%;font:500 10.5px var(--mono);letter-spacing:.08em;text-transform:uppercase;text-align:left;color:var(--text-dim)}
+  #lang{top:12px}
+}
+</style>
+</head>
+<body>
+<button type="button" class="menu-btn" id="menu"><span></span><span class="ru">Меню</span><span class="uk">Меню</span><b id="menuNum"></b></button>
+<div id="lang" role="group" aria-label="Мова / Язык"><button type="button" data-lang="uk" aria-pressed="false">UA</button><button type="button" data-lang="ru" aria-pressed="true">RU</button></div>
+<div class="overlay" id="ov"></div>
+<div class="layout">
+  <aside class="sidebar" id="side">
+    <div class="sidebar-brand">
+      <span class="topnav"><span class="topnav-on">AI · Оператор</span><span class="topnav-beam"></span><span class="topnav-off">Воркшоп №1</span></span>
+      <p class="sidebar-sub" data-i="2">AI-Ассистенты и Скиллы</p>
+      <div class="sidebar-progress"><i id="sideFill"></i></div>
+    </div>
+    <nav class="sidebar-nav"><p class="nav-group" data-i="3">Часть 1 – Ассистенты</p><button type="button" class="nav-item" data-go="0"><span class="nav-num">01</span><span><span class="ru">Что такое ассистент</span><span class="uk">Що таке асистент</span></span></button><button type="button" class="nav-item" data-go="1"><span class="nav-num">02</span><span><span class="ru">Ассистент vs Агент</span><span class="uk">Асистент vs Агент</span></span></button><button type="button" class="nav-item" data-go="2"><span class="nav-num">03</span><span><span class="ru">Системный промпт</span><span class="uk">Системний промпт</span></span></button><button type="button" class="nav-item" data-go="3"><span class="nav-num">04</span><span><span class="ru">4 платформы</span><span class="uk">4 платформи</span></span></button><button type="button" class="nav-item" data-go="4"><span class="nav-num">05</span><span><span class="ru">Claude Projects</span><span class="uk">Claude Projects</span></span></button><button type="button" class="nav-item" data-go="5"><span class="nav-num">06</span><span><span class="ru">Gemini: Gems → скиллы</span><span class="uk">Gemini: Gems → скіли</span></span></button><p class="nav-group" data-i="5">Часть 2 – Скиллы</p><button type="button" class="nav-item" data-go="6"><span class="nav-num">07</span><span><span class="ru">Демо: Универс. Продавец</span><span class="uk">Демо: Універс. Продавець</span></span></button><button type="button" class="nav-item" data-go="7"><span class="nav-num">08</span><span><span class="ru">Что такое скилл</span><span class="uk">Що таке скіл</span></span></button><button type="button" class="nav-item" data-go="8"><span class="nav-num">09</span><span><span class="ru">Мои скиллы</span><span class="uk">Мої скіли</span></span></button><button type="button" class="nav-item" data-go="9"><span class="nav-num">10</span><span><span class="ru">Как установить</span><span class="uk">Як встановити</span></span></button><button type="button" class="nav-item" data-go="10"><span class="nav-num">11</span><span><span class="ru">Задание</span><span class="uk">Завдання</span></span></button><p class="nav-group" data-i="7">Материалы</p><button type="button" class="nav-item" data-go="11"><span class="nav-num">12</span><span><span class="ru">Ресурсы</span><span class="uk">Ресурси</span></span></button></nav>
+  </aside>
+  <main class="main"><div class="wrap">
+    <header class="hero" id="hero">
+      <p class="eyebrow" data-i="22">Воркшоп №1</p>
+      <h1 class="hero-title" data-i="23">AI-Ассистенты<br/>и Скиллы</h1>
+      <p class="hero-lead" data-i="24">Создаем первых цифровых сотрудников – один раз настроил, они работают за тебя постоянно.</p>
+      <div class="pills" data-i="25"><span class="pill">Claude Projects</span> <span class="pill">Gemini</span> <span class="pill">Скиллы</span> <span class="pill">30 мин на первый ассистент</span></div>
+    </header>
+    <div class="glass bar"><button type="button" class="arrow" id="prev" aria-label="Назад">←</button><div class="track" id="track"></div><span class="count" id="count"></span><button type="button" class="arrow" id="next" aria-label="Дальше">→</button></div>
+    <article class="glass step" data-step="0" hidden><p class="eyebrow" data-i="3">Часть 1 – Ассистенты</p><div class="section-header">
+<div>
+<h2 data-i="27">Что такое AI-ассистент?</h2>
+<div class="sub" data-i="28">Не просто ChatGPT – запрограммированное поведение</div>
+</div>
+</div>
+<div class="callout purple">
+<div class="callout-body" data-i="30"><strong>Главная идея</strong>
+        Ассистент – это не просто ChatGPT в браузере. Это <em>запрограммированное поведение</em>: роль, контекст, правила мышления, ограничения и логика работы. Один раз настроил – работает одинаково каждый раз.</div>
+</div>
+<div class="card-grid">
+<div class="card">
+<div class="card-title" data-i="31">Обычный чат</div>
+<ul class="checklist">
+<li data-i="32">Отвечает и забывает контекст</li>
+<li data-i="33">Каждый раз объясняешь все заново</li>
+<li data-i="34">Нет роли и правил поведения</li>
+<li data-i="35">Результат непредсказуем</li>
+</ul>
+</div>
+<div class="card">
+<div class="card-title" data-i="36">AI-Ассистент</div>
+<ul class="checklist">
+<li data-i="37">Помнит роль и контекст всегда</li>
+<li data-i="38">Работает строго по заданным правилам</li>
+<li data-i="39">Предсказуемый стабильный результат</li>
+<li data-i="40">Масштабируется без усилий</li>
+</ul>
+</div>
+</div>
+<div class="callout green">
+<div class="callout-body" data-i="42"><strong>Формула ценности</strong>
+        Платишь один раз (время на настройку) – получаешь цифрового сотрудника, который делает рутину без твоего участия.</div>
+</div><div class="nav"><button type="button" class="btn" data-go="1"><span><span class="ru">Дальше: Ассистент vs Агент</span><span class="uk">Далі: Асистент vs Агент</span></span><i>→</i></button></div></article><article class="glass step" data-step="1" hidden><p class="eyebrow" data-i="3">Часть 1 – Ассистенты</p><div class="section-header">
+<div>
+<h2 data-i="44">Ассистент vs Агент</h2>
+<div class="sub" data-i="45">Три метафоры, которые объясняют разницу</div>
+</div>
+</div>
+<div class="card-grid-3">
+<div class="metaphor-card">
+<div class="metaphor-title" data-i="47">Спорт</div>
+<div class="metaphor-row">
+<div class="metaphor-item" data-i="48">Теннис<small>Ассистент</small></div>
+<div class="metaphor-vs-label" data-i="49">VS</div>
+<div class="metaphor-item" data-i="50">Футбол<small>Агент</small></div>
+</div>
+</div>
+<div class="metaphor-card">
+<div class="metaphor-title" data-i="52">Ресторан</div>
+<div class="metaphor-row">
+<div class="metaphor-item" data-i="53">Официант<small>Ассистент</small></div>
+<div class="metaphor-vs-label" data-i="49">VS</div>
+<div class="metaphor-item" data-i="54">Шеф<small>Агент</small></div>
+</div>
+</div>
+<div class="metaphor-card">
+<div class="metaphor-title" data-i="56">Навигация</div>
+<div class="metaphor-row">
+<div class="metaphor-item" data-i="57">GPS<small>Ассистент</small></div>
+<div class="metaphor-vs-label" data-i="49">VS</div>
+<div class="metaphor-item" data-i="58">Автопилот<small>Агент</small></div>
+</div>
+</div>
+</div>
+<div class="table-wrap">
+<table class="tbl">
+<thead>
+<tr>
+<th data-i="59">Параметр</th>
+<th data-i="60">Ассистент</th>
+<th data-i="61">Агент</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-i="62">Действует</td>
+<td data-i="63">Когда его спрашивают</td>
+<td data-i="64">Самостоятельно, по триггеру</td>
+</tr>
+<tr>
+<td data-i="65">Решения</td>
+<td data-i="66">В рамках заданного</td>
+<td data-i="67">Принимает сам, цепочками</td>
+</tr>
+<tr>
+<td data-i="68">Инструменты</td>
+<td data-i="69">Текст → текст</td>
+<td data-i="70">Браузер, API, код, файлы</td>
+</tr>
+<tr>
+<td data-i="71">Сложность</td>
+<td data-i="72"><span class="tag tag-green">Легко – 30 мин</span></td>
+<td data-i="73"><span class="tag tag-orange">Сложнее</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="callout yellow">
+<div class="callout-body" data-i="75"><strong>Сегодня – только ассистенты</strong>
+        Агенты – отдельная тема. Сначала делаем стабильных ассистентов, потом масштабируем.</div>
+</div><div class="nav"><button type="button" class="btn btn-ghost" data-go="0"><span class="ru">Назад</span><span class="uk">Назад</span></button><button type="button" class="btn" data-go="2"><span><span class="ru">Дальше: Системный промпт</span><span class="uk">Далі: Системний промпт</span></span><i>→</i></button></div></article><article class="glass step" data-step="2" hidden><p class="eyebrow" data-i="3">Часть 1 – Ассистенты</p><div class="section-header">
+<div>
+<h2 data-i="77">Как создать ассистента за 10 минут</h2>
+<div class="sub" data-i="78">5-элементный системный промпт</div>
+</div>
+</div>
+<p data-i="79">Любой ассистент строится из <strong>5 элементов</strong>. Это системный промпт – инструкция, которую ИИ читает перед каждым разговором.</p>
+<div class="prompt-block" data-i="80"><span class="pc"># Системный промпт – 5 элементов</span><br/><br/>
+<span class="pl">1. КОНТЕКСТ</span><br/>
+<span class="pv">Ты работаешь в компании [название]. Аудитория – [кто клиенты]. Продукт – [что продаете].</span><br/><br/>
+<span class="pl">2. РОЛЬ</span><br/>
+<span class="pv">Ты – эксперт по [область]. Твои функции: [3-7 конкретных задач].</span><br/><br/>
+<span class="pl">3. ЦЕЛЬ</span><br/>
+<span class="pv">Твоя задача – [главный результат]. Алгоритм принятия решений: [шаги].</span><br/><br/>
+<span class="pl">4. ИНСТРУКЦИИ</span><br/>
+<span class="pv">Стиль: [тон]. Всегда делай: [обязательное]. Никогда не делай: [запрещенное].</span><br/><br/>
+<span class="pl">5. ФОРМАТ</span><br/>
+<span class="pv">Отвечай [структура]. Длина: [ограничения]. Язык: [язык/стиль].</span></div>
+<div class="callout blue">
+<div class="callout-body" data-i="82"><strong>Job Story – формула для определения задачи</strong>
+<em>Когда [ситуация] → Я хочу [действие] → Чтобы [результат]</em><br/><br/>
+        Пример: <em>Когда приходит лид в Telegram → Я хочу, чтобы ассистент квалифицировал его → Чтобы тратить время только на горячих клиентов.</em></div>
+</div>
+<h3 data-i="83">4 шага от идеи до готового ассистента</h3>
+<div class="sts">
+<div class="st">
+<div class="st-n"></div>
+<div class="st-b">
+<div class="st-t" data-i="84">Определи задачу через Job Story</div>
+<div class="st-d" data-i="85">Запиши: Когда ___ я хочу ___ чтобы ___. Это фундамент ассистента.</div>
+</div>
+</div>
+<div class="st">
+<div class="st-n"></div>
+<div class="st-b">
+<div class="st-t" data-i="86">Заполни 5 элементов системного промпта</div>
+<div class="st-d" data-i="87">Используй шаблон выше. Лучше 3 четкие инструкции, чем 20 размытых.</div>
+</div>
+</div>
+<div class="st">
+<div class="st-n"></div>
+<div class="st-b">
+<div class="st-t" data-i="88">Выбери платформу и создай</div>
+<div class="st-d" data-i="89">Claude Projects, скилл Claude, Gemini (скиллы) или Gemini Notebook – по задаче.</div>
+</div>
+</div>
+<div class="st">
+<div class="st-n"></div>
+<div class="st-b">
+<div class="st-t" data-i="90">Протестируй на 5 реальных сценариях</div>
+<div class="st-d" data-i="91">Не идеальный кейс – а реальные ситуации, которые бывают. Доработай.</div>
+</div>
+</div>
+</div><div class="nav"><button type="button" class="btn btn-ghost" data-go="1"><span class="ru">Назад</span><span class="uk">Назад</span></button><button type="button" class="btn" data-go="3"><span><span class="ru">Дальше: 4 платформы</span><span class="uk">Далі: 4 платформи</span></span><i>→</i></button></div></article><article class="glass step" data-step="3" hidden><p class="eyebrow" data-i="3">Часть 1 – Ассистенты</p><div class="section-header">
+<div>
+<h2 data-i="93">4 платформы – где создавать</h2>
+<div class="sub" data-i="94">Каждая – для своей задачи</div>
+</div>
+</div>
+<div class="table-wrap">
+<table class="tbl">
+<thead>
+<tr>
+<th data-i="95">Платформа</th>
+<th data-i="96">Лучшее для</th>
+<th data-i="97">Суперсила</th>
+<th data-i="98">Ограничение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-i="99">Скиллы Claude</td>
+<td data-i="100">Повторяемые задачи в один вызов</td>
+<td data-i="101"><span class="tag tag-blue">Загрузка ZIP</span></td>
+<td data-i="102">Нужен включенный Code execution</td>
+</tr>
+<tr>
+<td data-i="103">Claude Projects</td>
+<td data-i="104">Аналитика, тексты</td>
+<td data-i="105"><span class="tag tag-purple">RAG на платных тарифах</span></td>
+<td data-i="106">Общий доступ – только Team/Enterprise</td>
+</tr>
+<tr>
+<td data-i="107">Gemini: Gems → скиллы</td>
+<td data-i="108">Экосистема Google</td>
+<td data-i="109"><span class="tag tag-green">Личный аккаунт 18+</span></td>
+<td data-i="110">Gems уходят: с ноября 2026</td>
+</tr>
+<tr>
+<td data-i="111">Gemini Notebook</td>
+<td data-i="112">Работа с документами</td>
+<td data-i="113"><span class="tag tag-orange">Источники + аудио</span></td>
+<td data-i="114">Только по файлам</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="callout green">
+<div class="callout-body" data-i="116"><strong>Совет: начни с Claude Projects</strong> Удобная работа с файлами, хорошо держит роль, у каждого проекта своя память. Когда файлов много, на платных тарифах Claude сам включает режим RAG. Потом расширяй.</div>
+</div><div class="nav"><button type="button" class="btn btn-ghost" data-go="2"><span class="ru">Назад</span><span class="uk">Назад</span></button><button type="button" class="btn" data-go="4"><span><span class="ru">Дальше: Claude Projects</span><span class="uk">Далі: Claude Projects</span></span><i>→</i></button></div></article><article class="glass step" data-step="4" hidden><p class="eyebrow" data-i="3">Часть 1 – Ассистенты</p><div class="section-header">
+<div>
+<h2 data-i="118">Claude Projects</h2>
+<div class="sub" data-i="119">Контекст, память, файлы – все в одном месте</div>
+</div>
+</div>
+<div class="callout purple">
+<div class="callout-body" data-i="121"><strong>Что такое Claude Projects?</strong> Отдельное пространство внутри Claude с собственной памятью. Добавляешь файлы, задаешь системный промпт – и каждый разговор начинается с полным контекстом. Проекты есть на всех тарифах (на бесплатном – до 5). На платных тарифах, когда знаний много, Claude автоматически включает RAG и вмещает больше.</div>
+</div>
+<div class="card-grid">
+<div class="card">
+<div class="card-title" data-i="122">Что добавлять в проект</div>
+<ul class="checklist">
+<li data-i="123">Описание компании / продукта</li>
+<li data-i="124">Целевая аудитория и боли</li>
+<li data-i="125">Tone of Voice, примеры текстов</li>
+<li data-i="126">Прайс-лист, FAQ, возражения</li>
+<li data-i="127">Результаты исследований</li>
+</ul>
+</div>
+<div class="card">
+<div class="card-title" data-i="128">Применения</div>
+<ul class="checklist">
+<li data-i="129">Ассистент по продажам с знанием продукта</li>
+<li data-i="130">Копирайтер в твоем стиле</li>
+<li data-i="131">Аналитик по твоим данным</li>
+<li data-i="132">SMM-менеджер с TOV</li>
+<li data-i="133">Личный советник с контекстом</li>
+</ul>
+</div>
+</div>
+<h3 data-i="134">Создать Claude Project – 5 шагов</h3>
+<div class="sts">
+<div class="st">
+<div class="st-n"></div>
+<div class="st-b">
+<div class="st-t" data-i="135">Открой claude.ai → Projects → New Project</div>
+<div class="st-d" data-i="136">Назови понятно. Например: "Маркетолог [Компания]".</div>
+</div>
+</div>
+<div class="st">
+<div class="st-n"></div>
+<div class="st-b">
+<div class="st-t" data-i="137">Добавь Project Instructions (системный промпт)</div>
+<div class="st-d" data-i="138">Вставь 5-элементный шаблон. Это главный мозг ассистента.</div>
+</div>
+</div>
+<div class="st">
+<div class="st-n"></div>
+<div class="st-b">
+<div class="st-t" data-i="139">Загрузи файлы с контекстом</div>
+<div class="st-d" data-i="140">PDF, DOCX, TXT – все что нужно. На платных тарифах при большом объеме включается RAG.</div>
+</div>
+</div>
+<div class="st">
+<div class="st-n"></div>
+<div class="st-b">
+<div class="st-t" data-i="141">Протестируй на 5 реальных задачах</div>
+<div class="st-d" data-i="142">Если не то – редактируй системный промпт до нужного результата.</div>
+</div>
+</div>
+<div class="st">
+<div class="st-n"></div>
+<div class="st-b">
+<div class="st-t" data-i="143">Используй каждый день</div>
+<div class="st-d" data-i="144">Проект накапливает историю разговоров. Со временем становится лучше.</div>
+</div>
+</div>
+</div>
+<div class="callout orange">
+<div class="callout-body" data-i="145"><strong>Лайфхак: "Золотое трио"</strong>
+        Три базовых проекта покрывают 80% задач: <em>Маркетолог</em> (контент, тексты, анализ ЦА) + <em>Продажи</em> (квалификация, возражения, follow-up) + <em>Личный ассистент</em> (планирование, исследования).</div>
+</div><div class="nav"><button type="button" class="btn btn-ghost" data-go="3"><span class="ru">Назад</span><span class="uk">Назад</span></button><button type="button" class="btn" data-go="5"><span><span class="ru">Дальше: Gemini: Gems → скиллы</span><span class="uk">Далі: Gemini: Gems → скіли</span></span><i>→</i></button></div></article><article class="glass step" data-step="5" hidden><p class="eyebrow" data-i="3">Часть 1 – Ассистенты</p><div class="section-header">
+<div>
+<h2 data-i="175">Gemini: Gems → скиллы</h2>
+<div class="sub" data-i="176">Gems заменяются скиллами Gemini</div>
+</div>
+</div>
+<div class="callout yellow">
+<div class="callout-body" data-i="177"><strong>Gems уходят.</strong> Google заменяет Gems скиллами: на личных аккаунтах – с ноября 2026, на рабочих Workspace (бизнес) – в марте 2027, на учебных – в июне 2027. Gems конвертируются в скиллы автоматически (вместе с поддерживаемыми файлами). Пока в скиллах нет Canvas, Deep Research, создания видео и музыки. Скиллы доступны личным аккаунтам Google 18+.</div>
+</div>
+<div class="card-grid">
+<div class="card">
+<div class="card-title" data-i="178">Когда выбирать Gemini</div>
+<ul class="checklist">
+<li data-i="179">Ты уже работаешь в экосистеме Google</li>
+<li data-i="180">Нужны файлы с Google Диска (для скиллов Google обещает «в ближайшие недели»)</li>
+<li data-i="181">Хочешь связать с Gemini Notebook – через Notebooks в Gemini</li>
+<li data-i="182">Команда в Workspace – переход позже (март 2027 бизнес, июнь 2027 учебные)</li>
+<li data-i="183">Личный аккаунт 18+ – скиллы доступны уже сейчас</li>
+</ul>
+</div>
+<div class="card">
+<div class="card-title" data-i="184">Когда выбирать Claude</div>
+<ul class="checklist">
+<li data-i="185">Нужен глубокий анализ текста</li>
+<li data-i="186">Работа с большими документами</li>
+<li data-i="187">Важна точность и нюансы</li>
+<li data-i="188">Нужна кастомная логика ответов</li>
+<li data-i="189">Работаешь с кодом</li>
+</ul>
+</div>
+</div>
+<h3 data-i="190">Создать скилл в Gemini – за 3 минуты</h3>
+<div class="sts">
+<div class="st">
+<div class="st-n"></div>
+<div class="st-b">
+<div class="st-t" data-i="191">gemini.google.com → Skills (пока Gems доступны: Gems → Create a Gem – он сам станет скиллом)</div>
+<div class="st-d" data-i="192">Нужен личный аккаунт Google 18+ и включенная история Gemini Apps Activity. Названия пунктов меню могут меняться.</div>
+</div>
+</div>
+<div class="st">
+<div class="st-n"></div>
+<div class="st-b">
+<div class="st-t" data-i="193">Задай имя и системные инструкции</div>
+<div class="st-d" data-i="194">Тот же 5-элементный шаблон. Google упрощает при необходимости.</div>
+</div>
+</div>
+<div class="st">
+<div class="st-n"></div>
+<div class="st-b">
+<div class="st-t" data-i="195">Добавь файлы к скиллу</div>
+<div class="st-d" data-i="196">Загрузка файлов при создании скилла – в веб-версии и приложении для Mac. Максимум 100 активных скиллов.</div>
+</div>
+</div>
+</div><div class="nav"><button type="button" class="btn btn-ghost" data-go="4"><span class="ru">Назад</span><span class="uk">Назад</span></button><button type="button" class="btn" data-go="6"><span><span class="ru">Дальше: Демо: Универс. Продавец</span><span class="uk">Далі: Демо: Універс. Продавець</span></span><i>→</i></button></div></article><article class="glass step" data-step="6" hidden><p class="eyebrow" data-i="5">Часть 2 – Скиллы</p><div class="section-header">
+<div>
+<h2 data-i="147">Демо: Универсальный Продавец</h2>
+<div class="sub" data-i="148">Готовый Claude Project – скопируй и запусти за 5 минут</div>
+</div>
+</div>
+<div class="callout orange">
+<div class="callout-body" data-i="150"><strong>Что внутри папки</strong>
+        Готовый шаблон Claude Project для продаж. Там уже есть системный промпт, база знаний и инструкция. Тебе остается только скопировать и вставить.</div>
+</div>
+<div class="card">
+<div class="card-title" data-i="151">Папка с материалами</div>
+<div class="card-body" data-i="152">Все файлы для создания демо-ассистента лежат здесь:</div><span class="i18n" data-i="153"><a class="lnk" href="https://sofiialand.github.io/ai-operator/vorkshop1-assistenty.html" target="_blank" rel="noopener">Открыть материалы →</a></span></div>
+<h3 data-i="154">Что есть в папке</h3>
+<div class="card-grid">
+<div class="card">
+<div class="card-title" data-i="155">system-prompt</div>
+<div class="card-body" data-i="156">Готовый системный промпт для ассистента по продажам. Копируешь целиком → вставляешь в Project Instructions.</div>
+</div>
+<div class="card">
+<div class="card-title" data-i="157">knowledge</div>
+<div class="card-body" data-i="158">Папка с файлами базы знаний. Скачай все файлы → загрузи в свой Claude Project.</div>
+</div>
+</div>
+<h3 data-i="159">Шаг за шагом – создаем Claude Project</h3>
+<div class="sts">
+<div class="st">
+<div class="st-n"></div>
+<div class="st-b">
+<div class="st-t" data-i="160">Открой папку → скачай файл <code class="kbd">system-prompt</code></div>
+<div class="st-d" data-i="161">Открой файл, выдели весь текст (Ctrl+A / Cmd+A) и скопируй.</div>
+</div>
+</div>
+<div class="st">
+<div class="st-n"></div>
+<div class="st-b">
+<div class="st-t" data-i="162">Зайди на claude.ai → левое меню → Projects → + New Project</div>
+<div class="st-d" data-i="163">Назови проект: "Универсальный Продавец" (или под свой бизнес).</div>
+</div>
+</div>
+<div class="st">
+<div class="st-n"></div>
+<div class="st-b">
+<div class="st-t" data-i="164">Нажми "Set project instructions" → вставь скопированный промпт</div>
+<div class="st-d" data-i="165">Это главный мозг ассистента. Вставляй как есть, потом доработаешь под себя.</div>
+</div>
+</div>
+<div class="st">
+<div class="st-n"></div>
+<div class="st-b">
+<div class="st-t" data-i="166">Открой папку <code class="kbd">knowledge</code> → скачай все файлы</div>
+<div class="st-d" data-i="167">Это база знаний ассистента – описание продукта, возражения, скрипты.</div>
+</div>
+</div>
+<div class="st">
+<div class="st-n"></div>
+<div class="st-b">
+<div class="st-t" data-i="168">В проекте нажми "Add content" → загрузи скачанные файлы</div>
+<div class="st-d" data-i="169">Claude читает файлы и использует их в каждом разговоре автоматически.</div>
+</div>
+</div>
+<div class="st">
+<div class="st-n"></div>
+<div class="st-b">
+<div class="st-t" data-i="170">Начни новый чат внутри проекта → протестируй</div>
+<div class="st-d" data-i="171">Напиши: "Представься и расскажи, чем можешь помочь." Если все верно – ассистент в роли.</div>
+</div>
+</div>
+</div>
+<div class="callout green">
+<div class="callout-body" data-i="172"><strong>Готово! Теперь адаптируй под себя</strong>
+        Замени в системном промпте название компании, продукт и целевую аудиторию. Добавь свои файлы в knowledge. Через 10 минут – твой персональный ассистент по продажам.</div>
+</div>
+<div class="callout purple">
+<div class="callout-body" data-i="173"><strong>Дальше – скилл</strong>
+        Ниже в разделе "Скиллы" покажу, как использовать тот же материал как скилл – запускать одной командой прямо в разговоре без создания проекта.</div>
+</div><div class="nav"><button type="button" class="btn btn-ghost" data-go="5"><span class="ru">Назад</span><span class="uk">Назад</span></button><button type="button" class="btn" data-go="7"><span><span class="ru">Дальше: Что такое скилл</span><span class="uk">Далі: Що таке скіл</span></span><i>→</i></button></div></article><article class="glass step" data-step="7" hidden><p class="eyebrow" data-i="5">Часть 2 – Скиллы</p><div class="section-header">
+<div>
+<h2 data-i="197">Что такое скилл?</h2>
+<div class="sub" data-i="198">Готовый эксперт в одной команде</div>
+</div>
+</div>
+<div class="callout purple">
+<div class="callout-body" data-i="199"><strong>Скилл = папка с инструкциями, которую Claude подключает сам</strong> Скилл – это папка с файлом SKILL.md (инструкции) и, при желании, скриптами и материалами. Claude подгружает скилл, когда задача подходит, или ты вызываешь его по имени. Раньше то же делали «мегапромптом», вставленным вручную.</div>
+</div>
+<div class="card-grid">
+<div class="card">
+<div class="card-title" data-i="200">Без скиллов</div>
+<ul class="checklist">
+<li data-i="201">Каждый раз пишешь контекст с нуля</li>
+<li data-i="202">Разные результаты в разные дни</li>
+<li data-i="203">Теряешь время на "объяснялки"</li>
+<li data-i="204">Нельзя поделиться с командой</li>
+</ul>
+</div>
+<div class="card">
+<div class="card-title" data-i="205">Со скиллами</div>
+<ul class="checklist">
+<li data-i="206">Запускаешь одной командой /skill</li>
+<li data-i="207">Стабильный экспертный результат</li>
+<li data-i="208">Накапливаешь библиотеку навыков</li>
+<li data-i="209">Делишься с командой или продаешь</li>
+</ul>
+</div>
+</div>
+<div class="callout green">
+<div class="callout-body" data-i="210"><strong>Ассистент vs Скилл – чем отличаются?</strong> <em>Ассистент</em> (Projects, Gemini) – постоянное рабочее пространство с памятью и файлами. Открываешь и работаешь.<br/> <em>Скилл</em> – специализированная инструкция для конкретной задачи. Подключил, сделал, закрыл.</div>
+</div><div class="nav"><button type="button" class="btn btn-ghost" data-go="6"><span class="ru">Назад</span><span class="uk">Назад</span></button><button type="button" class="btn" data-go="8"><span><span class="ru">Дальше: Мои скиллы</span><span class="uk">Далі: Мої скіли</span></span><i>→</i></button></div></article><article class="glass step" data-step="8" hidden><p class="eyebrow" data-i="5">Часть 2 – Скиллы</p><div class="section-header">
+<div>
+<h2 data-i="212">Мои скиллы – примеры</h2>
+<div class="sub" data-i="213">Каждый решает конкретную задачу</div>
+</div>
+</div>
+<div class="skill-card">
+<div class="skill-header">
+<div class="skill-meta">
+<div class="skill-name" data-i="215">ДНК Клиента</div>
+<div class="skill-role" data-i="216">Исследование ЦА</div>
+</div><span class="i18n" data-i="217"><span class="badge badge-orange">Research</span></span></div>
+<div class="skill-body">
+<div class="skill-desc" data-i="218">Глубинный анализ целевой аудитории и психологии покупателя. Выдает карту болей, желаний, триггеров и Jobs-to-be-done идеального клиента.</div>
+</div>
+<div class="skill-footer" data-i="219"><span class="tag tag-orange">ЦА</span>
+<span class="tag tag-orange">Психология</span>
+<span class="tag tag-orange">Jobs-to-be-done</span></div>
+</div>
+<div class="skill-card">
+<div class="skill-header">
+<div class="skill-meta">
+<div class="skill-name" data-i="221">Viral Reels</div>
+<div class="skill-role" data-i="222">Видеоконтент</div>
+</div><span class="i18n" data-i="223"><span class="badge badge-green">Content</span></span></div>
+<div class="skill-body">
+<div class="skill-desc" data-i="224">Генератор вирусных сценариев для Reels, TikTok и Shorts. Создает хуки, структуру и CTA под разные форматы и аудитории.</div>
+</div>
+<div class="skill-footer" data-i="225"><span class="tag tag-green">Reels</span>
+<span class="tag tag-green">TikTok</span>
+<span class="tag tag-green">Shorts</span></div>
+</div>
+<div class="skill-card">
+<div class="skill-header">
+<div class="skill-meta">
+<div class="skill-name" data-i="226">VSL High Ticket</div>
+<div class="skill-role" data-i="227">Продающее видео</div>
+</div><span class="i18n" data-i="228"><span class="badge badge-purple">Sales</span></span></div>
+<div class="skill-body">
+<div class="skill-desc" data-i="229">Сценарии Video Sales Letter для высокочековых продуктов. 15-блочная структура, адаптированная под ценовой сегмент и аудиторию.</div>
+</div>
+<div class="skill-footer" data-i="230"><span class="tag tag-purple">VSL</span>
+<span class="tag tag-purple">High Ticket</span>
+<span class="tag tag-purple">Сценарий</span></div>
+</div>
+<div class="skill-card">
+<div class="skill-header">
+<div class="skill-meta">
+<div class="skill-name" data-i="232">Анализ звонков</div>
+<div class="skill-role" data-i="233">Менеджмент продаж</div>
+</div><span class="i18n" data-i="234"><span class="badge badge-blue">Analysis</span></span></div>
+<div class="skill-body">
+<div class="skill-desc" data-i="235">Разбирает транскрипции звонков и встреч. Выделяет договоренности, точки роста, конкретные действия и follow-up задачи.</div>
+</div>
+<div class="skill-footer" data-i="236"><span class="tag tag-blue">Транскрипт</span>
+<span class="tag tag-blue">Менеджмент</span>
+<span class="tag tag-blue">Follow-up</span></div>
+</div>
+<div class="skill-card">
+<div class="skill-header">
+<div class="skill-meta">
+<div class="skill-name" data-i="238">Quiz Funnel</div>
+<div class="skill-role" data-i="239">Воронки</div>
+</div><span class="i18n" data-i="240"><span class="badge badge-orange">Funnel</span></span></div>
+<div class="skill-body">
+<div class="skill-desc" data-i="241">Персонализированные квиз-воронки для любого продукта. 4 формата: диагностика, типология, ультра-скрининг, калькулятор. Автоматически создает вопросы и результаты.</div>
+</div>
+<div class="skill-footer" data-i="242"><span class="tag tag-orange">Квиз</span>
+<span class="tag tag-orange">Лидген</span>
+<span class="tag tag-orange">Персонализация</span></div>
+</div>
+<div class="callout purple">
+<div class="callout-body" data-i="244"><strong>Все скиллы – на одной странице</strong>
+        Полная библиотека: <a class="tl" rel="noopener" href="https://virtual-employees-personal.vercel.app/" target="_blank">virtual-employees-personal.vercel.app</a> – скопируй промпт или скачай .txt файл.</div>
+</div><div class="nav"><button type="button" class="btn btn-ghost" data-go="7"><span class="ru">Назад</span><span class="uk">Назад</span></button><button type="button" class="btn" data-go="9"><span><span class="ru">Дальше: Как установить</span><span class="uk">Далі: Як встановити</span></span><i>→</i></button></div></article><article class="glass step" data-step="9" hidden><p class="eyebrow" data-i="5">Часть 2 – Скиллы</p><div class="section-header">
+<div>
+<h2 data-i="246">Как установить и использовать скилл</h2>
+<div class="sub" data-i="247">Три способа – от простого к продвинутому</div>
+</div>
+</div>
+<div class="card-grid">
+<div class="card">
+<div class="card-title" data-i="248">Через Claude Projects</div>
+<ol>
+<li data-i="249">Скопируй промпт скилла</li>
+<li data-i="250">Создай новый Project в claude.ai</li>
+<li data-i="251">Вставь в "Project Instructions"</li>
+<li data-i="252">Используй через этот проект</li>
+</ol>
+</div>
+<div class="card">
+<div class="card-title" data-i="253">Загрузить как скилл (официальный способ)</div>
+<ol>
+<li data-i="254">Включи «Code execution and file creation»: Settings → Capabilities</li>
+<li data-i="255">Упакуй папку скилла (внутри файл SKILL.md) в ZIP</li>
+<li data-i="256">Customize → Skills → «+» → Create skill → Upload a skill</li>
+<li data-i="257">Claude сам подключит скилл, когда задача подходит. Не сработало – назови скилл в запросе</li>
+</ol>
+</div>
+</div>
+<div class="card">
+<div class="card-title" data-i="258">Claude Code – самый быстрый способ</div>
+<div class="card-body" data-i="259">Если установлен Claude Code – скиллы запускаются одной командой:</div>
+<div class="prompt-block" data-i="260"><span class="pc"># Запуск скилла в Claude Code</span><br/>
+<span class="pl">/viral-reels</span><br/>
+<span class="pl">/client-dna</span><br/>
+<span class="pl">/call-analysis</span><br/>
+<span class="pl">/quiz-funnel</span></div>
+</div>
+<h3 data-i="261">Как создать свой скилл</h3>
+<div class="sts">
+<div class="st">
+<div class="st-n"></div>
+<div class="st-b">
+<div class="st-t" data-i="262">Найди задачу, которую делаешь постоянно</div>
+<div class="st-d" data-i="263">Что объясняешь Claude снова и снова? Это кандидат в скилл.</div>
+</div>
+</div>
+<div class="st">
+<div class="st-n"></div>
+<div class="st-b">
+<div class="st-t" data-i="264">Напиши подробный промпт с примерами</div>
+<div class="st-d" data-i="265">Роль, задача, формат ответа, примеры хорошего результата, запреты.</div>
+</div>
+</div>
+<div class="st">
+<div class="st-n"></div>
+<div class="st-b">
+<div class="st-t" data-i="266">Протестируй на 10 разных кейсах</div>
+<div class="st-d" data-i="267">Хороший скилл работает стабильно на простых и сложных задачах.</div>
+</div>
+</div>
+<div class="st">
+<div class="st-n"></div>
+<div class="st-b">
+<div class="st-t" data-i="268">Сохрани, используй или поделись</div>
+<div class="st-d" data-i="269">Скилл – это актив. Его можно продавать, давать команде, улучшать.</div>
+</div>
+</div>
+</div><div class="nav"><button type="button" class="btn btn-ghost" data-go="8"><span class="ru">Назад</span><span class="uk">Назад</span></button><button type="button" class="btn" data-go="10"><span><span class="ru">Дальше: Задание</span><span class="uk">Далі: Завдання</span></span><i>→</i></button></div></article><article class="glass step" data-step="10" hidden><p class="eyebrow" data-i="5">Часть 2 – Скиллы</p><div class="section-header">
+<div>
+<h2 data-i="271">Практическое задание</h2>
+<div class="sub" data-i="272">Выбери уровень – главное запустить первого ассистента</div>
+</div>
+</div>
+<div class="assignment">
+<div class="assignment-header">
+<h3 data-i="273">Задание воркшопа №1</h3>
+<p data-i="274">Три уровня – выбери по своим возможностям на сегодня.</p>
+</div>
+<div class="assignment-body">
+<div class="level-card">
+<div class="level-time" data-i="275">30 минут</div>
+<div class="level-title" data-i="276">Минимум</div>
+<div class="level-items" data-i="277">1. Определи одну повторяющуюся задачу в своей работе<br/>
+            2. Напиши Job Story: «Когда ___ я хочу ___ чтобы ___»<br/>
+            3. Создай Claude Project с 5-элементным промптом<br/>
+            4. Протестируй 3 реальных запроса</div>
+</div>
+<div class="level-card">
+<div class="level-time" data-i="278">1–2 часа</div>
+<div class="level-title" data-i="279">Стандарт</div>
+<div class="level-items" data-i="280">Все из минимума, плюс:<br/> 5. Создай скилл в Gemini (или Gem – он конвертируется автоматически)<br/> 6. Добавь 2–3 файла с контекстом в Claude Project<br/> 7. Установи один скилл из библиотеки и используй его</div>
+</div>
+<div class="level-card">
+<div class="level-time" data-i="281">3+ часа</div>
+<div class="level-title" data-i="282">Продвинутый</div>
+<div class="level-items" data-i="283">Все из стандарта, плюс:<br/> 8. Создай «золотое трио»: Маркетолог + Продажи + Личный ассистент<br/> 9. Создай Notebook в Gemini (Google AI Plus/Pro/Ultra) – он синхронизируется с Gemini Notebook<br/> 10. Напиши свой первый скилл (SKILL.md) для повторяющейся задачи и загрузи его ZIP-ом<br/> 11. Поделись результатом в чат группы</div>
+</div>
+</div>
+</div><div class="nav"><button type="button" class="btn btn-ghost" data-go="9"><span class="ru">Назад</span><span class="uk">Назад</span></button><button type="button" class="btn" data-go="11"><span><span class="ru">Дальше: Ресурсы</span><span class="uk">Далі: Ресурси</span></span><i>→</i></button></div></article><article class="glass step" data-step="11" hidden><p class="eyebrow" data-i="7">Материалы</p><div class="section-header">
+<div>
+<h2 data-i="285">Материалы и ресурсы</h2>
+<div class="sub" data-i="286">Все ссылки в одном месте</div>
+</div>
+</div>
+<div class="platform-grid">
+<div class="platform-card">
+<div class="platform-name" data-i="118">Claude Projects</div>
+<div class="platform-desc" data-i="287">Ассистенты с постоянным контекстом: файлы, системный промпт, своя память у каждого проекта.</div>
+<div class="platform-tags" data-i="288"><span class="tag tag-purple">Память</span> <span class="tag tag-purple">RAG на платных</span></div><span class="i18n" data-i="289"><a class="platform-link" rel="noopener" href="https://claude.ai" target="_blank">Открыть →</a></span></div>
+<div class="platform-card">
+<div class="platform-name" data-i="175">Gemini: Gems → скиллы</div>
+<div class="platform-desc" data-i="290">Gems переходят в скиллы Gemini: личные аккаунты – с ноября 2026.</div>
+<div class="platform-tags" data-i="291"><span class="tag tag-green">Скиллы</span> <span class="tag tag-green">Аккаунт 18+</span></div><span class="i18n" data-i="292"><a class="platform-link" rel="noopener" href="https://gemini.google.com" target="_blank">Открыть →</a></span></div>
+<div class="platform-card">
+<div class="platform-name" data-i="294">Gemini Notebook</div>
+<div class="platform-desc" data-i="295">AI-анализ документов, подкасты и исследования на основе источников.</div>
+<div class="platform-tags" data-i="296"><span class="tag tag-green">Документы</span>
+<span class="tag tag-green">Аудио</span></div><span class="i18n" data-i="297"><a class="platform-link" rel="noopener" href="https://notebook.google.com" target="_blank">Открыть →</a></span></div>
+<div class="platform-card">
+<div class="platform-name" data-i="299">Скиллы Claude</div>
+<div class="platform-desc" data-i="300">Загрузи свой скилл в Claude: инструкция от Anthropic.</div>
+<div class="platform-tags" data-i="301"><span class="tag tag-blue">SKILL.md</span> <span class="tag tag-blue">ZIP</span></div><span class="i18n" data-i="302"><a class="platform-link" rel="noopener" href="https://support.claude.com/en/articles/12512180-use-skills-in-claude" target="_blank">Открыть →</a></span></div>
+<div class="platform-card">
+<div class="platform-name" data-i="304">Библиотека скиллов</div>
+<div class="platform-desc" data-i="305">Готовые скиллы по маркетингу, продажам, контенту и аналитике.</div>
+<div class="platform-tags" data-i="306"><span class="tag tag-purple">Готово к использованию</span></div><span class="i18n" data-i="307"><a class="platform-link" rel="noopener" href="https://virtual-employees-personal.vercel.app/" target="_blank">Открыть →</a></span></div>
+<div class="platform-card">
+<div class="platform-name" data-i="308">Шаблон промпта</div>
+<div class="platform-desc" data-i="309">5-элементный шаблон системного промпта – скопируй и заполни под свою задачу.</div>
+<div class="platform-tags" data-i="310"><span class="tag tag-orange">5 элементов</span></div><span class="i18n" data-i="311"><a class="platform-link" href="#system-prompt">Смотреть ↑</a></span></div>
+</div><div class="nav"><button type="button" class="btn btn-ghost" data-go="10"><span class="ru">Назад</span><span class="uk">Назад</span></button></div></article>
+  </div></main>
+</div>
+<script>
+(function(){
+  var RU=["Воркшоп №1", "AI · Оператор", "AI-Ассистенты и Скиллы", "Часть 1 – Ассистенты", "<a class=\"nav-link active\" href=\"#what-is\"><span class=\"emoji\"><\/span>Что такое ассистент<\/a>\n<a class=\"nav-link\" href=\"#vs-agent\"><span class=\"emoji\"><\/span>Ассистент vs Агент<\/a>\n<a class=\"nav-link\" href=\"#system-prompt\"><span class=\"emoji\"><\/span>Системный промпт<\/a>\n<a class=\"nav-link\" href=\"#platforms\"><span class=\"emoji\"><\/span>4 платформы<\/a>\n<a class=\"nav-link\" href=\"#claude-projects\"><span class=\"emoji\"><\/span>Claude Projects<\/a>\n<a class=\"nav-link\" href=\"#google-gems\"><span class=\"emoji\"><\/span>Gemini: Gems → скиллы<\/a>", "Часть 2 – Скиллы", "<a class=\"nav-link\" href=\"#demo-project\"><span class=\"emoji\"><\/span>Демо: Универс. Продавец<\/a>\n<a class=\"nav-link\" href=\"#what-skill\"><span class=\"emoji\"><\/span>Что такое скилл<\/a>\n<a class=\"nav-link\" href=\"#my-skills\"><span class=\"emoji\"><\/span>Мои скиллы<\/a>\n<a class=\"nav-link\" href=\"#how-install\"><span class=\"emoji\"><\/span>Как установить<\/a>\n<a class=\"nav-link\" href=\"#assignment\"><span class=\"emoji\"><\/span>Задание<\/a>", "Материалы", "<a class=\"nav-link\" href=\"#resources\"><span class=\"emoji\"><\/span>Ресурсы<\/a>", "<span class=\"stat-num\">1/11<\/span>\n<span class=\"stat-label\">Модуль<\/span>", "<span class=\"stat-num\">0<\/span>\n<span class=\"stat-label\">Пройдено<\/span>", "<span class=\"stat-num\">10<\/span>\n<span class=\"stat-label\">Впереди<\/span>", "Прогресс курса", "<span class=\"dot\"><\/span>Фундамент AI. Claude Code", "<span class=\"dot\"><\/span>Deep Research", "<span class=\"dot\"><\/span>AI-Ассистенты и Скиллы", "<span class=\"dot\"><\/span>Упаковка продукта", "<span class=\"dot\"><\/span>Vibe Coding. Лендинги", "<span class=\"dot\"><\/span>Создание контента", "<span class=\"dot\"><\/span>Система автоматизации", "<span class=\"dot\"><\/span>Оптимизация эксперта", "<span class=\"dot\"><\/span>Чат-боты и воронки", "Воркшоп №1", "AI-Ассистенты<br/>и Скиллы", "Создаем первых цифровых сотрудников – один раз настроил, они работают за тебя постоянно.", "<span class=\"pill\">Claude Projects<\/span> <span class=\"pill\">Gemini<\/span> <span class=\"pill\">Скиллы<\/span> <span class=\"pill\">30 мин на первый ассистент<\/span>", "", "Что такое AI-ассистент?", "Не просто ChatGPT – запрограммированное поведение", "", "<strong>Главная идея<\/strong>\n        Ассистент – это не просто ChatGPT в браузере. Это <em>запрограммированное поведение<\/em>: роль, контекст, правила мышления, ограничения и логика работы. Один раз настроил – работает одинаково каждый раз.", "Обычный чат", "Отвечает и забывает контекст", "Каждый раз объясняешь все заново", "Нет роли и правил поведения", "Результат непредсказуем", "AI-Ассистент", "Помнит роль и контекст всегда", "Работает строго по заданным правилам", "Предсказуемый стабильный результат", "Масштабируется без усилий", "", "<strong>Формула ценности<\/strong>\n        Платишь один раз (время на настройку) – получаешь цифрового сотрудника, который делает рутину без твоего участия.", "", "Ассистент vs Агент", "Три метафоры, которые объясняют разницу", "", "Спорт", "Теннис<small>Ассистент<\/small>", "VS", "Футбол<small>Агент<\/small>", "", "Ресторан", "Официант<small>Ассистент<\/small>", "Шеф<small>Агент<\/small>", "", "Навигация", "GPS<small>Ассистент<\/small>", "Автопилот<small>Агент<\/small>", "Параметр", "Ассистент", "Агент", "Действует", "Когда его спрашивают", "Самостоятельно, по триггеру", "Решения", "В рамках заданного", "Принимает сам, цепочками", "Инструменты", "Текст → текст", "Браузер, API, код, файлы", "Сложность", "<span class=\"tag tag-green\">Легко – 30 мин<\/span>", "<span class=\"tag\">Сложнее<\/span>", "", "<strong>Сегодня – только ассистенты<\/strong> Агенты – отдельная тема. Сначала делаем стабильных ассистентов, потом масштабируем.", "", "Как создать ассистента за 10 минут", "5-элементный системный промпт", "Любой ассистент строится из <strong>5 элементов<\/strong>. Это системный промпт – инструкция, которую ИИ читает перед каждым разговором.", "<span class=\"pc\"># Системный промпт – 5 элементов<\/span><br/><br/>\n<span class=\"pl\">1. КОНТЕКСТ<\/span><br/>\n<span class=\"pv\">Ты работаешь в компании [название]. Аудитория – [кто клиенты]. Продукт – [что продаете].<\/span><br/><br/>\n<span class=\"pl\">2. РОЛЬ<\/span><br/>\n<span class=\"pv\">Ты – эксперт по [область]. Твои функции: [3-7 конкретных задач].<\/span><br/><br/>\n<span class=\"pl\">3. ЦЕЛЬ<\/span><br/>\n<span class=\"pv\">Твоя задача – [главный результат]. Алгоритм принятия решений: [шаги].<\/span><br/><br/>\n<span class=\"pl\">4. ИНСТРУКЦИИ<\/span><br/>\n<span class=\"pv\">Стиль: [тон]. Всегда делай: [обязательное]. Никогда не делай: [запрещенное].<\/span><br/><br/>\n<span class=\"pl\">5. ФОРМАТ<\/span><br/>\n<span class=\"pv\">Отвечай [структура]. Длина: [ограничения]. Язык: [язык/стиль].<\/span>", "", "<strong>Job Story – формула для определения задачи<\/strong>\n<em>Когда [ситуация] → Я хочу [действие] → Чтобы [результат]<\/em><br/><br/>\n        Пример: <em>Когда приходит лид в Telegram → Я хочу, чтобы ассистент квалифицировал его → Чтобы тратить время только на горячих клиентов.<\/em>", "4 шага от идеи до готового ассистента", "Определи задачу через Job Story", "Запиши: Когда ___ я хочу ___ чтобы ___. Это фундамент ассистента.", "Заполни 5 элементов системного промпта", "Используй шаблон выше. Лучше 3 четкие инструкции, чем 20 размытых.", "Выбери платформу и создай", "Claude Projects, скилл Claude, Gemini (скиллы) или Gemini Notebook – по задаче.", "Протестируй на 5 реальных сценариях", "Не идеальный кейс – а реальные ситуации, которые бывают. Доработай.", "", "4 платформы – где создавать", "Каждая – для своей задачи", "Платформа", "Лучшее для", "Суперсила", "Ограничение", "Скиллы Claude", "Повторяемые задачи в один вызов", "<span class=\"tag tag-blue\">Загрузка ZIP<\/span>", "Нужен включенный Code execution", "Claude Projects", "Аналитика, тексты", "<span class=\"tag tag-purple\">RAG на платных тарифах<\/span>", "Общий доступ – только Team/Enterprise", "Gemini: Gems → скиллы", "Экосистема Google", "<span class=\"tag tag-green\">Личный аккаунт 18+<\/span>", "Gems уходят: с ноября 2026", "Gemini Notebook", "Работа с документами", "<span class=\"tag tag-orange\">Источники + аудио<\/span>", "Только по файлам", "", "<strong>Совет: начни с Claude Projects<\/strong> Удобная работа с файлами, хорошо держит роль, у каждого проекта своя память. Когда файлов много, на платных тарифах Claude сам включает режим RAG. Потом расширяй.", "", "Claude Projects", "Контекст, память, файлы – все в одном месте", "", "<strong>Что такое Claude Projects?<\/strong> Отдельное пространство внутри Claude с собственной памятью. Добавляешь файлы, задаешь системный промпт – и каждый разговор начинается с полным контекстом. Проекты есть на всех тарифах (на бесплатном – до 5). На платных тарифах, когда знаний много, Claude автоматически включает RAG и вмещает больше.", "Что добавлять в проект", "Описание компании / продукта", "Целевая аудитория и боли", "Tone of Voice, примеры текстов", "Прайс-лист, FAQ, возражения", "Результаты исследований", "Применения", "Ассистент по продажам с знанием продукта", "Копирайтер в твоем стиле", "Аналитик по твоим данным", "SMM-менеджер с TOV", "Личный советник с контекстом", "Создать Claude Project – 5 шагов", "Открой claude.ai → Projects → New Project", "Назови понятно. Например: \"Маркетолог [Компания]\".", "Добавь Project Instructions (системный промпт)", "Вставь 5-элементный шаблон. Это главный мозг ассистента.", "Загрузи файлы с контекстом", "PDF, DOCX, TXT – все что нужно. На платных тарифах при большом объеме включается RAG.", "Протестируй на 5 реальных задачах", "Если не то – редактируй системный промпт до нужного результата.", "Используй каждый день", "Проект накапливает историю разговоров. Со временем становится лучше.", "<strong>Лайфхак: \"Золотое трио\"<\/strong>\n        Три базовых проекта покрывают 80% задач: <em>Маркетолог<\/em> (контент, тексты, анализ ЦА) + <em>Продажи<\/em> (квалификация, возражения, follow-up) + <em>Личный ассистент<\/em> (планирование, исследования).", "", "Демо: Универсальный Продавец", "Готовый Claude Project – скопируй и запусти за 5 минут", "", "<strong>Что внутри<\/strong> Готовый шаблон Claude Project для продаж. Там уже есть системный промпт, база знаний и инструкция. Тебе остается только скопировать и вставить.", "Материалы ассистента", "Все файлы для создания демо-ассистента собраны на отдельной странице:", "<a class=\"lnk\" href=\"https://sofiialand.github.io/ai-operator/vorkshop1-assistenty.html\" target=\"_blank\" rel=\"noopener\">Открыть материалы →<\/a>", "Что есть в материалах", "system-prompt", "Готовый системный промпт для ассистента по продажам. Копируешь целиком → вставляешь в Project Instructions.", "knowledge", "Папка с файлами базы знаний. Скачай все файлы → загрузи в свой Claude Project.", "Шаг за шагом – создаем Claude Project", "Открой материалы → нажми «Скопировать инструкцию»", "Инструкция скопируется целиком, ничего выделять не нужно.", "Зайди на claude.ai → левое меню → Projects → + New Project", "Назови проект: \"Универсальный Продавец\" (или под свой бизнес).", "Нажми \"Set project instructions\" → вставь скопированный промпт", "Это главный мозг ассистента. Вставляй как есть, потом доработаешь под себя.", "Скачай файлы из блока <code class=\"kbd\">knowledge<\/code>", "Это база знаний ассистента – описание продукта, возражения, скрипты.", "В проекте нажми \"Add content\" → загрузи скачанные файлы", "Claude читает файлы и использует их в каждом разговоре автоматически.", "Начни новый чат внутри проекта → протестируй", "Напиши: \"Представься и расскажи, чем можешь помочь.\" Если все верно – ассистент в роли.", "<strong>Готово! Теперь адаптируй под себя<\/strong>\n        Замени в системном промпте название компании, продукт и целевую аудиторию. Добавь свои файлы в knowledge. Через 10 минут – твой персональный ассистент по продажам.", "<strong>Дальше – скилл<\/strong>\n        Ниже в разделе \"Скиллы\" покажу, как использовать тот же материал как скилл – запускать одной командой прямо в разговоре без создания проекта.", "", "Gemini: Gems → скиллы", "Gems заменяются скиллами Gemini", "<strong>Gems уходят.<\/strong> Google заменяет Gems скиллами: на личных аккаунтах – с ноября 2026, на рабочих Workspace (бизнес) – в марте 2027, на учебных – в июне 2027. Gems конвертируются в скиллы автоматически (вместе с поддерживаемыми файлами). Пока в скиллах нет Canvas, Deep Research, создания видео и музыки. Скиллы доступны личным аккаунтам Google 18+.", "Когда выбирать Gemini", "Ты уже работаешь в экосистеме Google", "Нужны файлы с Google Диска (для скиллов Google обещает «в ближайшие недели»)", "Хочешь связать с Gemini Notebook – через Notebooks в Gemini", "Команда в Workspace – переход позже (март 2027 бизнес, июнь 2027 учебные)", "Личный аккаунт 18+ – скиллы доступны уже сейчас", "Когда выбирать Claude", "Нужен глубокий анализ текста", "Работа с большими документами", "Важна точность и нюансы", "Нужна кастомная логика ответов", "Работаешь с кодом", "Создать скилл в Gemini – за 3 минуты", "gemini.google.com → Skills (пока Gems доступны: Gems → Create a Gem – он сам станет скиллом)", "Нужен личный аккаунт Google 18+ и включенная история Gemini Apps Activity. Названия пунктов меню могут меняться.", "Задай имя и системные инструкции", "Тот же 5-элементный шаблон. Google упрощает при необходимости.", "Добавь файлы к скиллу", "Загрузка файлов при создании скилла – в веб-версии и приложении для Mac. Максимум 100 активных скиллов.", "Что такое скилл?", "Готовый эксперт в одной команде", "<strong>Скилл = папка с инструкциями, которую Claude подключает сам<\/strong> Скилл – это папка с файлом SKILL.md (инструкции) и, при желании, скриптами и материалами. Claude подгружает скилл, когда задача подходит, или ты вызываешь его по имени. Раньше то же делали «мегапромптом», вставленным вручную.", "Без скиллов", "Каждый раз пишешь контекст с нуля", "Разные результаты в разные дни", "Теряешь время на \"объяснялки\"", "Нельзя поделиться с командой", "Со скиллами", "Запускаешь одной командой /skill", "Стабильный экспертный результат", "Накапливаешь библиотеку навыков", "Делишься с командой или продаешь", "<strong>Ассистент vs Скилл – чем отличаются?<\/strong> <em>Ассистент<\/em> (Projects, Gemini) – постоянное рабочее пространство с памятью и файлами. Открываешь и работаешь.<br/> <em>Скилл<\/em> – специализированная инструкция для конкретной задачи. Подключил, сделал, закрыл.", "", "Мои скиллы – примеры", "Каждый решает конкретную задачу", "", "ДНК Клиента", "Исследование ЦА", "<span class=\"badge badge-orange\">Research<\/span>", "Глубинный анализ целевой аудитории и психологии покупателя. Выдает карту болей, желаний, триггеров и Jobs-to-be-done идеального клиента.", "<span class=\"tag tag-orange\">ЦА<\/span>\n<span class=\"tag tag-orange\">Психология<\/span>\n<span class=\"tag tag-orange\">Jobs-to-be-done<\/span>", "", "Viral Reels", "Видеоконтент", "<span class=\"badge badge-green\">Content<\/span>", "Генератор вирусных сценариев для Reels, TikTok и Shorts. Создает хуки, структуру и CTA под разные форматы и аудитории.", "<span class=\"tag tag-green\">Reels<\/span>\n<span class=\"tag tag-green\">TikTok<\/span>\n<span class=\"tag tag-green\">Shorts<\/span>", "VSL High Ticket", "Продающее видео", "<span class=\"badge badge-purple\">Sales<\/span>", "Сценарии Video Sales Letter для высокочековых продуктов. 15-блочная структура, адаптированная под ценовой сегмент и аудиторию.", "<span class=\"tag tag-purple\">VSL<\/span>\n<span class=\"tag tag-purple\">High Ticket<\/span>\n<span class=\"tag tag-purple\">Сценарий<\/span>", "", "Анализ звонков", "Менеджмент продаж", "<span class=\"badge badge-blue\">Analysis<\/span>", "Разбирает транскрипции звонков и встреч. Выделяет договоренности, точки роста, конкретные действия и follow-up задачи.", "<span class=\"tag tag-blue\">Транскрипт<\/span>\n<span class=\"tag tag-blue\">Менеджмент<\/span>\n<span class=\"tag tag-blue\">Follow-up<\/span>", "", "Quiz Funnel", "Воронки", "<span class=\"badge badge-orange\">Funnel<\/span>", "Персонализированные квиз-воронки для любого продукта. 4 формата: диагностика, типология, ультра-скрининг, калькулятор. Автоматически создает вопросы и результаты.", "<span class=\"tag tag-orange\">Квиз<\/span>\n<span class=\"tag tag-orange\">Лидген<\/span>\n<span class=\"tag tag-orange\">Персонализация<\/span>", "", "<strong>Все скиллы – на одной странице<\/strong>\n        Полная библиотека: <a class=\"tl\" rel=\"noopener\" href=\"https://virtual-employees-personal.vercel.app/\" target=\"_blank\">virtual-employees-personal.vercel.app<\/a> – скопируй промпт или скачай .txt файл.", "", "Как установить и использовать скилл", "Три способа – от простого к продвинутому", "Через Claude Projects", "Скопируй промпт скилла", "Создай новый Project в claude.ai", "Вставь в \"Project Instructions\"", "Используй через этот проект", "Загрузить как скилл (официальный способ)", "Включи «Code execution and file creation»: Settings → Capabilities", "Упакуй папку скилла (внутри файл SKILL.md) в ZIP", "Customize → Skills → «+» → Create skill → Upload a skill", "Claude сам подключит скилл, когда задача подходит. Не сработало – назови скилл в запросе", "Claude Code – самый быстрый способ", "Если установлен Claude Code – скиллы запускаются одной командой:", "<span class=\"pc\"># Запуск скилла в Claude Code<\/span><br/>\n<span class=\"pl\">/viral-reels<\/span><br/>\n<span class=\"pl\">/client-dna<\/span><br/>\n<span class=\"pl\">/call-analysis<\/span><br/>\n<span class=\"pl\">/quiz-funnel<\/span>", "Как создать свой скилл", "Найди задачу, которую делаешь постоянно", "Что объясняешь Claude снова и снова? Это кандидат в скилл.", "Напиши подробный промпт с примерами", "Роль, задача, формат ответа, примеры хорошего результата, запреты.", "Протестируй на 10 разных кейсах", "Хороший скилл работает стабильно на простых и сложных задачах.", "Сохрани, используй или поделись", "Скилл – это актив. Его можно продавать, давать команде, улучшать.", "", "Практическое задание", "Выбери уровень – главное запустить первого ассистента", "Задание воркшопа №1", "Три уровня – выбери по своим возможностям на сегодня.", "30 минут", "Минимум", "1. Определи одну повторяющуюся задачу в своей работе<br/>\n            2. Напиши Job Story: «Когда ___ я хочу ___ чтобы ___»<br/>\n            3. Создай Claude Project с 5-элементным промптом<br/>\n            4. Протестируй 3 реальных запроса", "1–2 часа", "Стандарт", "Все из минимума, плюс:<br/> 5. Создай скилл в Gemini (или Gem – он конвертируется автоматически)<br/> 6. Добавь 2–3 файла с контекстом в Claude Project<br/> 7. Установи один скилл из библиотеки и используй его", "3+ часа", "Продвинутый", "Все из стандарта, плюс:<br/> 8. Создай «золотое трио»: Маркетолог + Продажи + Личный ассистент<br/> 9. Создай Notebook в Gemini (Google AI Plus/Pro/Ultra) – он синхронизируется с Gemini Notebook<br/> 10. Напиши свой первый скилл (SKILL.md) для повторяющейся задачи и загрузи его ZIP-ом<br/> 11. Поделись результатом в чат группы", "", "Материалы и ресурсы", "Все ссылки в одном месте", "Ассистенты с постоянным контекстом: файлы, системный промпт, своя память у каждого проекта.", "<span class=\"tag tag-purple\">Память<\/span> <span class=\"tag tag-purple\">RAG на платных<\/span>", "<a class=\"platform-link\" rel=\"noopener\" href=\"https://claude.ai\" target=\"_blank\">Открыть →<\/a>", "Gems переходят в скиллы Gemini: личные аккаунты – с ноября 2026.", "<span class=\"tag tag-green\">Скиллы<\/span> <span class=\"tag tag-green\">Аккаунт 18+<\/span>", "<a class=\"platform-link\" rel=\"noopener\" href=\"https://gemini.google.com\" target=\"_blank\">Открыть →<\/a>", "", "Gemini Notebook", "AI-анализ документов, подкасты и исследования на основе источников.", "<span class=\"tag tag-green\">Документы<\/span>\n<span class=\"tag tag-green\">Аудио<\/span>", "<a class=\"platform-link\" rel=\"noopener\" href=\"https://notebook.google.com\" target=\"_blank\">Открыть →<\/a>", "", "Скиллы Claude", "Загрузи свой скилл в Claude: инструкция от Anthropic.", "<span class=\"tag tag-blue\">SKILL.md<\/span> <span class=\"tag tag-blue\">ZIP<\/span>", "<a class=\"platform-link\" rel=\"noopener\" href=\"https://support.claude.com/en/articles/12512180-use-skills-in-claude\" target=\"_blank\">Открыть →<\/a>", "", "Библиотека скиллов", "Готовые скиллы по маркетингу, продажам, контенту и аналитике.", "<span class=\"tag tag-purple\">Готово к использованию<\/span>", "<a class=\"platform-link\" rel=\"noopener\" href=\"https://virtual-employees-personal.vercel.app/\" target=\"_blank\">Открыть →<\/a>", "Шаблон промпта", "5-элементный шаблон системного промпта – скопируй и заполни под свою задачу.", "<span class=\"tag tag-orange\">5 элементов<\/span>", "<a class=\"platform-link\" href=\"#system-prompt\">Смотреть ↑<\/a>", "<span class=\"dot\"><\/span>Создание AI-ассистентов", "<span class=\"dot\"><\/span>Глубокое исследование", "<span class=\"dot\"><\/span>Создание оффера", "<span class=\"dot\"><\/span>Вайбкодинг: создание лендингов", "<span class=\"dot\"><\/span>Контент маркетинг", "<span class=\"dot\"><\/span>Визуальный контент", "<span class=\"dot\"><\/span>AI-Контент завод", "<span class=\"dot\"><\/span>Создание AI-агентов", "<span class=\"dot\"><\/span>Создание AI-агента Hermes", "<span class=\"dot\"><\/span>Вайбкодинг: создание приложений", "<span class=\"dot\"><\/span>Сотрудник AI-таргетолог"],UA=["Воркшоп №1", "AI · Оператор", "AI-Асистенти та Скіли", "Частина 1 – Асистенти", "<a class=\"nav-link active\" href=\"#what-is\"><span class=\"emoji\"><\/span>Що таке асистент<\/a>\n<a class=\"nav-link\" href=\"#vs-agent\"><span class=\"emoji\"><\/span>Асистент vs Агент<\/a>\n<a class=\"nav-link\" href=\"#system-prompt\"><span class=\"emoji\"><\/span>Системний промпт<\/a>\n<a class=\"nav-link\" href=\"#platforms\"><span class=\"emoji\"><\/span>4 платформи<\/a>\n<a class=\"nav-link\" href=\"#claude-projects\"><span class=\"emoji\"><\/span>Claude Projects<\/a>\n<a class=\"nav-link\" href=\"#google-gems\"><span class=\"emoji\"><\/span>Gemini: Gems → скіли<\/a>", "Частина 2 – Скіли", "<a class=\"nav-link\" href=\"#demo-project\"><span class=\"emoji\"><\/span>Демо: Універс. Продавець<\/a>\n<a class=\"nav-link\" href=\"#what-skill\"><span class=\"emoji\"><\/span>Що таке скіл<\/a>\n<a class=\"nav-link\" href=\"#my-skills\"><span class=\"emoji\"><\/span>Мої скіли<\/a>\n<a class=\"nav-link\" href=\"#how-install\"><span class=\"emoji\"><\/span>Як встановити<\/a>\n<a class=\"nav-link\" href=\"#assignment\"><span class=\"emoji\"><\/span>Завдання<\/a>", "Матеріали", "<a class=\"nav-link\" href=\"#resources\"><span class=\"emoji\"><\/span>Ресурси<\/a>", "<span class=\"stat-num\">1/11<\/span>\n<span class=\"stat-label\">Модуль<\/span>", "<span class=\"stat-num\">0<\/span>\n<span class=\"stat-label\">Пройдено<\/span>", "<span class=\"stat-num\">10<\/span>\n<span class=\"stat-label\">Попереду<\/span>", "Прогрес курсу", "<span class=\"dot\"><\/span>Фундамент AI. Claude Code", "<span class=\"dot\"><\/span>Deep Research", "<span class=\"dot\"><\/span>AI-Ассистенты и Скиллы", "<span class=\"dot\"><\/span>Упаковка продукта", "<span class=\"dot\"><\/span>Vibe Coding. Лендинги", "<span class=\"dot\"><\/span>Создание контента", "<span class=\"dot\"><\/span>Система автоматизации", "<span class=\"dot\"><\/span>Оптимизация эксперта", "<span class=\"dot\"><\/span>Чат-боты и воронки", "Воркшоп №1", "AI-Асистенти<br/>та Скіли", "Створюємо перших цифрових співробітників – один раз налаштував, вони працюють за тебе постійно.", "<span class=\"pill\">Claude Projects<\/span> <span class=\"pill\">Gemini<\/span> <span class=\"pill\">Скіли<\/span> <span class=\"pill\">30 хв на першого асистента<\/span>", "", "Що таке AI-асистент?", "Не просто ChatGPT – запрограмована поведінка", "", "<strong>Головна ідея<\/strong>\n        Асистент – це не просто ChatGPT у браузері. Це <em>запрограмована поведінка<\/em>: роль, контекст, правила мислення, обмеження та логіка роботи. Один раз налаштував – працює однаково щоразу.", "Звичайний чат", "Відповідає й забуває контекст", "Щоразу пояснюєш усе заново", "Немає ролі та правил поведінки", "Результат непередбачуваний", "AI-Асистент", "Пам'ятає роль і контекст завжди", "Працює суворо за заданими правилами", "Передбачуваний стабільний результат", "Масштабується без зусиль", "", "<strong>Формула цінності<\/strong>\n        Платиш один раз (час на налаштування) – отримуєш цифрового співробітника, який робить рутину без твоєї участі.", "", "Асистент vs Агент", "Три метафори, які пояснюють різницю", "", "Спорт", "Теніс<small>Асистент<\/small>", "VS", "Футбол<small>Агент<\/small>", "", "Ресторан", "Офіціант<small>Асистент<\/small>", "Шеф<small>Агент<\/small>", "", "Навігація", "GPS<small>Асистент<\/small>", "Автопілот<small>Агент<\/small>", "Параметр", "Асистент", "Агент", "Діє", "Коли його запитують", "Самостійно, за тригером", "Рішення", "У межах заданого", "Ухвалює сам, ланцюжками", "Інструменти", "Текст → текст", "Браузер, API, код, файли", "Складність", "<span class=\"tag tag-green\">Легко – 30 хв<\/span>", "<span class=\"tag\">Складніше<\/span>", "", "<strong>Сьогодні – лише асистенти<\/strong> Агенти – окрема тема. Спочатку робимо стабільних асистентів, потім масштабуємо.", "", "Як створити асистента за 10 хвилин", "5-елементний системний промпт", "Будь-який асистент будується з <strong>5 елементів<\/strong>. Це системний промпт – інструкція, яку ШІ читає перед кожною розмовою.", "<span class=\"pc\"># Системний промпт – 5 елементів<\/span><br/><br/>\n<span class=\"pl\">1. КОНТЕКСТ<\/span><br/>\n<span class=\"pv\">Ти працюєш у компанії [назва]. Аудиторія – [хто клієнти]. Продукт – [що продаєте].<\/span><br/><br/>\n<span class=\"pl\">2. РОЛЬ<\/span><br/>\n<span class=\"pv\">Ти – експерт із [галузь]. Твої функції: [3-7 конкретних завдань].<\/span><br/><br/>\n<span class=\"pl\">3. МЕТА<\/span><br/>\n<span class=\"pv\">Твоє завдання – [головний результат]. Алгоритм ухвалення рішень: [кроки].<\/span><br/><br/>\n<span class=\"pl\">4. ІНСТРУКЦІЇ<\/span><br/>\n<span class=\"pv\">Стиль: [тон]. Завжди роби: [обов'язкове]. Ніколи не роби: [заборонене].<\/span><br/><br/>\n<span class=\"pl\">5. ФОРМАТ<\/span><br/>\n<span class=\"pv\">Відповідай [структура]. Довжина: [обмеження]. Мова: [мова/стиль].<\/span>", "", "<strong>Job Story – формула для визначення завдання<\/strong>\n<em>Коли [ситуація] → Я хочу [дія] → Щоб [результат]<\/em><br/><br/>\n        Приклад: <em>Коли приходить лід у Telegram → Я хочу, щоб асистент кваліфікував його → Щоб витрачати час лише на гарячих клієнтів.<\/em>", "4 кроки від ідеї до готового асистента", "Визнач завдання через Job Story", "Запиши: Коли ___ я хочу ___ щоб ___. Це фундамент асистента.", "Заповни 5 елементів системного промпта", "Використай шаблон вище. Краще 3 чіткі інструкції, ніж 20 розмитих.", "Обери платформу й створи", "Claude Projects, скіл Claude, Gemini (скіли) або Gemini Notebook – за завданням.", "Протестуй на 5 реальних сценаріях", "Не ідеальний кейс – а реальні ситуації, які бувають. Доопрацюй.", "", "4 платформи – де створювати", "Кожна – для свого завдання", "Платформа", "Найкраще для", "Суперсила", "Обмеження", "Скіли Claude", "Завдання, що повторюються, в один виклик", "<span class=\"tag tag-blue\">Завантаження ZIP<\/span>", "Потрібен увімкнений Code execution", "Claude Projects", "Аналітика, тексти", "<span class=\"tag tag-purple\">RAG на платних тарифах<\/span>", "Спільний доступ – лише Team/Enterprise", "Gemini: Gems → скіли", "Екосистема Google", "<span class=\"tag tag-green\">Особистий акаунт 18+<\/span>", "Gems зникають: з листопада 2026", "Gemini Notebook", "Робота з документами", "<span class=\"tag tag-orange\">Джерела + аудіо<\/span>", "Лише за файлами", "", "<strong>Порада: почни з Claude Projects<\/strong> Зручна робота з файлами, добре тримає роль, у кожного проєкту своя пам'ять. Коли файлів багато, на платних тарифах Claude сам вмикає режим RAG. Потім розширюй.", "", "Claude Projects", "Контекст, пам'ять, файли – усе в одному місці", "", "<strong>Що таке Claude Projects?<\/strong> Окремий простір усередині Claude з власною пам'яттю. Додаєш файли, задаєш системний промпт – і кожна розмова починається з повним контекстом. Проєкти є на всіх тарифах (на безкоштовному – до 5). На платних тарифах, коли знань багато, Claude автоматично вмикає RAG і вміщує більше.", "Що додавати в проєкт", "Опис компанії / продукту", "Цільова аудиторія та болі", "Tone of Voice, приклади текстів", "Прайс-лист, FAQ, заперечення", "Результати досліджень", "Застосування", "Асистент із продажів зі знанням продукту", "Копірайтер у твоєму стилі", "Аналітик за твоїми даними", "SMM-менеджер із TOV", "Особистий радник із контекстом", "Створити Claude Project – 5 кроків", "Відкрий claude.ai → Projects → New Project", "Назви зрозуміло. Наприклад: \"Маркетолог [Компанія]\".", "Додай Project Instructions (системний промпт)", "Встав 5-елементний шаблон. Це головний мозок асистента.", "Завантаж файли з контекстом", "PDF, DOCX, TXT – усе що потрібно. На платних тарифах при великому обсязі вмикається RAG.", "Протестуй на 5 реальних завданнях", "Якщо не те – редагуй системний промпт до потрібного результату.", "Використовуй щодня", "Проєкт накопичує історію розмов. З часом стає кращим.", "<strong>Лайфхак: \"Золоте тріо\"<\/strong>\n        Три базові проєкти покривають 80% завдань: <em>Маркетолог<\/em> (контент, тексти, аналіз ЦА) + <em>Продажі<\/em> (кваліфікація, заперечення, follow-up) + <em>Особистий асистент<\/em> (планування, дослідження).", "", "Демо: Універсальний Продавець", "Готовий Claude Project – скопіюй і запусти за 5 хвилин", "", "<strong>Що всередині<\/strong> Готовий шаблон Claude Project для продажів. Там уже є системний промпт, база знань та інструкція. Тобі залишається лише скопіювати й вставити.", "Матеріали асистента", "Усі файли для створення демо-асистента зібрані на окремій сторінці:", "<a class=\"lnk\" href=\"https://sofiialand.github.io/ai-operator/vorkshop1-assistenty.html\" target=\"_blank\" rel=\"noopener\">Відкрити матеріали →<\/a>", "Що є в матеріалах", "system-prompt", "Готовий системний промпт для асистента з продажів. Копіюєш цілком → вставляєш у Project Instructions.", "knowledge", "Папка з файлами бази знань. Завантаж усі файли → додай у свій Claude Project.", "Крок за кроком – створюємо Claude Project", "Відкрий матеріали → натисни «Скопіювати інструкцію»", "Інструкція скопіюється повністю, нічого виділяти не потрібно.", "Зайди на claude.ai → ліве меню → Projects → + New Project", "Назви проєкт: \"Універсальний Продавець\" (або під свій бізнес).", "Натисни \"Set project instructions\" → встав скопійований промпт", "Це головний мозок асистента. Вставляй як є, потім доопрацюєш під себе.", "Завантаж файли з блоку <code class=\"kbd\">knowledge<\/code>", "Це база знань асистента – опис продукту, заперечення, скрипти.", "У проєкті натисни \"Add content\" → завантаж скачані файли", "Claude читає файли й використовує їх у кожній розмові автоматично.", "Почни новий чат усередині проєкту → протестуй", "Напиши: \"Представся й розкажи, чим можеш допомогти.\" Якщо все вірно – асистент у ролі.", "<strong>Готово! Тепер адаптуй під себе<\/strong>\n        Заміни в системному промпті назву компанії, продукт і цільову аудиторію. Додай свої файли в knowledge. Через 10 хвилин – твій персональний асистент із продажів.", "<strong>Далі – скіл<\/strong>\n        Нижче в розділі \"Скіли\" покажу, як використовувати той самий матеріал як скіл – запускати однією командою прямо в розмові без створення проєкту.", "", "Gemini: Gems → скіли", "Gems замінюються скілами Gemini", "<strong>Gems зникають.<\/strong> Google замінює Gems скілами: на особистих акаунтах – з листопада 2026, на робочих Workspace (бізнес) – у березні 2027, на навчальних – у червні 2027. Gems конвертуються в скіли автоматично (разом з файлами, що підтримуються). Поки що в скілах немає Canvas, Deep Research, створення відео й музики. Скіли доступні особистим акаунтам Google 18+.", "Коли обирати Gemini", "Ти вже працюєш в екосистемі Google", "Потрібні файли з Google Диска (для скілів Google обіцяє «найближчими тижнями»)", "Хочеш зв'язати з Gemini Notebook – через Notebooks у Gemini", "Команда у Workspace – перехід пізніше (березень 2027 бізнес, червень 2027 навчальні)", "Особистий акаунт 18+ – скіли доступні вже зараз", "Коли обирати Claude", "Потрібен глибокий аналіз тексту", "Робота з великими документами", "Важлива точність і нюанси", "Потрібна кастомна логіка відповідей", "Працюєш з кодом", "Створити скіл у Gemini – за 3 хвилини", "gemini.google.com → Skills (поки Gems доступні: Gems → Create a Gem – він сам стане скілом)", "Потрібен особистий акаунт Google 18+ і ввімкнена історія Gemini Apps Activity. Назви пунктів меню можуть змінюватися.", "Задай ім'я та системні інструкції", "Той самий 5-елементний шаблон. Google спрощує за потреби.", "Додай файли до скіла", "Завантаження файлів під час створення скіла – у веб-версії та застосунку для Mac. Максимум 100 активних скілів.", "Що таке скіл?", "Готовий експерт в одній команді", "<strong>Скіл = тека з інструкціями, яку Claude підключає сам<\/strong> Скіл – це тека з файлом SKILL.md (інструкції) та, за потреби, скриптами й матеріалами. Claude підвантажує скіл, коли завдання підходить, або ти викликаєш його за назвою. Раніше те саме робили «мегапромптом», вставленим вручну.", "Без скілів", "Щоразу пишеш контекст з нуля", "Різні результати в різні дні", "Втрачаєш час на \"пояснялки\"", "Не можна поділитися з командою", "Зі скілами", "Запускаєш однією командою /skill", "Стабільний експертний результат", "Накопичуєш бібліотеку навичок", "Ділишся з командою або продаєш", "<strong>Асистент vs Скіл – чим відрізняються?<\/strong> <em>Асистент<\/em> (Projects, Gemini) – постійний робочий простір із пам'яттю й файлами. Відкриваєш і працюєш.<br/> <em>Скіл<\/em> – спеціалізована інструкція для конкретного завдання. Підключив, зробив, закрив.", "", "Мої скіли – приклади", "Кожен вирішує конкретне завдання", "", "ДНК Клієнта", "Дослідження ЦА", "<span class=\"badge badge-orange\">Research<\/span>", "Глибинний аналіз цільової аудиторії та психології покупця. Видає карту болів, бажань, тригерів і Jobs-to-be-done ідеального клієнта.", "<span class=\"tag tag-orange\">ЦА<\/span>\n<span class=\"tag tag-orange\">Психологія<\/span>\n<span class=\"tag tag-orange\">Jobs-to-be-done<\/span>", "", "Viral Reels", "Відеоконтент", "<span class=\"badge badge-green\">Content<\/span>", "Генератор віральних сценаріїв для Reels, TikTok і Shorts. Створює хуки, структуру й CTA під різні формати та аудиторії.", "<span class=\"tag tag-green\">Reels<\/span>\n<span class=\"tag tag-green\">TikTok<\/span>\n<span class=\"tag tag-green\">Shorts<\/span>", "VSL High Ticket", "Продаюче відео", "<span class=\"badge badge-purple\">Sales<\/span>", "Сценарії Video Sales Letter для високочекових продуктів. 15-блокова структура, адаптована під ціновий сегмент і аудиторію.", "<span class=\"tag tag-purple\">VSL<\/span>\n<span class=\"tag tag-purple\">High Ticket<\/span>\n<span class=\"tag tag-purple\">Сценарій<\/span>", "", "Аналіз дзвінків", "Менеджмент продажів", "<span class=\"badge badge-blue\">Analysis<\/span>", "Розбирає транскрипції дзвінків і зустрічей. Виділяє домовленості, точки зростання, конкретні дії та follow-up завдання.", "<span class=\"tag tag-blue\">Транскрипт<\/span>\n<span class=\"tag tag-blue\">Менеджмент<\/span>\n<span class=\"tag tag-blue\">Follow-up<\/span>", "", "Quiz Funnel", "Воронки", "<span class=\"badge badge-orange\">Funnel<\/span>", "Персоналізовані квіз-воронки для будь-якого продукту. 4 формати: діагностика, типологія, ультра-скринінг, калькулятор. Автоматично створює питання та результати.", "<span class=\"tag tag-orange\">Квіз<\/span>\n<span class=\"tag tag-orange\">Лідген<\/span>\n<span class=\"tag tag-orange\">Персоналізація<\/span>", "", "<strong>Усі скіли – на одній сторінці<\/strong>\n        Повна бібліотека: <a class=\"tl\" rel=\"noopener\" href=\"https://virtual-employees-personal.vercel.app/\" target=\"_blank\">virtual-employees-personal.vercel.app<\/a> – скопіюй промпт або завантаж .txt файл.", "", "Як встановити й використовувати скіл", "Три способи – від простого до просунутого", "Через Claude Projects", "Скопіюй промпт скіла", "Створи новий Project у claude.ai", "Встав у \"Project Instructions\"", "Використовуй через цей проєкт", "Завантажити як скіл (офіційний спосіб)", "Увімкни «Code execution and file creation»: Settings → Capabilities", "Запакуй теку скіла (усередині файл SKILL.md) у ZIP", "Customize → Skills → «+» → Create skill → Upload a skill", "Claude сам підключить скіл, коли завдання підходить. Не спрацювало – назви скіл у запиті", "Claude Code – найшвидший спосіб", "Якщо встановлений Claude Code – скіли запускаються однією командою:", "<span class=\"pc\"># Запуск скіла в Claude Code<\/span><br/>\n<span class=\"pl\">/viral-reels<\/span><br/>\n<span class=\"pl\">/client-dna<\/span><br/>\n<span class=\"pl\">/call-analysis<\/span><br/>\n<span class=\"pl\">/quiz-funnel<\/span>", "Як створити свій скіл", "Знайди завдання, яке робиш постійно", "Що пояснюєш Claude знову й знову? Це кандидат у скіл.", "Напиши докладний промпт із прикладами", "Роль, завдання, формат відповіді, приклади доброго результату, заборони.", "Протестуй на 10 різних кейсах", "Хороший скіл працює стабільно на простих і складних завданнях.", "Збережи, використовуй або поділися", "Скіл – це актив. Його можна продавати, давати команді, покращувати.", "", "Практичне завдання", "Обери рівень – головне запустити першого асистента", "Завдання воркшопу №1", "Три рівні – обери за своїми можливостями на сьогодні.", "30 хвилин", "Мінімум", "1. Визнач одне завдання, що повторюється, у своїй роботі<br/>\n            2. Напиши Job Story: «Коли ___ я хочу ___ щоб ___»<br/>\n            3. Створи Claude Project із 5-елементним промптом<br/>\n            4. Протестуй 3 реальні запити", "1–2 години", "Стандарт", "Усе з мінімуму, плюс:<br/> 5. Створи скіл у Gemini (або Gem – він конвертується автоматично)<br/> 6. Додай 2–3 файли з контекстом у Claude Project<br/> 7. Встанови один скіл із бібліотеки й використай його", "3+ години", "Просунутий", "Усе зі стандарту, плюс:<br/> 8. Створи «золоте тріо»: Маркетолог + Продажі + Особистий асистент<br/> 9. Створи Notebook у Gemini (Google AI Plus/Pro/Ultra) – він синхронізується з Gemini Notebook<br/> 10. Напиши свій перший скіл (SKILL.md) для завдання, що повторюється, і завантаж його ZIP-ом<br/> 11. Поділися результатом у чаті групи", "", "Матеріали та ресурси", "Усі посилання в одному місці", "Асистенти з постійним контекстом: файли, системний промпт, власна пам'ять у кожного проєкту.", "<span class=\"tag tag-purple\">Пам'ять<\/span> <span class=\"tag tag-purple\">RAG на платних<\/span>", "<a class=\"platform-link\" rel=\"noopener\" href=\"https://claude.ai\" target=\"_blank\">Відкрити →<\/a>", "Gems переходять у скіли Gemini: особисті акаунти – з листопада 2026.", "<span class=\"tag tag-green\">Скіли<\/span> <span class=\"tag tag-green\">Акаунт 18+<\/span>", "<a class=\"platform-link\" rel=\"noopener\" href=\"https://gemini.google.com\" target=\"_blank\">Відкрити →<\/a>", "", "Gemini Notebook", "AI-аналіз документів, подкасти та дослідження на основі джерел.", "<span class=\"tag tag-green\">Документи<\/span>\n<span class=\"tag tag-green\">Аудіо<\/span>", "<a class=\"platform-link\" rel=\"noopener\" href=\"https://notebook.google.com\" target=\"_blank\">Відкрити →<\/a>", "", "Скіли Claude", "Завантаж свій скіл у Claude: інструкція від Anthropic.", "<span class=\"tag tag-blue\">SKILL.md<\/span> <span class=\"tag tag-blue\">ZIP<\/span>", "<a class=\"platform-link\" rel=\"noopener\" href=\"https://support.claude.com/en/articles/12512180-use-skills-in-claude\" target=\"_blank\">Відкрити →<\/a>", "", "Бібліотека скілів", "Готові скіли з маркетингу, продажів, контенту та аналітики.", "<span class=\"tag tag-purple\">Готово до використання<\/span>", "<a class=\"platform-link\" rel=\"noopener\" href=\"https://virtual-employees-personal.vercel.app/\" target=\"_blank\">Відкрити →<\/a>", "Шаблон промпта", "5-елементний шаблон системного промпта – скопіюй і заповни під своє завдання.", "<span class=\"tag tag-orange\">5 елементів<\/span>", "<a class=\"platform-link\" href=\"#system-prompt\">Дивитися ↑<\/a>", "<span class=\"dot\"><\/span>Створення AI-асистентів", "<span class=\"dot\"><\/span>Глибоке дослідження", "<span class=\"dot\"><\/span>Створення оферу", "<span class=\"dot\"><\/span>Вайбкодинг: створення лендингів", "<span class=\"dot\"><\/span>Контент маркетинг", "<span class=\"dot\"><\/span>Візуальний контент", "<span class=\"dot\"><\/span>AI-Контент завод", "<span class=\"dot\"><\/span>Створення AI-агентів", "<span class=\"dot\"><\/span>Створення AI-агента Hermes", "<span class=\"dot\"><\/span>Вайбкодинг: створення застосунків", "<span class=\"dot\"><\/span>Співробітник AI-таргетолог"],IDS=["what-is", "vs-agent", "system-prompt", "platforms", "claude-projects", "google-gems", "demo-project", "what-skill", "my-skills", "how-install", "assignment", "resources"];
+  var root=document.documentElement,steps=[].slice.call(document.querySelectorAll('.step')),N=steps.length,cur=0;
+  var hero=document.getElementById('hero'),track=document.getElementById('track'),count=document.getElementById('count'),prev=document.getElementById('prev'),next=document.getElementById('next'),fill=document.getElementById('sideFill');
+  var side=document.getElementById('side'),ov=document.getElementById('ov'),menuNum=document.getElementById('menuNum');
+  var items=[].slice.call(document.querySelectorAll('.nav-item'));
+  function store(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v);}catch(e){return null;}}
+  var seen=(store('op-w1-seen')||'').split(',').filter(Boolean).map(Number);
+  steps.forEach(function(s,i){var b=document.createElement('button');b.type='button';b.setAttribute('aria-label',String(i+1));b.addEventListener('click',function(){show(i);});track.appendChild(b);});
+  var dots=[].slice.call(track.children);
+  function pad(n){return (n<10?'0':'')+n;}
+  function show(n,keep){
+    cur=Math.max(0,Math.min(N-1,n));
+    if(seen.indexOf(cur)<0){seen.push(cur);store('op-w1-seen',seen.join(','));}
+    steps.forEach(function(s,i){s.hidden=i!==cur;});
+    hero.hidden=cur!==0;
+    dots.forEach(function(b,i){b.classList.toggle('on',i===cur);b.classList.toggle('seen',seen.indexOf(i)>-1&&i!==cur);});
+    items.forEach(function(b,i){b.classList.toggle('active',i===cur);b.classList.toggle('seen',seen.indexOf(i)>-1&&i!==cur);if(i===cur){b.setAttribute('aria-current','step');if(b.scrollIntoView)b.scrollIntoView({block:'nearest'});}else b.removeAttribute('aria-current');});
+    count.innerHTML='<b>'+pad(cur+1)+'</b> / '+pad(N);
+    menuNum.textContent=pad(cur+1)+'/'+pad(N);
+    fill.style.width=((cur+1)/N*100)+'%';
+    prev.disabled=cur===0;next.disabled=cur===N-1;
+    side.classList.remove('open');ov.classList.remove('open');
+    if(window.__closeTip)window.__closeTip();
+    try{history.replaceState(null,'','#'+(cur+1));}catch(e){}
+    if(!keep)window.scrollTo(0,0);
+  }
+  prev.addEventListener('click',function(){show(cur-1);});
+  next.addEventListener('click',function(){show(cur+1);});
+  document.addEventListener('click',function(e){
+    var go=e.target.closest('[data-go]');
+    if(go){show(+go.dataset.go);return;}
+    var a=e.target.closest('a[href^="#"]');
+    if(a){var i=IDS.indexOf(a.getAttribute('href').slice(1));if(i>-1){e.preventDefault();show(i);}}
+  });
+  addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='PageDown')show(cur+1);
+    if(e.key==='ArrowLeft'||e.key==='PageUp')show(cur-1);
+    if(e.key==='Escape'){side.classList.remove('open');ov.classList.remove('open');closeTip();}
+  });
+  document.getElementById('menu').addEventListener('click',function(){side.classList.add('open');ov.classList.add('open');});
+  ov.addEventListener('click',function(){side.classList.remove('open');ov.classList.remove('open');});
+  var TERMS=[["sp", "системн\\p{L}* промпт\\p{L}*|системн\\p{L}* инструкци\\p{L}*", "Системный промпт", "Постоянная инструкция для ассистента. Нейросеть читает ее перед каждым разговором, и повторять ее не нужно.", "системн\\p{L}* промпт\\p{L}*|системн\\p{L}* інструкці\\p{L}*", "Системний промпт", "Постійна інструкція для асистента. Нейромережа читає її перед кожною розмовою, і повторювати її не потрібно."], ["pi", "Project Instructions", "Project Instructions", "Поле в проекте Claude, куда вставляют системный промпт.", "Project Instructions", "Project Instructions", "Поле в проєкті Claude, куди вставляють системний промпт."], ["cp", "Claude Projects?", "Claude Projects", "Раздел в Claude: отдельное пространство с инструкцией и файлами под одну задачу.", "Claude Projects?", "Claude Projects", "Розділ у Claude: окремий простір з інструкцією та файлами під одне завдання."], ["cc", "Claude Code", "Claude Code", "Режим Claude, который работает с файлами на твоем компьютере и может сам выполнять задачи.", "Claude Code", "Claude Code", "Режим Claude, який працює з файлами на твоєму комп'ютері й може сам виконувати завдання."], ["skill", "скилл\\p{L}*", "Скилл", "Папка с инструкцией для конкретной задачи. Нейросеть подключает ее, когда задача подходит.", "скіл\\p{L}*|скилл\\p{L}*", "Скіл", "Папка з інструкцією для конкретного завдання. Нейромережа підключає її, коли завдання підходить."], ["asst", "AI-[Аа]ссистент\\p{L}*|ассистент\\p{L}*", "AI-ассистент", "Настроенный алгоритм работы нейросети: он помнит контекст и каждый раз действует по твоей инструкции.", "AI-[Аа]систент\\p{L}*|асистент\\p{L}*", "AI-асистент", "Налаштований алгоритм роботи нейромережі: він пам'ятає контекст і щоразу діє за твоєю інструкцією."], ["gems", "Gems?", "Gem", "Помощник внутри Gemini со своей инструкцией. Google заменяет Gems скиллами.", "Gems?", "Gem", "Помічник усередині Gemini зі своєю інструкцією. Google замінює Gems скілами."], ["js", "Job Story", "Job Story", "Короткая формула задачи: когда случается ситуация, я хочу такое действие, чтобы получить такой результат.", "Job Story", "Job Story", "Коротка формула завдання: коли стається ситуація, я хочу таку дію, щоб отримати такий результат."], ["jtbd", "Jobs-to-be-done", "Jobs-to-be-done", "Подход к пониманию клиента: какую задачу человек решает, когда покупает продукт.", "Jobs-to-be-done", "Jobs-to-be-done", "Підхід до розуміння клієнта: яке завдання людина вирішує, коли купує продукт."], ["rag", "RAG", "RAG", "Способ работы с большим объемом файлов: нейросеть находит нужный фрагмент, когда он понадобился, а не держит в памяти все сразу.", "RAG", "RAG", "Спосіб роботи з великим обсягом файлів: нейромережа знаходить потрібний фрагмент, коли він знадобився, а не тримає в пам'яті все одразу."], ["kb", "баз\\p{L}* знаний", "База знаний", "Твои файлы и материалы, на которые нейросеть опирается в ответах.", "баз\\p{L}* знань", "База знань", "Твої файли й матеріали, на які нейромережа спирається у відповідях."], ["zip", "ZIP(?:-\\p{L}+)?", "ZIP", "Архив: один файл, в который упакована целая папка.", "ZIP(?:-\\p{L}+)?", "ZIP", "Архів: один файл, у який запаковано цілу папку."], ["smd", "SKILL\\.md", "SKILL.md", "Главный файл скилла: обычный текстовый файл с инструкцией.", "SKILL\\.md", "SKILL.md", "Головний файл скіла: звичайний текстовий файл з інструкцією."], ["exec", "Code execution(?: and file creation)?", "Code execution", "Настройка Claude, которая разрешает ему запускать код и создавать файлы. Для скиллов ее нужно включить.", "Code execution(?: and file creation)?", "Code execution", "Налаштування Claude, яке дозволяє йому запускати код і створювати файли. Для скілів його потрібно ввімкнути."], ["api", "API", "API", "Способ, которым программы обмениваются данными между собой.", "API", "API", "Спосіб, у який програми обмінюються даними між собою."], ["trig", "тригг\\p{L}*", "Триггер", "Событие, которое запускает действие. Например, пришла новая заявка.", "тригер\\p{L}*", "Тригер", "Подія, яка запускає дію. Наприклад, надійшла нова заявка."], ["tov", "Tone of Voice|TOV", "Tone of Voice", "Манера, в которой бренд пишет и говорит: какие слова выбирает и как обращается к людям.", "Tone of Voice|TOV", "Tone of Voice", "Манера, у якій бренд пише й говорить: які слова обирає і як звертається до людей."], ["ca", "ЦА", "ЦА", "Целевая аудитория: люди, которым ты продаешь продукт.", "ЦА", "ЦА", "Цільова аудиторія: люди, яким ти продаєш продукт."], ["lead", "лид(?:а|у|ом|ы|ов|ам)?", "Лид", "Человек, который оставил заявку или проявил интерес к продукту.", "лід(?:а|у|ом|и|ів|ам)?", "Лід", "Людина, яка залишила заявку або виявила інтерес до продукту."], ["qual", "квалифициров\\p{L}*|квалификаци\\p{L}*", "Квалификация", "Проверка, подходит ли человеку продукт и готов ли он покупать.", "кваліфік\\p{L}*", "Кваліфікація", "Перевірка, чи підходить людині продукт і чи готова вона купувати."], ["fu", "follow-up", "Follow-up", "Следующее сообщение или действие после разговора с клиентом.", "follow-up", "Follow-up", "Наступне повідомлення або дія після розмови з клієнтом."], ["faq", "FAQ", "FAQ", "Список частых вопросов и ответов на них.", "FAQ", "FAQ", "Список частих запитань і відповідей на них."], ["smm", "SMM", "SMM", "Ведение соцсетей бизнеса: посты, сторис, общение с подписчиками.", "SMM", "SMM", "Ведення соцмереж бізнесу: дописи, сторіс, спілкування з підписниками."], ["reels", "Reels", "Reels", "Короткие вертикальные видео в Instagram.", "Reels", "Reels", "Короткі вертикальні відео в Instagram."], ["shorts", "Shorts", "Shorts", "Короткие вертикальные видео на YouTube.", "Shorts", "Shorts", "Короткі вертикальні відео на YouTube."], ["hook", "хук\\p{L}*", "Хук", "Первая фраза или кадр, которые цепляют внимание и заставляют смотреть дальше.", "хук\\p{L}*", "Хук", "Перша фраза або кадр, які чіпляють увагу й змушують дивитися далі."], ["cta", "CTA", "CTA", "Призыв к действию: например, написать в личные сообщения или оставить заявку.", "CTA", "CTA", "Заклик до дії: наприклад, написати в особисті повідомлення або залишити заявку."], ["vsl", "VSL|Video Sales Letter", "VSL", "Продающее видео: человек смотрит его и в конце получает предложение купить.", "VSL|Video Sales Letter", "VSL", "Продажне відео: людина дивиться його й наприкінці отримує пропозицію купити."], ["ht", "High Ticket|высокочеков\\p{L}*", "High Ticket", "Дорогой продукт или услуга с высоким средним чеком.", "High Ticket|високочеков\\p{L}*", "High Ticket", "Дорогий продукт або послуга з високим середнім чеком."], ["fun", "ворон(?:к|ок)\\p{L}*", "Воронка", "Путь клиента от первого знакомства с продуктом до покупки.", "воронк\\p{L}*|воронок", "Воронка", "Шлях клієнта від першого знайомства з продуктом до покупки."], ["lg", "лидген\\p{L}*", "Лидген", "Сбор заявок от людей, которым может быть интересен продукт.", "лідген\\p{L}*", "Лідген", "Збір заявок від людей, яким може бути цікавий продукт."], ["mega", "мегапромпт\\p{L}*", "Мегапромпт", "Очень длинный промпт, в котором сразу прописаны все правила задачи.", "мегапромпт\\p{L}*", "Мегапромпт", "Дуже довгий промпт, у якому одразу прописані всі правила завдання."], ["ws2", "Workspace", "Workspace", "Рабочие и учебные аккаунты Google для компаний и школ.", "Workspace", "Workspace", "Робочі й навчальні акаунти Google для компаній і шкіл."], ["team", "Team/Enterprise", "Team и Enterprise", "Тарифы Claude для команд и компаний.", "Team/Enterprise", "Team і Enterprise", "Тарифи Claude для команд і компаній."], ["gaa", "Gemini Apps Activity", "Gemini Apps Activity", "Настройка Google, которая сохраняет историю твоих чатов с Gemini.", "Gemini Apps Activity", "Gemini Apps Activity", "Налаштування Google, яке зберігає історію твоїх чатів із Gemini."], ["gplans", "Google AI Plus/Pro/Ultra", "Google AI Plus, Pro и Ultra", "Платные тарифы Google с Gemini.", "Google AI Plus/Pro/Ultra", "Google AI Plus, Pro та Ultra", "Платні тарифи Google із Gemini."], ["gn", "Gemini Notebook", "Gemini Notebook", "Сервис Google, который отвечает на вопросы только по твоим материалам. Раньше назывался NotebookLM.", "Gemini Notebook", "Gemini Notebook", "Сервіс Google, який відповідає на запитання лише за твоїми матеріалами. Раніше називався NotebookLM."], ["gm", "Gemini(?!\\s+(?:Notebook|Canvas|Gems))", "Gemini", "Чат с искусственным интеллектом от Google. Умеет искать в интернете, писать тексты и создавать картинки.", "Gemini(?!\\s+(?:Notebook|Canvas|Gems))", "Gemini", "Чат зі штучним інтелектом від Google. Вміє шукати в інтернеті, писати тексти й створювати картинки."], ["canvas", "Canvas", "Canvas", "Режим в Gemini, где результат открывается в отдельном окне: документ или небольшое приложение. Его можно менять прямо там.", "Canvas", "Canvas", "Режим у Gemini, де результат відкривається в окремому вікні: документ або невеликий застосунок. Його можна змінювати просто там."], ["dr", "Deep Research|глубоко\\p{L}* исследовани\\p{L}*", "Deep Research", "Глубокий поиск: нейросеть сама читает много сайтов и собирает подробный отчет. Это занимает несколько минут.", "Deep Research|глибок\\p{L}* дослідженн\\p{L}*", "Deep Research", "Глибокий пошук: нейромережа сама читає багато сайтів і збирає докладний звіт. Це займає кілька хвилин."], ["cg", "чат-GPT|ChatGPT", "ChatGPT", "Популярный чат с искусственным интеллектом. Отвечает на вопросы обо всем подряд, а не только по твоим материалам.", "чат-GPT|ChatGPT", "ChatGPT", "Популярний чат зі штучним інтелектом. Відповідає на запитання про все, а не лише за твоїми матеріалами."], ["prompt", "промпт\\p{L}*", "Промпт", "Задание для нейросети. Обычный текст, в котором ты пишешь, что нужно сделать.", "промпт\\p{L}*", "Промпт", "Завдання для нейромережі. Звичайний текст, у якому ти пишеш, що потрібно зробити."], ["nb", "блокнот\\p{L}*", "Блокнот", "Отдельная папка в Gemini Notebook. Ты складываешь в нее материалы по одной теме и задаешь вопросы только по ним.", "блокнот\\p{L}*", "Блокнот", "Окрема папка в Gemini Notebook. Ти складаєш у неї матеріали з однієї теми й ставиш запитання лише за ними."], ["audio", "аудиопересказ\\p{L}*|подкаст\\p{L}*", "Аудиопересказ", "Аудиозапись, где два голоса нейросети обсуждают твои материалы. Похоже на подкаст, который можно слушать в дороге.", "аудіопереказ\\p{L}*|подкаст\\p{L}*", "Аудіопереказ", "Аудіозапис, де два голоси нейромережі обговорюють твої матеріали. Схоже на подкаст, який можна слухати в дорозі."], ["diag", "самодиагностик\\p{L}*", "Самодиагностика", "Список вопросов или тест, по которым человек сам видит свои проблемы и понимает, что ему нужно.", "самодіагностик\\p{L}*", "Самодіагностика", "Список запитань або тест, за якими людина сама бачить свої проблеми й розуміє, що їй потрібно."], ["tr", "транскри\\p{L}*", "Транскрибация", "Текст, полученный из аудио или видео: все, что сказали, записано словами.", "транскри\\p{L}*", "Транскрибація", "Текст, отриманий з аудіо або відео: усе, що сказали, записано словами."], ["case", "кейс\\p{L}*", "Кейс", "Реальный пример работы: что было, что сделали и какой получился результат.", "кейс\\p{L}*", "Кейс", "Реальний приклад роботи: що було, що зробили і який вийшов результат."], ["quiz", "квиз(?:-\\p{L}+)?\\p{L}*", "Квиз", "Короткий тест из нескольких вопросов. В конце человек сразу получает результат.", "квіз(?:-\\p{L}+)?\\p{L}*", "Квіз", "Короткий тест із кількох запитань. Наприкінці людина одразу отримує результат."], ["agent", "AI-агент\\p{L}*|агент\\p{L}*", "AI-агент", "Помощник на базе нейросети, который сам выполняет задачи по твоей инструкции.", "AI-агент\\p{L}*|агент\\p{L}*", "AI-агент", "Помічник на базі нейромережі, який сам виконує завдання за твоєю інструкцією."], ["check", "чек-лист\\p{L}*", "Чек-лист", "Короткий список пунктов для проверки. Идешь по нему и отмечаешь, что сделано.", "чек-лист\\p{L}*", "Чек-лист", "Короткий список пунктів для перевірки. Ідеш за ним і позначаєш, що зроблено."], ["model", "модел(?:ь|и|ью)", "Модель", "Так называют саму нейросеть, которая выполняет твой запрос.", "модел(?:ь|і)", "Модель", "Так називають саму нейромережу, яка виконує твій запит."], ["ws", "воркшоп\\p{L}*", "Воркшоп", "Практическое занятие: ты не только слушаешь, но и сразу делаешь сам.", "воркшоп\\p{L}*", "Воркшоп", "Практичне заняття: ти не лише слухаєш, а й одразу робиш сам."], ["cust", "кастомн\\p{L}*", "Кастомная", "Сделанная под конкретного человека, а не общая для всех.", "кастомн\\p{L}*", "Кастомна", "Зроблена під конкретну людину, а не загальна для всіх."]],SKIP='a,button,h1,h2,h3,.eyebrow,.card-title,.callout-body strong,.metaphor-title,.metaphor-item,.metaphor-vs-label,.skill-name,.platform-name,.level-title,.level-time,.prompt-block,.kbd,th,.badge,.nav,.term,#tt';
+  var compiled={ru:[],uk:[]};
+  TERMS.forEach(function(t){
+    compiled.ru.push({k:t[0],re:new RegExp('(?<![\p{L}\p{N}-])(?:'+t[1]+')(?![\p{L}\p{N}])','iu'),title:t[2],text:t[3]});
+    compiled.uk.push({k:t[0],re:new RegExp('(?<![\p{L}\p{N}-])(?:'+t[4]+')(?![\p{L}\p{N}])','iu'),title:t[5],text:t[6]});
+  });
+  var dict={};
+  function unmark(){
+    [].slice.call(document.querySelectorAll('.term')).forEach(function(s){
+      var p=s.parentNode,tx=document.createTextNode(s.firstChild.nodeValue);
+      p.replaceChild(tx,s);p.normalize();
+    });
+  }
+  function textNodes(step){
+    var w=document.createTreeWalker(step,NodeFilter.SHOW_TEXT,{acceptNode:function(n){
+      if(!n.nodeValue.trim())return NodeFilter.FILTER_REJECT;
+      return n.parentElement.closest(SKIP)?NodeFilter.FILTER_REJECT:NodeFilter.FILTER_ACCEPT;
+    }}),out=[],n;
+    while((n=w.nextNode()))out.push(n);
+    return out;
+  }
+  function annotate(l){
+    unmark();dict={};
+    compiled[l].forEach(function(t){dict[t.k]=t;});
+    steps.forEach(function(step){
+      compiled[l].forEach(function(t){
+        var nodes=textNodes(step);
+        for(var i=0;i<nodes.length;i++){
+          var n=nodes[i],m=t.re.exec(n.nodeValue);
+          if(!m)continue;
+          var after=n.splitText(m.index);after.nodeValue=after.nodeValue.slice(m[0].length);
+          var s=document.createElement('span');s.className='term';s.appendChild(document.createTextNode(m[0]));
+          var b=document.createElement('button');b.type='button';b.className='ti';b.dataset.t=t.k;b.textContent='i';b.setAttribute('aria-label',t.title);
+          s.appendChild(b);n.parentNode.insertBefore(s,after);
+          break;
+        }
+      });
+    });
+  }
+  var tt=document.createElement('div');tt.id='tt';tt.setAttribute('role','tooltip');document.body.appendChild(tt);
+  var curBtn=null,hide=null,pinned=false;
+  function openTip(b){
+    clearTimeout(hide);
+    var t=dict[b.dataset.t];if(!t)return;
+    if(curBtn&&curBtn!==b)curBtn.classList.remove('on');
+    curBtn=b;b.classList.add('on');
+    tt.innerHTML='';var h=document.createElement('b');h.textContent=t.title;var p=document.createElement('p');p.textContent=t.text;tt.appendChild(h);tt.appendChild(p);
+    var r=b.getBoundingClientRect(),w=tt.offsetWidth,hh=tt.offsetHeight;
+    var x=Math.max(12,Math.min(innerWidth-w-12,r.left+r.width/2-w/2));
+    var up=r.top-hh-12>=8,y=up?r.top-hh-12:Math.min(innerHeight-hh-8,r.bottom+12);
+    tt.style.left=x+'px';tt.style.top=y+'px';tt.style.setProperty('--ax',Math.max(18,Math.min(w-18,r.left+r.width/2-x))+'px');tt.classList.toggle('up',!up);
+    tt.classList.add('open');
+  }
+  window.__closeTip=function(){closeTip();};
+  function closeTip(){tt.classList.remove('open');if(curBtn){curBtn.classList.remove('on');curBtn=null;}pinned=false;}
+  function closeLater(){if(pinned)return;clearTimeout(hide);hide=setTimeout(closeTip,120);}
+  if(window.matchMedia&&matchMedia('(hover:hover)').matches){
+    document.addEventListener('mouseover',function(e){var b=e.target.closest&&e.target.closest('.ti');if(b)openTip(b);else if(e.target.closest&&e.target.closest('#tt'))clearTimeout(hide);});
+    document.addEventListener('mouseout',function(e){if(e.target.closest&&e.target.closest('.ti,#tt'))closeLater();});
+  }
+  document.addEventListener('focusin',function(e){if(e.target.classList&&e.target.classList.contains('ti')&&e.target.matches(':focus-visible'))openTip(e.target);});
+  document.addEventListener('focusout',function(e){if(e.target.classList&&e.target.classList.contains('ti'))closeLater();});
+  document.addEventListener('click',function(e){
+    var b=e.target.closest('.ti');
+    if(b){e.stopPropagation();if(curBtn===b&&pinned){closeTip();}else{openTip(b);pinned=true;}return;}
+    if(!e.target.closest('#tt'))closeTip();
+  },true);
+  addEventListener('scroll',closeTip,{passive:true});
+  addEventListener('resize',closeTip);
+  var langs=[].slice.call(document.querySelectorAll('[data-lang]'));
+  function links(){
+    document.querySelectorAll('a[href^="http"]').forEach(function(a){a.target='_blank';a.rel='noopener';});
+  }
+  function tables(){
+    document.querySelectorAll('table.tbl').forEach(function(tb){
+      var h=[].slice.call(tb.querySelectorAll('th')).map(function(x){return x.textContent.trim();});
+      tb.querySelectorAll('tbody tr').forEach(function(r){[].slice.call(r.children).forEach(function(c,i){c.setAttribute('data-k',h[i]||'');});});
+    });
+  }
+  function setLang(l,keep){
+    root.lang=l;
+    var T=l==='uk'?UA:RU;
+    document.querySelectorAll('[data-i]').forEach(function(el){el.innerHTML=T[+el.getAttribute('data-i')];});
+    langs.forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.lang===l));});
+    links();tables();
+    closeTip();annotate(l);
+    if(keep)store('op-w1-lang',l);
+  }
+  langs.forEach(function(b){b.addEventListener('click',function(){setLang(b.dataset.lang,true);});});
+  var q=new URLSearchParams(location.search).get('lang');
+  setLang(q==='ru'||q==='uk'?q:(store('op-w1-lang')==='uk'?'uk':'ru'));
+  show((parseInt(location.hash.slice(1),10)||1)-1,true);
+})();
+</script>
+</body>
+</html>
