@@ -6,13 +6,14 @@
 <title>Материалы урока</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700&family=Inter+Tight:wght@700&display=swap" rel="stylesheet">
 <style>
 :root{--ink:#0b0c0e;--ink-2:#15100c;--cream:#f4efe7;--gold:#fdd506}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{background:transparent}
 html[lang="uk"] .ru,html[lang="ru"] .uk{display:none}
-.links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;padding:8px 16px 28px}
+.links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:8px 16px 28px}
+h1{grid-column:1/-1;margin-bottom:8px;color:var(--ink-2);font:700 clamp(28px,3.6vw,44px)/1.05 "Inter Tight",Inter,system-ui,sans-serif;letter-spacing:-.03em}
 .btn{display:flex;align-items:center;gap:14px;min-height:92px;padding:14px 16px;border-radius:18px;font-family:Inter,system-ui,sans-serif;text-decoration:none;box-shadow:0 8px 16px rgba(21,16,12,.18);transition:transform .2s,box-shadow .2s}
 .btn:hover{transform:translateY(-1px);box-shadow:0 10px 16px rgba(21,16,12,.24)}
 .btn:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
@@ -28,6 +29,10 @@ html[lang="uk"] .ru,html[lang="ru"] .uk{display:none}
 .cream{background:var(--cream);color:var(--ink-2)}
 .cream svg{background:var(--ink-2);color:var(--gold)}
 .cream small{color:#5f5a52}
+.white{background:#fff;color:var(--ink-2);box-shadow:inset 0 0 0 1px rgba(21,16,12,.16),0 8px 16px rgba(21,16,12,.1)}
+.white:hover{box-shadow:inset 0 0 0 1px rgba(21,16,12,.16),0 10px 16px rgba(21,16,12,.14)}
+.white svg{background:var(--ink-2);color:var(--gold)}
+.white small{color:#5f5a52}
 @media (max-width:560px){
   .links{grid-template-columns:minmax(0,1fr);padding:8px 16px 28px}
   .btn{min-height:76px}
@@ -36,7 +41,8 @@ html[lang="uk"] .ru,html[lang="ru"] .uk{display:none}
 </style>
 </head>
 <body>
-<nav class="links">
+<section class="links">
+  <h1><span class="uk">Матеріали воркшопу</span><span class="ru">Материалы воркшопа</span></h1>
   <a class="btn gold" href="https://sofiialand.github.io/ai-operator/ekosistema-gajd.html" target="_blank" rel="noopener">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h11a3 3 0 013 3v13H8a3 3 0 01-3-3z"/><path d="M5 17a3 3 0 013-3h11"/><path d="M9 8h6"/></svg>
     <span><b><span class="uk">Гайд із воркшопу</span><span class="ru">Гайд по воркшопу</span></b><small><span class="uk">Покроковий конспект усього воркшопу</span><span class="ru">Пошаговый конспект всего воркшопа</span></small></span>
@@ -49,7 +55,11 @@ html[lang="uk"] .ru,html[lang="ru"] .uk{display:none}
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4l9 5-9 5-9-5z"/><path d="M3 14l9 5 9-5"/></svg>
     <span><b>AI-Start Pack</b><small><span class="uk">Які нейромережі реально потрібні для старту (без хаосу та зайвого)</span><span class="ru">Какие нейросети реально нужны для старта (без хаоса и лишнего)</span></small></span>
   </a>
-</nav>
+  <a class="btn white" href="https://sofiialand.github.io/ai-operator/ekosistema-transkript.html" target="_blank" rel="noopener">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/><path d="M9 12h6"/><path d="M9 16h6"/></svg>
+    <span><b><span class="uk">Транскрибація</span><span class="ru">Транскрибация</span></b><small><span class="uk">Текст відео</span><span class="ru">Текст видео</span></small></span>
+  </a>
+</section>
 <script>
 if(new URLSearchParams(location.search).get('lang')==='uk'){document.documentElement.lang='uk';document.title='Матеріали уроку';}
 </script>
