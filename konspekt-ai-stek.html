@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Конспект AI-стек</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef1f4;--cream:#f4efe7;--card:rgba(255,255,255,.72);--card-solid:#fbfaf7;--line:rgba(21,16,12,.09);--line-2:rgba(21,16,12,.16);--ink:#15100c;--ink-2:#0b0c0e;--text:#15100c;--text-mid:rgba(21,16,12,.68);--text-dim:rgba(21,16,12,.46);--gold:#fdd506;--gold-deep:#e6be00;--gold-rgb:253,213,6;--cool:#c2ccd2;--cool-rgb:194,204,210;--shadow:0 1px 0 rgba(255,255,255,.8) inset,0 10px 30px rgba(21,16,12,.06);--sidebar-w:280px;--display:"Inter Tight","Inter",system-ui,sans-serif;--sans:"Inter",system-ui,sans-serif;--mono:"JetBrains Mono",ui-monospace,monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--text);font:400 15px/1.6 var(--sans);-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(760px 520px at 82% -6%,rgba(var(--gold-rgb),.16),transparent 70%),radial-gradient(820px 620px at 100% 100%,rgba(var(--cool-rgb),.55),transparent 70%),radial-gradient(640px 520px at 18% 70%,rgba(255,255,255,.7),transparent 70%)}
+html[lang="uk"] .ru,html[lang="ru"] .uk{display:none!important}
+[hidden]{display:none!important}
+button{font:inherit;color:inherit}
+button:focus-visible,summary:focus-visible,input:focus-visible+.box{outline:2px solid var(--ink);outline-offset:2px}
+.hl{padding:0 .16em;border-radius:6px;background:var(--gold);color:var(--ink);-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.layout{position:relative;z-index:1;min-height:100vh}
+.main{margin-left:var(--sidebar-w);padding:48px 56px 64px}
+.wrap{max-width:860px;margin:0 auto}
+
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:var(--sidebar-w);z-index:200;background:rgba(246,247,249,.78);border-right:1px solid var(--line);-webkit-backdrop-filter:blur(26px) saturate(150%);backdrop-filter:blur(26px) saturate(150%);display:flex;flex-direction:column;padding:20px 12px;overflow-y:auto}
+.sidebar-brand{padding:0 8px 20px;border-bottom:1px solid var(--line)}
+.topnav{display:inline-flex;align-items:center;padding:3px;border-radius:12px;background:var(--ink-2);box-shadow:0 8px 20px rgba(21,16,12,.18);font-size:12px;font-weight:700;white-space:nowrap;color:var(--cream)}
+.topnav-on{padding:6px 11px;border-radius:9px;background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.06));box-shadow:inset 0 1px 0 rgba(255,255,255,.18)}
+.topnav-beam{width:2px;height:18px;margin:0 8px;border-radius:2px;background:var(--gold)}
+.topnav-off{padding:6px 11px 6px 0;color:rgba(244,239,231,.5)}
+.sidebar-sub{margin-top:16px;font-size:12.5px;color:var(--text-mid)}
+.sidebar-progress{margin-top:12px;height:3px;border-radius:3px;background:var(--line);overflow:hidden}
+.sidebar-progress i{display:block;height:100%;background:linear-gradient(90deg,var(--cool),var(--gold-deep));transition:width .3s ease}
+.sidebar-nav{padding-top:12px;display:flex;flex-direction:column;gap:4px}
+.nav-group{margin:14px 12px 4px;font:500 10px var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--text-dim)}
+.nav-item{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:8px 12px;border-radius:12px;font-size:13.5px;font-weight:500;line-height:1.3;color:var(--text-mid);background:none;border:1px solid transparent;cursor:pointer;transition:background .2s,color .2s}
+.nav-item:hover{background:rgba(255,255,255,.7);color:var(--text)}
+.nav-item.active{background:var(--ink-2);color:var(--cream);box-shadow:0 8px 20px rgba(21,16,12,.16)}
+.nav-num{width:24px;height:24px;flex:none;border-radius:50%;display:grid;place-items:center;font:500 10px var(--mono);color:var(--text-dim);background:rgba(255,255,255,.8);border:1px solid var(--line-2)}
+.nav-item.seen .nav-num{color:var(--ink);border-color:var(--gold-deep)}
+.nav-item.active .nav-num{background:var(--gold);color:var(--ink);border-color:var(--gold);font-weight:600}
+.sidebar-foot{margin-top:auto;padding:20px 8px 0;font:500 10.5px/1.5 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim)}
+.menu-btn{display:none;position:fixed;top:14px;left:16px;z-index:210;align-items:center;gap:8px;padding:9px 14px;border-radius:12px;background:var(--ink-2);color:var(--cream);border:0;box-shadow:0 8px 20px rgba(21,16,12,.2);font:600 13px var(--sans);cursor:pointer}
+.menu-btn>span:first-child{display:block;width:14px;height:1.5px;background:currentColor;box-shadow:0 -4px 0 currentColor,0 4px 0 currentColor}
+.menu-btn b{font:500 11px var(--mono);color:var(--gold);letter-spacing:.08em}
+.overlay{display:none;position:fixed;inset:0;background:rgba(21,16,12,.35);z-index:190;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+
+#lang{position:fixed;top:14px;right:16px;z-index:210;display:flex;gap:2px;padding:3px;border-radius:999px;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px)}
+#lang button{min-width:40px;min-height:30px;padding:0 10px;border:0;border-radius:999px;background:none;color:var(--text-mid);font:600 12px/1 var(--sans);cursor:pointer}
+#lang button[aria-pressed="true"]{background:var(--ink-2);color:var(--cream)}
+
+.glass{position:relative;background:var(--card);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px)}
+.hero{padding:12px 0 32px;margin-bottom:32px;border-bottom:1px solid var(--line)}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font:500 11px var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim)}
+.eyebrow:before{content:"";flex:none;width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 3px rgba(var(--gold-rgb),.25)}
+.hero-title{font:700 clamp(40px,6.6vw,72px)/1.02 var(--display);letter-spacing:-.03em;margin:16px 0 0;color:var(--ink)}
+.hero-sub{display:block;margin-top:12px;font-size:clamp(20px,2.6vw,28px);line-height:1.25;letter-spacing:-.02em;font-weight:600;color:var(--text-mid)}
+.hero-lead{margin-top:20px;max-width:620px;font-size:16px;color:var(--text-mid)}
+.hero-facts{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:28px}
+.fact{padding:16px 18px;border-radius:16px;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow)}
+.fact-k{font:500 10.5px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim)}
+.fact-v{margin-top:8px;font-size:14px;font-weight:600;line-height:1.45}
+
+.bar{display:flex;align-items:center;gap:12px;padding:8px;border-radius:999px;margin-bottom:20px}
+.arrow{flex:none;width:38px;height:38px;border-radius:50%;border:0;background:var(--ink-2);color:var(--cream);font-size:16px;cursor:pointer;display:grid;place-items:center;transition:transform .2s}
+.arrow:hover{transform:translateY(-1px)}
+.arrow:disabled{opacity:.2;cursor:default;transform:none}
+.track{flex:1;display:flex;gap:4px;min-width:0}
+.track button{flex:1;height:22px;border:0;background:none;padding:0;cursor:pointer;position:relative}
+.track button:before{content:"";position:absolute;left:0;right:0;top:50%;height:3px;transform:translateY(-50%);border-radius:3px;background:var(--line-2);transition:background .3s}
+.track button.seen:before{background:rgba(21,16,12,.45)}
+.track button.on:before{background:var(--gold);height:6px;box-shadow:0 0 0 1px var(--gold-deep)}
+.count{flex:none;font:500 12px var(--mono);letter-spacing:.08em;color:var(--text-mid);padding-right:10px}
+.count b{color:var(--ink);font-weight:600}
+
+.step{padding:32px;display:grid;gap:20px;animation:in .45s cubic-bezier(.22,.61,.36,1)}
+@keyframes in{from{opacity:0;transform:translateY(14px)}}
+.step h2{font:700 clamp(28px,3.8vw,40px)/1.08 var(--display);letter-spacing:-.03em;margin-top:-8px;color:var(--ink)}
+.step h4{margin-top:4px;font:500 11px var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--ink)}
+.grid3{display:grid;gap:12px;grid-template-columns:repeat(3,minmax(0,1fr))}
+.card{padding:20px;border-radius:16px;background:var(--card-solid);border:1px solid var(--line);display:grid;gap:8px;align-content:start}
+.card h3{font:700 17px/1.3 var(--display);letter-spacing:-.02em}
+.card p{font-size:14px;line-height:1.55;color:var(--text-mid)}
+.ic{width:44px;height:44px;padding:11px;margin-bottom:4px;border-radius:12px;background:var(--ink-2);fill:none;stroke:var(--gold);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.tip,.why{padding:16px 18px;border-radius:16px;font-size:14.5px;line-height:1.65;color:var(--text-mid)}
+.tip b,.res b{display:block;margin-bottom:6px;font:600 10.5px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink)}
+.tip{background:rgba(var(--cool-rgb),.35);border:1px solid rgba(var(--cool-rgb),.9)}
+.why{background:rgba(var(--gold-rgb),.16);border:1px solid rgba(var(--gold-rgb),.55);color:var(--ink);font-weight:500}
+
+.do{list-style:none;display:grid;gap:10px;counter-reset:d}
+.do li{counter-increment:d;position:relative;padding:16px 18px 16px 62px;border-radius:16px;background:var(--card-solid);border:1px solid var(--line);font-weight:600;font-size:15px;line-height:1.5}
+.do li:before{content:counter(d,decimal-leading-zero);position:absolute;left:16px;top:13px;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font:600 10.5px var(--mono);background:var(--gold);color:var(--ink)}
+.do li small{display:block;margin-top:4px;font-weight:400;font-size:14px;line-height:1.6;color:var(--text-mid)}
+
+.logic{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:12px;align-items:stretch}
+.logic article{padding:20px;border-radius:16px;background:var(--card-solid);border:1px solid var(--line)}
+.logic .hot{background:var(--ink-2);border-color:var(--ink-2);color:var(--cream)}
+.logic .k{display:block;margin-bottom:10px;font:500 10.5px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim)}
+.logic .hot .k{color:var(--gold)}
+.logic h3{margin-bottom:12px;font:700 20px/1.25 var(--display);letter-spacing:-.02em}
+.logic ul{list-style:none;display:grid;gap:6px;font-size:14px}
+.arr{align-self:center;font-size:22px}
+
+.level{display:grid;gap:12px}
+.level+.level{margin-top:12px;padding-top:24px;border-top:1px solid var(--line)}
+.path{display:flex;gap:16px;align-items:flex-start}
+.big{flex:none;width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font:700 22px var(--display);color:var(--cream);background:var(--ink-2)}
+.path strong{display:block;font:700 18px/1.3 var(--display);letter-spacing:-.02em}
+.path p{margin-top:2px;font-size:14px;color:var(--text-mid)}
+.faq{display:grid;gap:8px}
+.faq details{border-radius:16px;background:var(--card-solid);border:1px solid var(--line);transition:border-color .2s,box-shadow .2s}
+.faq details[open]{border-color:rgba(var(--gold-rgb),.7);box-shadow:0 10px 30px rgba(var(--gold-rgb),.12)}
+.faq summary{list-style:none;cursor:pointer;padding:12px 16px;display:flex;align-items:center;gap:12px;font:700 15px/1.35 var(--display);letter-spacing:-.01em}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary span{flex:1}
+.faq summary i{flex:none;min-width:30px;font:600 10.5px var(--mono);font-style:normal;color:var(--text-dim)}
+.faq summary:after{content:"+";flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line-2);font:400 17px/1 var(--sans);transition:transform .2s,background .2s}
+.faq details[open] summary:after{transform:rotate(45deg);background:var(--gold);border-color:var(--gold)}
+.faq details p{padding:0 16px 12px;font-size:14px;line-height:1.55;color:var(--text-mid)}
+.faq .res{color:var(--ink);font-weight:500}
+
+.setbox{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.segs{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-bottom:12px;padding:3px;border-radius:999px;background:var(--card-solid);border:1px solid var(--line)}
+.seg{min-height:36px;border:0;border-radius:999px;background:none;font-weight:600;font-size:13px;color:var(--text-mid);cursor:pointer;transition:background .2s,color .2s}
+.seg.on{background:var(--ink-2);color:var(--cream)}
+.stats{list-style:none}
+.stats li{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:10px 2px;border-bottom:1px solid var(--line);font-size:14px;color:var(--text-mid)}
+.stats b{flex:none;font:700 20px var(--display);letter-spacing:-.02em;color:var(--ink)}
+.right{padding:20px;border-radius:16px;background:var(--card-solid);border:1px solid var(--line)}
+.right h3{margin-bottom:12px;font:700 17px/1.3 var(--display);letter-spacing:-.02em}
+.right>p{margin-top:14px;font-size:13px;line-height:1.5;color:var(--text-mid)}
+.chips{list-style:none;display:flex;flex-wrap:wrap;gap:6px}
+.chip{padding:5px 11px;border-radius:999px;background:var(--gold);font-size:13px;font-weight:600;transition:background .2s,color .2s}
+[data-active="bronze"] .l2,[data-active="bronze"] .l3,[data-active="silver"] .l3{background:rgba(21,16,12,.06);color:var(--text-dim)}
+
+.pack{display:grid;grid-template-columns:minmax(0,1fr) 180px;gap:12px;align-items:stretch}
+.list{display:grid;gap:10px}
+.chk{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:16px;background:var(--card-solid);border:1px solid var(--line);cursor:pointer;transition:border-color .2s,background .2s}
+.chk input{position:absolute;opacity:0;width:0;height:0}
+.box{flex:none;display:grid;place-items:center;width:24px;height:24px;border-radius:8px;border:1.5px solid var(--line-2);background:#fff;transition:background .15s,border-color .15s}
+.box:after{content:"";width:11px;height:6px;margin-top:-2px;border-left:2px solid var(--ink);border-bottom:2px solid var(--ink);transform:rotate(-45deg) scale(0);transition:transform .15s}
+.chk input:checked+.box{background:var(--gold);border-color:var(--gold)}
+.chk input:checked+.box:after{transform:rotate(-45deg) scale(1)}
+.chk:has(input:checked){border-color:rgba(var(--gold-rgb),.7);background:rgba(var(--gold-rgb),.08)}
+.txt b{display:block;font-size:15px;font-weight:600;line-height:1.35}
+.txt small{display:block;margin-top:2px;font-size:13px;line-height:1.45;color:var(--text-mid)}
+.meter{display:flex;flex-direction:column;justify-content:center;padding:20px;border-radius:18px;background:var(--ink-2);color:var(--cream);box-shadow:0 14px 34px rgba(21,16,12,.18)}
+.meter b{font:700 40px/1 var(--display);letter-spacing:-.03em}
+.meter p{margin:8px 0 16px;font-size:13px;color:rgba(244,239,231,.6)}
+.meter .bar{display:block;height:6px;padding:0;margin:0;border-radius:3px;background:rgba(244,239,231,.14);overflow:hidden}
+.meter .bar i{display:block;width:0;height:100%;background:var(--gold);transition:width .3s}
+
+.nav{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-top:8px;border-top:1px solid var(--line);margin-top:4px}
+.nav>:only-child{margin-left:auto}
+.btn{display:inline-flex;align-items:center;gap:12px;padding:8px 8px 8px 20px;border-radius:999px;border:0;background:var(--ink-2);color:var(--cream);font:700 14px var(--sans);text-align:left;cursor:pointer;transition:transform .2s,box-shadow .2s;margin-top:16px;box-shadow:0 10px 24px rgba(21,16,12,.16)}
+.btn:hover{transform:translateY(-1px);box-shadow:0 14px 30px rgba(21,16,12,.22)}
+.btn i{flex:none;width:30px;height:30px;border-radius:50%;background:var(--gold);color:var(--ink);display:grid;place-items:center;font-style:normal;font-size:15px}
+.btn-ghost{background:rgba(255,255,255,.6);color:var(--ink);border:1px solid var(--line-2);padding:12px 20px;box-shadow:none}
+.btn-ghost:hover{background:#fff;box-shadow:none}
+.foot{margin-top:40px;padding-top:20px;border-top:1px solid var(--line);font-size:12.5px;color:var(--text-dim)}
+
+@media (max-width:1100px){.main{padding:40px 32px 56px}}
+@media (max-width:900px){
+  .sidebar{transform:translateX(-100%);transition:transform .25s ease;box-shadow:22px 0 56px rgba(21,16,12,.18);background:rgba(246,247,249,.97)}
+  .sidebar.open{transform:none}
+  .overlay.open{display:block}
+  .menu-btn{display:inline-flex}
+  .main{margin-left:0;padding:72px 16px 48px}
+}
+@media (max-width:680px){
+  .hero-facts,.grid3,.setbox,.logic,.pack{grid-template-columns:minmax(0,1fr)}
+  .arr{transform:rotate(90deg);justify-self:center}
+}
+@media (max-width:560px){
+  .step{padding:22px 18px}
+  .bar{gap:8px}
+  .arrow{width:34px;height:34px}
+  .nav{flex-direction:column-reverse;align-items:stretch}
+  .nav .btn{justify-content:space-between}
+  .btn-ghost{justify-content:center}
+}
+@media (prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+
+#lang{display:none}
+.grid2,.grid3{gap:16px}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.lead{font-size:16px;line-height:1.6;color:var(--text-mid);max-width:680px}
+.lead b,.card p b,.ul b{color:var(--ink);font-weight:600}
+.card em,.do em,.why em{font-style:normal;font:500 .92em var(--mono)}
+.card>.ul{margin-top:4px}
+.card .lnks{margin-top:8px}
+.card .k{font:500 10.5px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim)}
+.why b{display:block;margin-bottom:6px;font:600 10.5px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink)}
+.ul{list-style:none;display:grid;gap:8px;font-size:14px;line-height:1.5;color:var(--text-mid)}
+.ul li{position:relative;padding-left:18px}
+.ul li:before{content:"";position:absolute;left:0;top:.52em;width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 1px var(--gold-deep)}
+.lnks{display:flex;flex-wrap:wrap;gap:8px}
+.lnk{display:inline-flex;align-items:center;gap:10px;max-width:100%;padding:6px 6px 6px 14px;border-radius:999px;background:var(--ink-2);color:var(--cream);font:600 13px/1.3 var(--sans);text-decoration:none;transition:transform .2s,box-shadow .2s}
+.lnk:hover{transform:translateY(-1px);box-shadow:0 10px 20px rgba(21,16,12,.18)}
+.lnk:focus-visible,.tl:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.lnk i{flex:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--gold);color:var(--ink);font-style:normal;font-size:12px}
+.tl{color:var(--ink);font-weight:600;text-decoration-color:var(--gold-deep);text-decoration-thickness:2px;text-underline-offset:3px;word-break:break-word}
+.code{margin:0;padding:16px 18px;border-radius:14px;background:var(--ink-2);color:rgba(244,239,231,.82);font:500 13px/1.7 var(--mono);white-space:pre-wrap;word-break:break-word}
+.code b{color:var(--gold);font-weight:500}
+.code .c{color:rgba(244,239,231,.5)}
+.formula{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:20px}
+.formula article{position:relative;display:grid;gap:4px;padding:16px 12px;border-radius:16px;background:var(--card-solid);border:1px solid var(--line);text-align:center}
+.formula article:not(:last-child):after{content:"→";position:absolute;right:-17px;top:50%;transform:translateY(-50%);font-size:14px;color:var(--text-dim)}
+.formula span{font:600 10.5px var(--mono);letter-spacing:.1em;color:var(--text-dim)}
+.formula b{font:700 15px/1.25 var(--display);letter-spacing:-.01em;overflow-wrap:anywhere}
+.formula small{font-size:12px;line-height:1.35;color:var(--text-mid)}
+.cmp{display:grid;gap:12px;align-content:start;padding:20px;border-radius:16px;border:1px solid var(--line);background:var(--card-solid);font-size:14px;color:var(--text-mid)}
+.cmp.good{background:rgba(var(--gold-rgb),.14);border-color:rgba(var(--gold-rgb),.6)}
+.cmp-k{font:600 10.5px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink)}
+.cmp.bad .cmp-k{color:#b4331f}
+.cmp .note{padding:10px 14px;border-radius:12px;background:rgba(240,67,46,.08);border:1px solid rgba(240,67,46,.25);color:var(--ink)}
+.tbl-wrap,.price{border-radius:16px;background:var(--card-solid);border:1px solid var(--line);overflow:hidden}
+.tbl{width:100%;border-collapse:collapse;font-size:14px;line-height:1.5;color:var(--text-mid)}
+.tbl th{padding:12px 16px;text-align:left;font:500 10.5px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);border-bottom:1px solid var(--line)}
+.tbl td{padding:14px 16px;vertical-align:middle;border-bottom:1px solid var(--line)}
+.tbl tr:last-child td{border-bottom:0}
+.tbl td>b,.sv b{font:700 15px/1.3 var(--display);color:var(--ink)}
+.tbl small{display:block;margin-top:2px;font-size:12px;line-height:1.4;color:var(--text-dim)}
+.bdg{display:inline-block;padding:3px 10px;border-radius:999px;background:rgba(21,16,12,.07);font-size:12px;font-weight:600;color:var(--ink);white-space:nowrap}
+.bdg.top{background:var(--gold)}
+.spd{display:inline-flex;align-items:center;gap:8px}
+.spd>span{display:inline-flex;gap:3px}
+.spd i{width:7px;height:7px;border-radius:50%;background:var(--line-2)}
+.spd i.on{background:var(--gold);box-shadow:0 0 0 1px var(--gold-deep)}
+.card .plan-p{margin-bottom:4px;font:700 34px/1 var(--display);letter-spacing:-.03em;color:var(--ink)}
+.plan.dark{background:var(--ink-2);border-color:var(--ink-2);color:var(--cream)}
+.card.plan.dark p{color:rgba(244,239,231,.7)}
+.card.plan.dark .plan-p{color:var(--gold)}
+.linkcards{list-style:none;counter-reset:l;display:grid;gap:12px}
+.linkcards li{counter-increment:l;position:relative;display:grid;gap:8px;padding:18px 20px 18px 66px;border-radius:16px;background:var(--card-solid);border:1px solid var(--line)}
+.linkcards li:before{content:counter(l);position:absolute;left:18px;top:16px;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:var(--gold);color:var(--ink);font:600 13px var(--mono)}
+.linkcards h3{font:700 16px/1.35 var(--display);letter-spacing:-.01em}
+.linkcards p{font-size:14px;line-height:1.55;color:var(--text-mid)}
+.linkcards .lnks{margin-top:4px}
+.price-h{padding:18px 20px;background:var(--ink-2);color:var(--cream)}
+.price-h h3{font:700 18px/1.3 var(--display);letter-spacing:-.02em}
+.price-h p{margin-top:4px;font-size:13px;line-height:1.5;color:rgba(244,239,231,.65)}
+.p-new{font:700 17px var(--display);color:var(--ink);white-space:nowrap}
+.p-old{margin-left:6px;font-size:12.5px;color:var(--text-dim);text-decoration:line-through;white-space:nowrap}
+.price-f{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:16px 20px;border-top:1px solid var(--line)}
+.price-f p{flex:1;min-width:220px;font-size:13.5px;line-height:1.5;color:var(--text-mid)}
+.tasks{display:grid;gap:12px}
+.task{display:grid;gap:10px;padding:18px 20px;border-radius:16px;background:var(--card-solid);border:1px solid var(--line)}
+.task-h{display:flex;align-items:center;gap:12px}
+.task-n{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--gold);font:600 12px var(--mono)}
+.task h3{flex:1;font:700 16px/1.35 var(--display);letter-spacing:-.01em}
+.task-t{flex:none;padding:3px 10px;border-radius:999px;background:rgba(21,16,12,.07);font:500 11px var(--mono);white-space:nowrap}
+.task p{font-size:14px;line-height:1.6;color:var(--text-mid)}
+.end{padding:24px;border-radius:16px;background:var(--ink-2);color:var(--cream);text-align:center;font:700 20px/1.3 var(--display);letter-spacing:-.02em}
+.end-k{margin-top:10px;font:500 10.5px/1.5 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:rgba(244,239,231,.6)}
+.hero-facts.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+.hero-facts.four .fact-v{margin:0 0 6px;font:700 30px/1 var(--display);letter-spacing:-.03em}
+.hero-facts.four .fact-k{letter-spacing:.08em;text-transform:none;font-size:11.5px;color:var(--text-mid)}
+@media (max-width:760px){
+  .formula{grid-template-columns:minmax(0,1fr);gap:22px}
+  .formula article:not(:last-child):after{content:"↓";right:auto;left:50%;top:auto;bottom:-20px;transform:translateX(-50%)}
+  .grid2{grid-template-columns:minmax(0,1fr)}
+  .hero-facts.four{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:560px){
+  .tbl thead{display:none}
+  .tbl,.tbl tbody,.tbl tr,.tbl td{display:block;width:100%}
+  .tbl tr{padding:12px 16px;border-bottom:1px solid var(--line)}
+  .tbl tr:last-child{border-bottom:0}
+  .tbl td{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:4px 0;border:0;text-align:right}
+  .tbl td:before{content:attr(data-k);flex:none;font:500 10.5px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim)}
+  .linkcards li{padding:16px 16px 16px 58px}
+  .linkcards li:before{left:14px;top:14px;width:30px;height:30px}
+  .task-h{flex-wrap:wrap}
+  .task h3{flex-basis:calc(100% - 42px)}
+  .task-t{margin-left:42px}
+}
+
+.title{font:700 clamp(32px,4.6vw,52px)/1.08 var(--display);letter-spacing:-.03em;margin:16px 0 0;color:var(--ink)}
+.toc{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:28px}
+.toc-i{display:grid;gap:6px;align-content:start;padding:16px 18px;border-radius:16px;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);text-align:left;cursor:pointer;transition:transform .2s,border-color .2s}
+.toc-i:hover{transform:translateY(-1px);border-color:rgba(var(--gold-rgb),.8)}
+.toc-i span{font:500 10.5px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim)}
+.toc-i b{font:700 16px/1.3 var(--display);letter-spacing:-.01em}
+.tags{list-style:none;display:flex;flex-wrap:wrap;gap:8px}
+.tags li{padding:5px 12px;border-radius:999px;background:rgba(21,16,12,.06);font-size:13px;font-weight:500;line-height:1.35}
+.tags li.on{background:var(--gold);font-weight:600}
+.dl .btn{margin-top:0;text-decoration:none}
+.sec{margin-top:12px;font:700 20px/1.25 var(--display);letter-spacing:-.02em}
+.do.plain li{font-weight:400;color:var(--text-mid);padding-top:18px;padding-bottom:18px}
+.do.plain li b{font-weight:600;color:var(--ink)}
+.kbd{padding:2px 7px;border-radius:7px;background:#fff;border:1px solid var(--line-2);font:500 12.5px var(--mono);color:var(--ink);white-space:nowrap}
+.cmd{font-size:14px;color:var(--text-mid)}
+.dim{font-weight:600;color:var(--text-dim)}
+.tip{color:var(--ink)}
+.foot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:32px}
+@media (max-width:760px){.toc{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+.step>h2{font-size:clamp(26px,3.2vw,36px)}
+.dls{display:flex;flex-wrap:wrap;gap:12px}
+.dls .btn{margin-top:0;text-decoration:none}
+.tbl .tl{white-space:nowrap;word-break:normal}
+.tip b{display:block}
+.tip{color:var(--ink)}
+.voice{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:18px 20px;border-radius:16px;background:rgba(var(--gold-rgb),.16);border:1px solid rgba(var(--gold-rgb),.55)}
+.voice b{font:700 16px/1.3 var(--display);letter-spacing:-.01em}
+.voice p{margin-top:2px;font-size:14px;color:var(--text-mid)}
+.grid2 .card h3{font-size:16px}
+.end p:first-child{text-wrap:balance}
+.end-k{text-transform:none;letter-spacing:.02em;font-size:12.5px}
+</style>
+</head>
+<body>
+<button type="button" class="menu-btn" id="menu"><span></span>Меню<b id="menuNum"></b></button>
+<div class="overlay" id="ov"></div>
+<div class="layout">
+  <aside class="sidebar" id="side">
+    <div class="sidebar-brand">
+      <span class="topnav"><span class="topnav-on">AI · Оператор</span><span class="topnav-beam"></span><span class="topnav-off">Конспект</span></span>
+      <p class="sidebar-sub">AI-стек</p>
+      <div class="sidebar-progress"><i id="sideFill"></i></div>
+    </div>
+    <nav class="sidebar-nav"><p class="nav-group">Обзор</p><button type="button" class="nav-item" data-go="0"><span class="nav-num">01</span><span>Обзор инструментов</span></button><p class="nav-group">Инструменты</p><button type="button" class="nav-item" data-go="1"><span class="nav-num">02</span><span>Lispr</span></button><button type="button" class="nav-item" data-go="2"><span class="nav-num">03</span><span>Wispr Flow</span></button><button type="button" class="nav-item" data-go="3"><span class="nav-num">04</span><span>Claude</span></button><button type="button" class="nav-item" data-go="4"><span class="nav-num">05</span><span>Google Gemini</span></button><button type="button" class="nav-item" data-go="5"><span class="nav-num">06</span><span>Gemini Notebook</span></button><button type="button" class="nav-item" data-go="6"><span class="nav-num">07</span><span>Gemini Notebook + Gemini</span></button><button type="button" class="nav-item" data-go="7"><span class="nav-num">08</span><span>Perplexity</span></button><button type="button" class="nav-item" data-go="8"><span class="nav-num">09</span><span>Comet Browser</span></button><p class="nav-group">Итог</p><button type="button" class="nav-item" data-go="9"><span class="nav-num">10</span><span>Итоговый стек</span></button></nav>
+  </aside>
+  <main class="main"><div class="wrap">
+    <header class="hero" id="hero">
+      <p class="eyebrow">Конспект урока</p>
+      <h1 class="hero-title">AI-стек</h1>
+      <span class="hero-sub"><span class="hl">7 AI-инструментов</span> для повседневной работы</span>
+      <p class="hero-lead">Цель урока: установить и настроить базовый набор нейросетей для повседневной работы. После урока у вас будет работающий стек из 7 AI-инструментов.</p>
+    </header>
+    <div class="glass bar"><button type="button" class="arrow" id="prev" aria-label="Назад">←</button><div class="track" id="track"></div><span class="count" id="count"></span><button type="button" class="arrow" id="next" aria-label="Дальше">→</button></div>
+    <article class="glass step" data-step="0" hidden><p class="eyebrow">Обзор</p><h2>Обзор инструментов</h2><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Инструмент</th><th>Для чего</th><th>Ссылка</th></tr></thead><tbody><tr><td data-k="Инструмент"><span class="sv"><b>1. Lispr</b></span></td><td data-k="Для чего">Голосовой ввод с переводом на лету</td><td data-k="Ссылка"><a class="tl" href="https://lispr.ai/ru/" target="_blank" rel="noopener">lispr.ai</a></td></tr><tr><td data-k="Инструмент"><span class="sv"><b>Wispr Flow</b><small>альтернатива</small></span></td><td data-k="Для чего">Голосовой ввод везде</td><td data-k="Ссылка"><a class="tl" href="https://wisprflow.ai" target="_blank" rel="noopener">wisprflow.ai</a></td></tr><tr><td data-k="Инструмент"><span class="sv"><b>2. Claude</b><small>в приоритете</small></span></td><td data-k="Для чего">Тексты, маркетинг, сценарии</td><td data-k="Ссылка"><a class="tl" href="https://claude.ai" target="_blank" rel="noopener">claude.ai</a></td></tr><tr><td data-k="Инструмент"><span class="sv"><b>3. Google Gemini</b></span></td><td data-k="Для чего">Генерация изображений, работа с контентом</td><td data-k="Ссылка"><a class="tl" href="https://gemini.google.com" target="_blank" rel="noopener">gemini.google.com</a></td></tr><tr><td data-k="Инструмент"><span class="sv"><b>4. Gemini Notebook</b><small>бывший NotebookLM</small></span></td><td data-k="Для чего">Анализ документов, внутренний поисковик</td><td data-k="Ссылка"><a class="tl" href="https://notebook.google.com" target="_blank" rel="noopener">notebook.google.com</a></td></tr><tr><td data-k="Инструмент"><span class="sv"><b>5. Perplexity</b></span></td><td data-k="Для чего">Глубокие исследования, поиск товаров</td><td data-k="Ссылка"><a class="tl" href="https://www.perplexity.ai" target="_blank" rel="noopener">perplexity.ai</a></td></tr><tr><td data-k="Инструмент"><span class="sv"><b>6. Comet Browser</b><small>по желанию</small></span></td><td data-k="Для чего">AI-браузер с ассистентом</td><td data-k="Ссылка"><a class="tl" href="https://www.perplexity.ai/comet" target="_blank" rel="noopener">perplexity.ai/comet</a></td></tr><tr><td data-k="Инструмент"><span class="sv"><b>7. Grok</b><small>необязательно</small></span></td><td data-k="Для чего">Оживление фото, видео (нужна платная подписка)</td><td data-k="Ссылка"><a class="tl" href="https://x.com/i/grok" target="_blank" rel="noopener">x.com/i/grok</a></td></tr></tbody></table></div><div class="voice"><div><b>Как настроить голосовой ввод</b><p>Отдельный гайд для Windows и Mac.</p></div><div class="dl"><a class="btn" href="https://sofiialand.github.io/ai-operator/golosovoi-vvod.html" target="_blank" rel="noopener"><span>Открыть гайд</span><i aria-hidden="true">↗</i></a></div></div><div class="nav"><button type="button" class="btn" data-go="1"><span>Дальше: Lispr</span><i>→</i></button></div></article><article class="glass step" data-step="1" hidden><p class="eyebrow">Инструменты</p><h2>1. Lispr – голосовой ввод текста</h2><p class="lead"><b>Зачем:</b> позволяет диктовать текст голосом и сразу переводить его в любом приложении на Windows и Mac. Зажали клавишу, сказали – и текст появился у курсора.</p><ul class="tags"><li>без аккаунта</li><li>около 99 языков</li><li>перевод на 32 языка</li><li>нужен интернет</li></ul><div class="dls"><a class="btn" href="https://lispr.ai/ru/windows/" target="_blank" rel="noopener"><span>Скачать для Windows</span><i aria-hidden="true">↗</i></a><a class="btn" href="https://lispr.ai/ru/" target="_blank" rel="noopener"><span>Скачать для Mac</span><i aria-hidden="true">↗</i></a></div><h3 class="sec">Установка на Windows</h3><ol class="do plain"><li>Зайдите на <b>lispr.ai/ru/windows</b> и скачайте установщик: около 14 МБ, нужна Windows 10 или новее, 64-bit.</li><li>Запустите установщик: при первом запуске он сам настроит нужные компоненты.</li><li>Разрешите доступ к микрофону.</li></ol><h3 class="sec">Установка на Mac</h3><ol class="do plain"><li>Зайдите на <b>lispr.ai/ru</b> и скачайте файл: около 6 МБ, нужна macOS 11 Big Sur или новее, Apple Silicon или Intel.</li><li>Откройте скачанный <code class="kbd">.dmg</code> и перетащите Lispr в Applications.</li><li>Запустите приложение и выдайте два доступа в Системных настройках: «Микрофон» и «Универсальный доступ». Приложение само проведет по ним.</li></ol><h3 class="sec">Как пользоваться</h3><ol class="do plain"><li>Поставьте курсор в любое текстовое поле.</li><li>Зажмите правый <code class="kbd">Ctrl</code> на Windows или правый <code class="kbd">Option</code> на Mac и говорите.</li><li>Чтобы сразу перевести фразу, во время речи добавьте <code class="kbd">Shift</code> на Windows или <code class="kbd">Control</code> на Mac.</li><li>Отпустите клавиши: текст напечатается там, где стоит курсор.</li></ol><p class="tip"><b>Бесплатный тариф</b>Диктовка, перевод и все языки бесплатны, но минуты диктовки ограничены недельным лимитом. Lispr Pro снимает лимит: 7.99&nbsp;$ в месяц или 79&nbsp;$ в год.</p><div class="nav"><button type="button" class="btn btn-ghost" data-go="0">Назад</button><button type="button" class="btn" data-go="2"><span>Дальше: Wispr Flow</span><i>→</i></button></div></article><article class="glass step" data-step="2" hidden><p class="eyebrow">Инструменты</p><h2>Wispr Flow – альтернативный голосовой ввод</h2><p class="lead"><b>Зачем:</b> позволяет диктовать текст голосом в любом приложении на Mac и Windows. Одна кнопка – и вы говорите вместо того, чтобы печатать.</p><div class="dl"><a class="btn" href="https://wisprflow.ai" target="_blank" rel="noopener"><span>Перейти на wisprflow.ai</span><i aria-hidden="true">↗</i></a></div><h3 class="sec">Пошаговая установка</h3><ol class="do plain"><li>Перейдите на <b>wisprflow.ai</b> и скачайте приложение.</li><li>На Mac откройте скачанный файл и перетащите приложение в папку Applications.</li><li>Запустите Wispr Flow и войдите через браузер: Google, Apple, Microsoft или почта.</li><li>Разрешите доступ к микрофону и Accessibility (System Settings → Privacy &amp; Security).</li><li>Проверьте микрофон и назначьте горячую клавишу.</li><li>Выберите язык: Russian (или нужный вам).</li></ol><h3 class="sec">Использование</h3><p class="tip">Зажмите <code class="kbd">Fn</code> в любом приложении (на Mac без клавиши Fn – <code class="kbd">Ctrl</code> + <code class="kbd">Opt</code>), говорите и отпустите клавишу. Текст автоматически появится с правильной пунктуацией. Сочетание меняется в Settings → General → Shortcuts.</p><p class="tip"><b>Бесплатный тариф</b>Карта не нужна, но число слов в неделю ограничено. Безлимит – на тарифе Pro: от 12&nbsp;$ в месяц при оплате за год или 15&nbsp;$ помесячно.</p><div class="nav"><button type="button" class="btn btn-ghost" data-go="1">Назад</button><button type="button" class="btn" data-go="3"><span>Дальше: Claude</span><i>→</i></button></div></article><article class="glass step" data-step="3" hidden><p class="eyebrow">Инструменты</p><h2>2. Claude – лучший копирайтер</h2><p class="lead"><b>Зачем:</b> лучшая языковая модель для текстов. Используется для маркетинга, сценариев Reels, лендингов, коммерческих предложений. Пишет красиво и естественно.</p><div class="dl"><a class="btn" href="https://claude.ai" target="_blank" rel="noopener"><span>Перейти на claude.ai</span><i aria-hidden="true">↗</i></a></div><h3 class="sec">Пошаговая настройка</h3><ol class="do plain"><li>Перейдите на <b>claude.ai</b>.</li><li>Нажмите Continue with Google или создайте аккаунт.</li><li>Выберите Claude Free для начала.</li><li>Начните диалог.</li></ol><p class="tip"><b>Когда использовать</b>Все что связано с текстом: посты, статьи, письма, сценарии, КП, тексты для сайтов.</p><p class="tip"><b>Что входит в тариф</b>Free ограничен по использованию за 5 часов и за неделю. Claude Code и Claude в Chrome открываются с тарифа Pro: 20&nbsp;$ в месяц или 17&nbsp;$ при оплате за год.</p><div class="nav"><button type="button" class="btn btn-ghost" data-go="2">Назад</button><button type="button" class="btn" data-go="4"><span>Дальше: Google Gemini</span><i>→</i></button></div></article><article class="glass step" data-step="4" hidden><p class="eyebrow">Инструменты</p><h2>3. Google Gemini – генерация изображений и контента</h2><p class="lead"><b>Зачем:</b> генерация и редактирование изображений, работа с документами, создание контента.</p><div class="dl"><a class="btn" href="https://gemini.google.com" target="_blank" rel="noopener"><span>Перейти на gemini.google.com</span><i aria-hidden="true">↗</i></a></div><h3 class="sec">Пошаговая настройка</h3><ol class="do plain"><li>Перейдите на <b>gemini.google.com</b>.</li><li>Войдите через Google-аккаунт.</li><li>Создавать изображения можно и без подписки, с лимитами.</li><li>Нужны более высокие лимиты – откройте Настройки внизу страницы и выберите переход на платный план Google AI.</li><li>Выберите план и следуйте шагам на экране. Понадобится способ оплаты, а наличие пробного периода зависит от страны и аккаунта.</li></ol><h3 class="sec">Как генерировать изображения</h3><ol class="do plain"><li>Откройте меню инструментов в поле ввода.</li><li>Выберите «Создание изображений».</li><li>Загрузите нужные фото и опишите, что хотите получить.</li><li>Сохраните результат правой кнопкой мыши.</li></ol><p class="why"><b>Пример</b>Сделай фотографию, на которой мой папа выглядит на 30 лет моложе, и мы вместе сидим в первом классе самолета</p><div class="nav"><button type="button" class="btn btn-ghost" data-go="3">Назад</button><button type="button" class="btn" data-go="5"><span>Дальше: Gemini Notebook</span><i>→</i></button></div></article><article class="glass step" data-step="5" hidden><p class="eyebrow">Инструменты</p><h2>4. Gemini Notebook – персональный поисковик по документам</h2><p class="lead"><b>Зачем:</b> создает внутренний поисковик только по вашим материалам. Загружаете PDF, видео, аудио, ссылки и задаете вопросы. Ответы основаны на добавленных источниках, со ссылками на них.</p><p class="tip"><b>Новое название</b>С июля 2026 года NotebookLM называется Gemini Notebook.</p><div class="dl"><a class="btn" href="https://notebook.google.com" target="_blank" rel="noopener"><span>Перейти на notebook.google.com</span><i aria-hidden="true">↗</i></a></div><h3 class="sec">Пошаговая настройка</h3><ol class="do plain"><li>Перейдите на <b>notebook.google.com</b>.</li><li>Войдите через Google-аккаунт.</li><li>Нажмите «Создать блокнот».</li><li>Загрузите источники: Google Docs, PDF, YouTube-видео, сайты, аудиофайлы, текст. На бесплатном тарифе – до 50 источников в блокноте.</li><li>Дождитесь обработки.</li></ol><h3 class="sec">Возможности</h3><div class="grid2"><article class="card"><h3>Аудиопересказ</h3><p>AI озвучивает содержимое документов</p></article><article class="card"><h3>Презентация</h3><p>Автоматическая генерация слайдов</p></article><article class="card"><h3>Инфографика</h3><p>Визуализация данных</p></article><article class="card"><h3>Тесты</h3><p>Проверка знаний по материалу</p></article></div><p class="why"><b>Пример</b>Кратко опиши содержание этих материалов и объясни, как я могу использовать их для позиционирования себя как эксперта в … (ваша ниша)</p><div class="nav"><button type="button" class="btn btn-ghost" data-go="4">Назад</button><button type="button" class="btn" data-go="6"><span>Дальше: Gemini Notebook + Gemini</span><i>→</i></button></div></article><article class="glass step" data-step="6" hidden><p class="eyebrow">Инструменты</p><h2>Связка Gemini Notebook + Gemini</h2><p class="lead"><b>Зачем:</b> Gemini Notebook работает только с вашими документами. Gemini имеет доступ к интернету. Вместе они позволяют использовать ваши данные + мировые знания.</p><h3 class="sec">Как использовать связку</h3><ol class="do plain"><li>Создайте блокнот в Gemini Notebook с вашими материалами.</li><li>Откройте Gemini.</li><li>Нажмите + в поле ввода и выберите Gemini Notebook (пункт может называться NotebookLM).</li><li>Выберите нужный блокнот.</li><li>Теперь Gemini имеет доступ к вашим документам и к интернету.</li></ol><p class="why"><b>Пример</b>На базе этих материалов о рынке недвижимости Бали, сгенерируй 3 идеи для вирусных Reels, которые помогут мне привлечь клиентов на услуги девелопмента</p><p class="tip"><b>Бонус Canvas</b>Выберите Canvas под полем ввода и попросите: «На базе этих материалов, какой калькулятор я могу сделать?» Gemini создаст интерактивное приложение прямо в чате.</p><div class="nav"><button type="button" class="btn btn-ghost" data-go="5">Назад</button><button type="button" class="btn" data-go="7"><span>Дальше: Perplexity</span><i>→</i></button></div></article><article class="glass step" data-step="7" hidden><p class="eyebrow">Инструменты</p><h2>5. Perplexity – глубокие исследования</h2><p class="lead"><b>Зачем:</b> AI-поисковик нового поколения. Функция «Глубокое исследование» анализирует сотни источников и выдает структурированный отчет. Также: умные новости и поиск товаров.</p><div class="dl"><a class="btn" href="https://www.perplexity.ai" target="_blank" rel="noopener"><span>Перейти на perplexity.ai</span><i aria-hidden="true">↗</i></a></div><h3 class="sec">Ключевые функции</h3><div class="grid2"><article class="card"><h3>Deep Research</h3><p>Глубокий анализ темы с отчетом. На бесплатном тарифе число запросов сильно ограничено.</p></article><article class="card"><h3>Discover</h3><p>Лента новостей по вашим интересам</p></article><article class="card"><h3>Shopping</h3><p>Поиск и сравнение товаров. Запущен для пользователей из США, в других странах возможности проверяйте в приложении.</p></article><article class="card"><h3>Pro Search</h3><p>Расширенный поиск: включается автоматически, на бесплатном тарифе с дневным лимитом</p></article></div><div class="nav"><button type="button" class="btn btn-ghost" data-go="6">Назад</button><button type="button" class="btn" data-go="8"><span>Дальше: Comet Browser</span><i>→</i></button></div></article><article class="glass step" data-step="8" hidden><p class="eyebrow">Инструменты</p><h2>6. Comet Browser – AI-браузер (бонус)</h2><p class="lead"><b>Зачем:</b> браузер со встроенным AI-ассистентом. Может автоматически заполнять формы, искать товары и выполнять задачи на сайтах. Браузер бесплатный, есть версии для Mac и Windows.</p><div class="dl"><a class="btn" href="https://www.perplexity.ai/comet" target="_blank" rel="noopener"><span>Перейти на perplexity.ai/comet</span><i aria-hidden="true">↗</i></a></div><p class="why"><b>Пример</b>Откройте Google Calendar, нажмите кнопку Assistant и скажите: «Проанализируй мой календарь и поставь встречу с инженером на любой свободный день начиная со среды»</p><div class="nav"><button type="button" class="btn btn-ghost" data-go="7">Назад</button><button type="button" class="btn" data-go="9"><span>Дальше: Итоговый стек</span><i>→</i></button></div></article><article class="glass step" data-step="9" hidden><p class="eyebrow">Итог</p><h2>Итоговый стек инструментов</h2><p class="lead">После урока у вас установлены и настроены:</p><div class="grid2"><article class="card"><h3>Wispr Flow</h3><p>Голосовой ввод</p></article><article class="card"><h3>Gemini</h3><p>Изображения + контент</p></article><article class="card"><h3>Gemini Notebook</h3><p>Анализ ваших документов</p></article><article class="card"><h3>Claude</h3><p>Тексты и маркетинг</p></article><article class="card"><h3>Perplexity</h3><p>Исследования и поиск</p></article><article class="card"><h3>Comet</h3><p>AI-браузер (опционально)</p></article></div><div class="end"><p>Не существует одной идеальной нейронки. Под каждый тип задач – свой инструмент.</p><p class="end-k">Ваша задача понять, какую нейронку использовать для какой задачи</p></div><div class="nav"><button type="button" class="btn btn-ghost" data-go="8">Назад</button></div></article>
+  </div></main>
+</div>
+<script>
+(function(){
+  var steps=[].slice.call(document.querySelectorAll('.step')),N=steps.length,cur=0;
+  var hero=document.getElementById('hero'),track=document.getElementById('track'),count=document.getElementById('count');
+  var prev=document.getElementById('prev'),next=document.getElementById('next'),fill=document.getElementById('sideFill');
+  var side=document.getElementById('side'),ov=document.getElementById('ov'),menuNum=document.getElementById('menuNum');
+  var items=[].slice.call(document.querySelectorAll('.nav-item'));
+  function store(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v);}catch(e){return null;}}
+  var seen=(store('op-stack-seen')||'').split(',').filter(Boolean).map(Number);
+  steps.forEach(function(s,i){var b=document.createElement('button');b.type='button';b.setAttribute('aria-label','Раздел '+(i+1));b.addEventListener('click',function(){show(i);});track.appendChild(b);});
+  var dots=[].slice.call(track.children);
+  function pad(n){return (n<10?'0':'')+n;}
+  function show(n,keep){
+    cur=Math.max(0,Math.min(N-1,n));
+    if(seen.indexOf(cur)<0){seen.push(cur);store('op-stack-seen',seen.join(','));}
+    steps.forEach(function(s,i){s.hidden=i!==cur;});
+    hero.hidden=cur!==0;
+    dots.forEach(function(b,i){b.classList.toggle('on',i===cur);b.classList.toggle('seen',seen.indexOf(i)>-1&&i!==cur);});
+    items.forEach(function(b,i){b.classList.toggle('active',i===cur);b.classList.toggle('seen',seen.indexOf(i)>-1&&i!==cur);if(i===cur){b.setAttribute('aria-current','step');if(b.scrollIntoView)b.scrollIntoView({block:'nearest'});}else b.removeAttribute('aria-current');});
+    count.innerHTML='<b>'+pad(cur+1)+'</b> / '+pad(N);
+    menuNum.textContent=pad(cur+1)+'/'+pad(N);
+    fill.style.width=((cur+1)/N*100)+'%';
+    prev.disabled=cur===0;next.disabled=cur===N-1;
+    side.classList.remove('open');ov.classList.remove('open');
+    try{history.replaceState(null,'','#'+(cur+1));}catch(e){}
+    if(!keep)window.scrollTo(0,0);
+  }
+  prev.addEventListener('click',function(){show(cur-1);});
+  next.addEventListener('click',function(){show(cur+1);});
+  document.addEventListener('click',function(e){var go=e.target.closest('[data-go]');if(go)show(+go.dataset.go);});
+  addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='PageDown')show(cur+1);
+    if(e.key==='ArrowLeft'||e.key==='PageUp')show(cur-1);
+    if(e.key==='Escape'){side.classList.remove('open');ov.classList.remove('open');}
+  });
+  document.getElementById('menu').addEventListener('click',function(){side.classList.add('open');ov.classList.add('open');});
+  ov.addEventListener('click',function(){side.classList.remove('open');ov.classList.remove('open');});
+  show((parseInt(location.hash.slice(1),10)||1)-1,true);
+})();
+</script>
+</body>
+</html>
