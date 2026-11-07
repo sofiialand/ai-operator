@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deep Research: исследуем рынок, конкурентов и продукт</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#eef1f4;--card:#fbfaf7;--line:rgba(21,16,12,.09);--ink:#15100c;--ink-2:#0b0c0e;--cream:#f4efe7;
+  --text-mid:rgba(21,16,12,.68);--gold:#fdd506;--gold-rgb:253,213,6;
+  --display:"Inter Tight","Inter",system-ui,sans-serif;--sans:"Inter",system-ui,sans-serif;--mono:"JetBrains Mono",ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--ink);font:400 15px/1.45 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden;display:grid;align-content:center}
+html[lang="uk"] .ru,html[lang="ru"] .uk{display:none!important}
+html.embed,html.embed body{height:auto}
+
+.page{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);grid-template-rows:1fr auto;grid-template-areas:"hero main" "res main";gap:16px;width:100%;max-width:1120px;margin:0 auto;padding:24px}
+
+.hero{grid-area:hero;display:flex;flex-direction:column;padding:28px;border-radius:24px;background:var(--ink-2);color:var(--cream)}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:32px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font:500 11px var(--mono);letter-spacing:.16em;text-transform:uppercase;color:rgba(244,239,231,.72)}
+.eyebrow:before{content:"";flex:none;width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 3px rgba(var(--gold-rgb),.25)}
+.switch{flex:none;display:flex;gap:2px;padding:3px;border-radius:999px;background:rgba(244,239,231,.1)}
+.switch button{min-width:40px;min-height:30px;padding:0 10px;border:0;border-radius:999px;background:none;color:rgba(244,239,231,.68);font:600 12px/1 var(--sans);cursor:pointer}
+.switch button[aria-pressed="true"]{background:var(--gold);color:var(--ink)}
+.switch button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+h1{font:700 clamp(30px,3.3vw,40px)/1.06 var(--display);letter-spacing:-.03em;text-wrap:balance}
+.lead{margin-top:16px;font-size:15px;line-height:1.5;color:rgba(244,239,231,.72)}
+.nb{white-space:nowrap}
+
+.res{grid-area:res;padding:28px;border-radius:24px;background:var(--gold);color:var(--ink)}
+.res span.lb{display:block;margin-bottom:12px;font:600 11px var(--mono);letter-spacing:.16em;text-transform:uppercase}
+.res b{display:block;margin-bottom:8px;font:700 22px/1.15 var(--display);letter-spacing:-.02em}
+.res p{font-size:15px;line-height:1.45}
+
+.main{grid-area:main;display:flex;flex-direction:column;justify-content:space-between;gap:20px;min-width:0}
+.lbl{margin-bottom:12px;font:700 19px/1.2 var(--display);letter-spacing:-.02em}
+
+.parts{list-style:none;display:grid;gap:12px}
+.parts li{display:grid;grid-template-columns:150px minmax(0,1fr);gap:16px;padding:16px 20px;border-radius:18px;background:var(--card);border:1px solid var(--line)}
+.parts .tag{display:block;margin-bottom:4px;font:600 10.5px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--text-mid)}
+.parts b{display:block;font:700 16px/1.2 var(--display);letter-spacing:-.01em}
+.parts p{font-size:14px;line-height:1.45;color:var(--text-mid)}
+.parts p strong{font-weight:600;color:var(--ink)}
+
+.sc{list-style:none;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.sc li{display:flex;align-items:flex-start;gap:12px;padding:16px;border-radius:18px;background:var(--card);border:1px solid var(--line)}
+.sc svg{flex:none;width:36px;height:36px;padding:9px;border-radius:10px;background:var(--ink-2);fill:none;stroke:var(--gold);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.sc b{display:block;margin-bottom:2px;font:700 15px/1.25 var(--display);letter-spacing:-.01em}
+.sc p{font-size:13px;line-height:1.35;color:var(--text-mid)}
+
+.hero,.res,.parts li,.sc li{animation:in .45s cubic-bezier(.22,.61,.36,1) backwards}
+.res{animation-delay:.08s}
+.parts li:nth-child(2){animation-delay:.06s}.parts li:nth-child(3){animation-delay:.12s}
+.sc li:nth-child(n+1){animation-delay:.16s}
+@keyframes in{from{opacity:0;transform:translateY(12px)}}
+@media (prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important}}
+
+@media (max-width:900px){
+  .page{grid-template-columns:minmax(0,1fr);grid-template-rows:none;grid-template-areas:"hero" "main" "res";gap:16px;padding:16px;align-content:start}
+  .hero,.res{padding:20px;border-radius:20px}
+  .top{margin-bottom:20px}
+  h1{font-size:28px}
+  .lead{margin-top:12px;font-size:14px}
+  .main{gap:16px}
+  .res span.lb{margin-bottom:8px}
+  .res b{margin-bottom:4px;font-size:20px}
+  .res p{font-size:14px}
+}
+@media (max-width:560px){
+  .lbl{margin-bottom:8px;font-size:17px}
+  .parts{gap:8px}
+  .parts li{grid-template-columns:minmax(0,1fr);gap:4px;padding:12px 14px;border-radius:14px}
+  .parts .tag{margin-bottom:2px;font-size:10px}
+  .parts p{font-size:13.5px;line-height:1.4}
+  .sc{gap:8px}
+  .sc li{flex-direction:column;gap:8px;padding:12px;border-radius:14px}
+  .sc svg{width:30px;height:30px;padding:7px;border-radius:8px}
+  .sc b{font-size:14px}
+  .sc p{font-size:12.5px}
+}
+</style>
+</head>
+<body>
+<main class="page">
+  <header class="hero">
+    <div class="top">
+      <p class="eyebrow"><span class="uk">Рівень 1 · Модуль 2</span><span class="ru">Уровень 1 · Модуль 2</span></p>
+      <div class="switch" role="group" aria-label="Мова / Язык">
+        <button type="button" data-set="uk" aria-pressed="false">UA</button>
+        <button type="button" data-set="ru" aria-pressed="true">RU</button>
+      </div>
+    </div>
+    <h1><span class="uk">Deep Research: досліджуємо ринок, конкурентів і продукт</span><span class="ru">Deep Research: исследуем рынок, конкурентов и продукт</span></h1>
+    <p class="lead"><span class="uk">Нішу й продукт, обрані навмання, доводиться переробляти вже після витрачених грошей. Перевіряємо ідею на даних: за кілька годин збираємо дослідження ринку, конкурентів і клієнтів.</span><span class="ru">Нишу и продукт, выбранные наугад, приходится переделывать уже после потраченных денег. Проверяем идею на данных: за пару часов собираем исследование рынка, конкурентов и клиентов.</span></p>
+  </header>
+
+  <div class="main">
+    <section>
+      <h2 class="lbl"><span class="uk">Що буде</span><span class="ru">Что будет</span></h2>
+      <ul class="parts">
+        <li>
+          <div><b><span class="uk">Ніша</span><span class="ru">Ниша</span></b></div>
+          <p><span class="uk"><strong>Яку нішу обрати:</strong> знаходимо ринок, де вже платять, на даних, а не на здогадках.</span><span class="ru"><strong>Какую нишу выбрать:</strong> находим рынок, где уже платят, на данных, а не на догадках.</span></p>
+        </li>
+        <li>
+          <div><b><span class="uk">Ідея продукту</span><span class="ru">Идея продукта</span></b></div>
+          <p><span class="uk"><strong>Який продукт робити:</strong> з болю клієнта й пропозицій конкурентів виводимо ідею продукту.</span><span class="ru"><strong>Какой продукт делать:</strong> из боли клиента и предложений конкурентов выводим идею продукта.</span></p>
+        </li>
+        <li>
+          <div><b><span class="uk">Нейромережі</span><span class="ru">Нейросети</span></b></div>
+          <p><span class="uk"><strong>Використовуємо:</strong> Perplexity, Gemini, Parallel AI, Gemini Notebook і Claude.</span><span class="ru"><strong>Используем:</strong> Perplexity, Gemini, Parallel AI, Gemini Notebook и Claude.</span></p>
+        </li>
+      </ul>
+    </section>
+
+    <section>
+      <h2 class="lbl"><span class="uk">Що покаже дослідження</span><span class="ru">Что покажет исследование</span></h2>
+      <ul class="sc">
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10"/><path d="M10 20V4"/><path d="M16 20v-7"/><path d="M21 20H3"/></svg><div><b><span class="uk">Ринок</span><span class="ru">Рынок</span></b><p><span class="uk">Хто платить, за що і скільки</span><span class="ru">Кто платит, за что и сколько</span></p></div></li>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l5 5"/></svg><div><b><span class="uk">Конкуренти</span><span class="ru">Конкуренты</span></b><p><span class="uk">Хто вже продає в ніші і що пропонує</span><span class="ru">Кто уже продает в нише и что предлагает</span></p></div></li>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0116 0"/></svg><div><b><span class="uk">Клієнти</span><span class="ru">Клиенты</span></b><p><span class="uk">Який біль приводить до покупки</span><span class="ru">Какая боль приводит к покупке</span></p></div></li>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.5"/></svg><div><b><span class="uk">Рішення</span><span class="ru">Решение</span></b><p><span class="uk">Куди йти далі: ніша, клієнт і продукт</span><span class="ru">Куда идти дальше: ниша, клиент и продукт</span></p></div></li>
+      </ul>
+    </section>
+  </div>
+
+  <section class="res">
+    <span class="lb"><span class="uk">Результат</span><span class="ru">Результат</span></span>
+    <b><span class="uk">Знаєте хто платить, за що і скільки</span><span class="ru">Знаете кто платит, за что и сколько</span></b>
+    <p><span class="uk">Дослідження ринку, конкурентів і клієнтів зібране за кілька годин: рішення про нішу й продукт ви ухвалюєте за даними, а не навмання.</span><span class="ru">Исследование рынка, конкурентов и клиентов собрано за пару часов: решения о нише и продукте вы принимаете по данным, а не наугад.</span></p>
+  </section>
+</main>
+<script>
+(function(){
+  var root=document.documentElement;
+  try{if(window.self!==window.top)root.classList.add('embed');}catch(e){root.classList.add('embed');}
+  var buttons=document.querySelectorAll('[data-set]');
+  var titles={uk:'Deep Research: досліджуємо ринок, конкурентів і продукт',ru:'Deep Research: исследуем рынок, конкурентов и продукт'};
+  function setLang(l){
+    root.lang=l;
+    document.title=titles[l];
+    buttons.forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.set===l));});
+  }
+  buttons.forEach(function(b){b.addEventListener('click',function(){setLang(b.dataset.set);});});
+  setLang(new URLSearchParams(location.search).get('lang')==='uk'?'uk':'ru');
+})();
+</script>
+<script>
+/* Сообщает платформе высоту содержимого, чтобы фрейм был без пустого места и обрезки */
+(function(){
+  if(window.parent===window)return;
+  var box=document.querySelector('.page'),last=0;
+  function send(){
+    var h=Math.ceil(box.getBoundingClientRect().height)+2;
+    if(h&&h!==last){last=h;window.parent.postMessage({kovchegHeight:h},'*');}
+  }
+  send();
+  addEventListener('load',send);
+  addEventListener('resize',send);
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(send);
+  if(window.ResizeObserver)new ResizeObserver(send).observe(box);
+})();
+</script>
+</body>
+</html>
