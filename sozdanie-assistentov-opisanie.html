@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Создание AI-ассистентов</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#eef1f4;--card:#fbfaf7;--line:rgba(21,16,12,.09);--ink:#15100c;--ink-2:#0b0c0e;--cream:#f4efe7;
+  --text-mid:rgba(21,16,12,.68);--gold:#fdd506;--gold-rgb:253,213,6;
+  --display:"Inter Tight","Inter",system-ui,sans-serif;--sans:"Inter",system-ui,sans-serif;--mono:"JetBrains Mono",ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--ink);font:400 15px/1.45 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden;display:grid;align-content:center}
+html[lang="uk"] .ru,html[lang="ru"] .uk{display:none!important}
+html.embed,html.embed body{height:auto}
+
+.page{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);grid-template-rows:auto 1fr auto;grid-template-areas:"sw sw" "hero main" "res main";gap:16px;width:100%;max-width:1120px;margin:0 auto;padding:24px}
+
+.hero{grid-area:hero;display:flex;flex-direction:column;padding:28px;border-radius:24px;background:var(--ink-2);color:var(--cream)}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font:500 11px var(--mono);letter-spacing:.16em;text-transform:uppercase;color:rgba(244,239,231,.72)}
+.eyebrow:before{content:"";flex:none;width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 3px rgba(var(--gold-rgb),.25)}
+.switch{grid-area:sw;justify-self:end;display:flex;gap:2px;padding:3px;border-radius:999px;background:rgba(21,16,12,.08)}
+.switch button{min-width:40px;min-height:30px;padding:0 10px;border:0;border-radius:999px;background:none;color:var(--text-mid);font:600 12px/1 var(--sans);cursor:pointer}
+.switch button[aria-pressed="true"]{background:var(--gold);color:var(--ink)}
+.switch button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+h1{font:700 clamp(30px,3.3vw,40px)/1.06 var(--display);letter-spacing:-.03em;text-wrap:balance}
+.lead{margin-top:16px;font-size:15px;line-height:1.5;color:rgba(244,239,231,.72)}
+.nb{white-space:nowrap}
+.art{display:block;width:190px;height:152px;margin:0 0 16px -16px;filter:brightness(1.35)}
+
+.res{grid-area:res;padding:28px;border-radius:24px;background:var(--gold);color:var(--ink)}
+.res span.lb{display:block;margin-bottom:12px;font:600 11px var(--mono);letter-spacing:.16em;text-transform:uppercase}
+.res b{display:block;margin-bottom:8px;font:700 22px/1.15 var(--display);letter-spacing:-.02em}
+.res p{font-size:15px;line-height:1.45}
+
+.main{grid-area:main;display:flex;flex-direction:column;gap:20px;min-width:0}
+.main>section:not(.ai){flex:1 1 auto;display:flex;flex-direction:column}
+.parts,.sc{flex:1 1 auto}
+.lbl{margin-bottom:12px;font:700 19px/1.2 var(--display);letter-spacing:-.02em}
+
+.parts{list-style:none;display:grid;gap:12px}
+.parts li{display:grid;grid-template-columns:150px minmax(0,1fr);gap:16px;padding:16px 20px;border-radius:18px;background:var(--card);border:1px solid var(--line)}
+.parts .tag{display:block;margin-bottom:4px;font:600 10.5px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--text-mid)}
+.parts b{display:block;font:700 16px/1.2 var(--display);letter-spacing:-.01em}
+.parts p{font-size:14px;line-height:1.45;color:var(--text-mid)}
+.parts p strong{font-weight:600;color:var(--ink)}
+
+.ai{padding:24px 28px;border-radius:24px;background:var(--ink-2);color:var(--cream)}
+.ai b{display:block;margin-bottom:12px;font:700 19px/1.2 var(--display);letter-spacing:-.02em}
+.tools{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:14px}
+.tools strong{font-weight:500;color:rgba(244,239,231,.72)}
+.tch{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;background:rgba(255,255,255,.07);border:1px solid rgba(244,239,231,.18);color:var(--cream);font:500 13px/1.2 var(--sans);white-space:nowrap}
+.tch svg{flex:none;width:15px;height:15px}
+
+.sc{list-style:none;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.sc li{display:flex;align-items:flex-start;gap:12px;padding:16px;border-radius:18px;background:var(--card);border:1px solid var(--line)}
+.sc svg{flex:none;width:36px;height:36px;padding:9px;border-radius:10px;background:var(--ink-2);fill:none;stroke:var(--gold);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.sc b{display:block;margin-bottom:2px;font:700 15px/1.25 var(--display);letter-spacing:-.01em}
+.sc p{font-size:13px;line-height:1.35;color:var(--text-mid)}
+
+.hero,.ai,.res,.parts li,.sc li{animation:in .45s cubic-bezier(.22,.61,.36,1) backwards}
+.res{animation-delay:.08s}.ai{animation-delay:.2s}
+.parts li:nth-child(2){animation-delay:.06s}.parts li:nth-child(3){animation-delay:.12s}
+.sc li:nth-child(n+1){animation-delay:.16s}
+@keyframes in{from{opacity:0;transform:translateY(12px)}}
+@media (prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important}}
+
+@media (max-width:900px){
+  .page{gap:12px;padding:16px}
+  .hero,.res,.ai{padding:20px;border-radius:20px}
+  .top{flex-wrap:wrap;margin-bottom:12px}
+  .art{width:130px;height:104px;margin:0 0 8px -11px}
+  h1{font-size:26px}
+  .lead{margin-top:12px;font-size:14px}
+  .main{gap:16px}
+  .res span.lb{margin-bottom:8px}
+  .res b{margin-bottom:4px;font-size:20px}
+  .res p{font-size:14px}
+  .parts li{grid-template-columns:minmax(0,1fr);gap:4px;padding:12px 14px;border-radius:14px}
+  .sc li{flex-direction:column;gap:8px;padding:12px;border-radius:14px}
+}
+@media (max-width:640px){
+  .page{grid-template-columns:minmax(0,1fr);grid-template-rows:none;grid-template-areas:"sw" "hero" "main" "res";gap:16px;align-content:start}
+  h1{font-size:28px}
+}
+@media (max-width:560px){
+  .lbl{margin-bottom:8px;font-size:17px}
+  .parts{gap:8px}
+  .parts li{grid-template-columns:minmax(0,1fr);gap:4px;padding:12px 14px;border-radius:14px}
+  .parts .tag{margin-bottom:2px;font-size:10px}
+  .parts p{font-size:13.5px;line-height:1.4}
+  .sc{gap:8px}
+  .sc li{flex-direction:column;gap:8px;padding:12px;border-radius:14px}
+  .sc svg{width:30px;height:30px;padding:7px;border-radius:8px}
+  .sc b{font-size:14px}
+  .sc p{font-size:12.5px}
+}
+</style>
+</head>
+<body>
+<main class="page">
+  <div class="switch" role="group" aria-label="Мова / Язык">
+    <button type="button" data-set="uk" aria-pressed="false">UA</button>
+    <button type="button" data-set="ru" aria-pressed="true">RU</button>
+  </div>
+  <header class="hero">
+    <div class="top">
+      <p class="eyebrow"><span class="uk">Рівень 1 · Модуль 1</span><span class="ru">Уровень 1 · Модуль 1</span></p>
+    </div>
+    <img class="art" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMTYwIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9InBsYXRlIiB4Mj0iLjgiIHkyPSIxIj48c3RvcCBzdG9wLWNvbG9yPSIjNjY1ZjRjIi8+PHN0b3Agb2Zmc2V0PSIuNDUiIHN0b3AtY29sb3I9IiMyOTI3MjIiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMxMjEyMGYiLz48L2xpbmVhckdyYWRpZW50PjxsaW5lYXJHcmFkaWVudCBpZD0iZWRnZSIgeDI9IjEiIHkyPSIxIj48c3RvcCBzdG9wLWNvbG9yPSIjZDBjOGFmIi8+PHN0b3Agb2Zmc2V0PSIuNDUiIHN0b3AtY29sb3I9IiM1YzU1NDIiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMyNjIzMWMiLz48L2xpbmVhckdyYWRpZW50PjxsaW5lYXJHcmFkaWVudCBpZD0iZ29sZCIgeDI9Ii42IiB5Mj0iMSI+PHN0b3Agc3RvcC1jb2xvcj0iI2ZmZjNhNSIvPjxzdG9wIG9mZnNldD0iLjM1IiBzdG9wLWNvbG9yPSIjZmRkNTA2Ii8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjODU3MDE1Ii8+PC9saW5lYXJHcmFkaWVudD48cmFkaWFsR3JhZGllbnQgaWQ9ImxpZ2h0Ij48c3RvcCBzdG9wLWNvbG9yPSIjZmRkNTA2IiBzdG9wLW9wYWNpdHk9Ii4xNSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2ZkZDUwNiIgc3RvcC1vcGFjaXR5PSIwIi8+PC9yYWRpYWxHcmFkaWVudD48ZmlsdGVyIGlkPSJzaGFkb3ciIHg9Ii01MCUiIHk9Ii01MCUiIHdpZHRoPSIyMDAlIiBoZWlnaHQ9IjIwMCUiPjxmZURyb3BTaGFkb3cgZHg9IjAiIGR5PSIxMCIgc3RkRGV2aWF0aW9uPSI3IiBmbG9vZC1vcGFjaXR5PSIuNjUiLz48L2ZpbHRlcj48L2RlZnM+PGVsbGlwc2UgY3g9IjEwNSIgY3k9IjEwMCIgcng9IjkyIiByeT0iNjAiIGZpbGw9InVybCgjbGlnaHQpIi8+PGcgZmlsdGVyPSJ1cmwoI3NoYWRvdykiPjxwYXRoIGQ9Im00OCA0OSA1OS0yMyA0OCAyNHY3MGwtNjAgMjUtNDctMjRaIiBmaWxsPSJ1cmwoI3BsYXRlKSIgc3Ryb2tlPSJ1cmwoI2VkZ2UpIi8+PHBhdGggZD0ibTQ4IDQ5IDQ3IDI1IDYwLTI0TTk1IDc0djcxIiBmaWxsPSJub25lIiBzdHJva2U9IiNiMWE1OGIiIHN0cm9rZS1vcGFjaXR5PSIuNSIvPjxwYXRoIGQ9Im0xMDcgNzkgMzUtMTR2MzlsLTM1IDE0WiIgZmlsbD0iIzEwMTIwZiIgc3Ryb2tlPSIjNjI1YzQyIi8+PHBhdGggZD0ibTExNSA4NiA3LTNtOCAwIDctM20tMTkgMTcgMTMtNSIgc3Ryb2tlPSJ1cmwoI2dvbGQpIiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxwYXRoIGQ9Ik03MyA1MFYzMyIgc3Ryb2tlPSIjYTk5YzdlIiBzdHJva2Utd2lkdGg9IjMiLz48Y2lyY2xlIGN4PSI3MyIgY3k9IjI5IiByPSI1IiBmaWxsPSJ1cmwoI2dvbGQpIi8+PHBhdGggZD0ibTQ2IDEwOC0xNCA2djEybTEyNS0zNCAxNC02Vjc0IiBmaWxsPSJub25lIiBzdHJva2U9IiM3YzczNWEiIHN0cm9rZS13aWR0aD0iMyIvPjxjaXJjbGUgY3g9IjMxIiBjeT0iMTMwIiByPSI0IiBmaWxsPSJ1cmwoI2dvbGQpIi8+PC9nPjwvc3ZnPg==" alt="" width="200" height="160">
+    <h1><span class="uk">Створення <span class="nb">AI-асистентів</span></span><span class="ru">Создание <span class="nb">AI-ассистентов</span></span></h1>
+    <p class="lead"><span class="uk">Щоразу пояснювати нейромережі, хто ви і що потрібно, – це втрачений час. Збираємо першого AI-асистента: він пам'ятає контекст бізнесу, діє за вашою інструкцією і щоразу видає передбачуваний результат.</span><span class="ru">Каждый раз объяснять нейросети, кто вы и что нужно, – потерянное время. Собираем первого AI-ассистента: он помнит контекст бизнеса, действует по вашей инструкции и каждый раз выдает предсказуемый результат.</span></p>
+  </header>
+  <section class="res">
+    <span class="lb"><span class="uk">Результат</span><span class="ru">Результат</span></span>
+    <b><span class="uk">Перший асистент зібраний</span><span class="ru">Первый ассистент собран</span></b>
+    <p><span class="uk">Ви більше не пояснюєте нейромережі щоразу, хто ви і що потрібно: свій AI-асистент пам'ятає контекст і сам виконує повторювані завдання.</span><span class="ru">Вы больше не объясняете нейросети каждый раз, кто вы и что нужно: свой AI-ассистент помнит контекст и сам делает повторяющиеся задачи.</span></p>
+  </section>
+
+  <div class="main">
+    <section>
+      <h2 class="lbl"><span class="uk">Що буде</span><span class="ru">Что будет</span></h2>
+      <ul class="parts">
+        <li>
+          <div><b><span class="uk">Свій асистент</span><span class="ru">Свой ассистент</span></b></div>
+          <p><span class="uk"><strong>Як створити асистента:</strong> із бази знань, інструкції та контексту про ваш бізнес, у Google Gems і Claude Projects.</span><span class="ru"><strong>Как создать ассистента:</strong> из базы знаний, инструкции и контекста о вашем бизнесе, в Google Gems и Claude Projects.</span></p>
+        </li>
+        <li>
+          <div><b><span class="uk">Досвід експерта</span><span class="ru">Опыт эксперта</span></b></div>
+          <p><span class="uk"><strong>Як передати асистенту досвід експерта:</strong> беремо матеріали сильного експерта й перетворюємо їх на інструкцію, за якою нейромережа працює його методом.</span><span class="ru"><strong>Как передать ассистенту опыт эксперта:</strong> берем материалы сильного эксперта и превращаем их в инструкцию, по которой нейросеть работает его методом.</span></p>
+        </li>
+        <li>
+          <div><b><span class="uk">Готові асистенти</span><span class="ru">Готовые ассистенты</span></b></div>
+          <p><span class="uk"><strong>Бібліотека асистентів Влада:</strong> доступ та інструкції до готових асистентів, яких можна одразу встановити.</span><span class="ru"><strong>Библиотека ассистентов Влада:</strong> доступ и инструкции к готовым ассистентам, которых можно сразу установить.</span></p>
+        </li>
+      </ul>
+    </section>
+
+    <section>
+      <h2 class="lbl"><span class="uk">Що розбираємо</span><span class="ru">Что разбираем</span></h2>
+      <ul class="sc">
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/><path d="M9 10h6"/></svg><div><b><span class="uk">Асистент і агент</span><span class="ru">Ассистент и агент</span></b><p><span class="uk">Чим вони відрізняються і кого обрати під задачу</span><span class="ru">Чем они отличаются и кого выбрать под задачу</span></p></div></li>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14v16H7a2 2 0 01-2-2z"/><path d="M5 18a2 2 0 012-2h12"/></svg><div><b><span class="uk">База знань</span><span class="ru">База знаний</span></b><p><span class="uk">Чому промпт без бази знань нічого не вартий</span><span class="ru">Почему промпт без базы знаний ничего не стоит</span></p></div></li>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6z"/><path d="M9 12h6"/><path d="M9 16h6"/></svg><div><b><span class="uk">Контекст бізнесу</span><span class="ru">Контекст бизнеса</span></b><p><span class="uk">Продукти, ціни, правила й тон, які асистент пам'ятає</span><span class="ru">Продукты, цены, правила и тон, которые ассистент помнит</span></p></div></li>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11a8 8 0 0114-4l2 2"/><path d="M20 4v5h-5"/><path d="M20 13a8 8 0 01-14 4l-2-2"/><path d="M4 20v-5h5"/></svg><div><b><span class="uk">Повторювані завдання</span><span class="ru">Повторяющиеся задачи</span></b><p><span class="uk">Те, що асистент далі робить сам</span><span class="ru">То, что ассистент дальше делает сам</span></p></div></li>
+      </ul>
+    </section>
+
+  <section class="ai">
+    <b><span class="uk">AI-стек модуля</span><span class="ru">AI-стек модуля</span></b>
+    <div class="tools"><span class="tch"><svg fill="#D97757" aria-hidden="true" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m4.7144 15.9555 4.7174-2.6471.079-.2307-.079-.1275h-.2307l-.7893-.0486-2.6956-.0729-2.3375-.0971-2.2646-.1214-.5707-.1215-.5343-.7042.0546-.3522.4797-.3218.686.0608 1.5179.1032 2.2767.1578 1.6514.0972 2.4468.255h.3886l.0546-.1579-.1336-.0971-.1032-.0972L6.973 9.8356l-2.55-1.6879-1.3356-.9714-.7225-.4918-.3643-.4614-.1578-1.0078.6557-.7225.8803.0607.2246.0607.8925.686 1.9064 1.4754 2.4893 1.8336.3643.3035.1457-.1032.0182-.0728-.164-.2733-1.3539-2.4467-1.445-2.4893-.6435-1.032-.17-.6194c-.0607-.255-.1032-.4674-.1032-.7285L6.287.1335 6.6997 0l.9957.1336.419.3642.6192 1.4147 1.0018 2.2282 1.5543 3.0296.4553.8985.2429.8318.091.255h.1579v-.1457l.1275-1.706.2368-2.0947.2307-2.6957.0789-.7589.3764-.9107.7468-.4918.5828.2793.4797.686-.0668.4433-.2853 1.8517-.5586 2.9021-.3643 1.9429h.2125l.2429-.2429.9835-1.3053 1.6514-2.0643.7286-.8196.85-.9046.5464-.4311h1.0321l.759 1.1293-.34 1.1657-1.0625 1.3478-.8804 1.1414-1.2628 1.7-.7893 1.36.0729.1093.1882-.0183 2.8535-.607 1.5421-.2794 1.8396-.3157.8318.3886.091.3946-.3278.8075-1.967.4857-2.3072.4614-3.4364.8136-.0425.0304.0486.0607 1.5482.1457.6618.0364h1.621l3.0175.2247.7892.522.4736.6376-.079.4857-1.2142.6193-1.6393-.3886-3.825-.9107-1.3113-.3279h-.1822v.1093l1.0929 1.0686 2.0035 1.8092 2.5075 2.3314.1275.5768-.3218.4554-.34-.0486-2.2039-1.6575-.85-.7468-1.9246-1.621h-.1275v.17l.4432.6496 2.3436 3.5214.1214 1.0807-.17.3521-.6071.2125-.6679-.1214-1.3721-1.9246L14.38 17.959l-1.1414-1.9428-.1397.079-.674 7.2552-.3156.3703-.7286.2793-.6071-.4614-.3218-.7468.3218-1.4753.3886-1.9246.3157-1.53.2853-1.9004.17-.6314-.0121-.0425-.1397.0182-1.4328 1.9672-2.1796 2.9446-1.7243 1.8456-.4128.164-.7164-.3704.0667-.6618.4008-.5889 2.386-3.0357 1.4389-1.882.929-1.0868-.0062-.1579h-.0546l-6.3385 4.1164-1.1293.1457-.4857-.4554.0608-.7467.2307-.2429 1.9064-1.3114Z"/></svg>Claude Projects</span><span class="tch"><svg fill="#4285F4" aria-hidden="true" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M11.04 19.32Q12 21.51 12 24q0-2.49.93-4.68.96-2.19 2.58-3.81t3.81-2.55Q21.51 12 24 12q-2.49 0-4.68-.93a12.3 12.3 0 0 1-3.81-2.58 12.3 12.3 0 0 1-2.58-3.81Q12 2.49 12 0q0 2.49-.96 4.68-.93 2.19-2.55 3.81a12.3 12.3 0 0 1-3.81 2.58Q2.49 12 0 12q2.49 0 4.68.96 2.19.93 3.81 2.55t2.55 3.81"/></svg>Google Gems</span></div>
+  </section>
+  </div>
+
+</main>
+<script>
+(function(){
+  var root=document.documentElement;
+  try{if(window.self!==window.top)root.classList.add('embed');}catch(e){root.classList.add('embed');}
+  var buttons=document.querySelectorAll('[data-set]');
+  var titles={uk:'Створення AI-асистентів',ru:'Создание AI-ассистентов'};
+  function setLang(l){
+    root.lang=l;
+    document.title=titles[l];
+    buttons.forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.set===l));});
+  }
+  buttons.forEach(function(b){b.addEventListener('click',function(){setLang(b.dataset.set);});});
+  setLang(new URLSearchParams(location.search).get('lang')==='uk'?'uk':'ru');
+})();
+</script>
+<script>
+/* Сообщает платформе высоту содержимого, чтобы фрейм был без пустого места и обрезки */
+(function(){
+  if(window.parent===window)return;
+  var box=document.querySelector('.page'),last=0;
+  function send(){
+    var h=Math.ceil(box.getBoundingClientRect().height)+2;
+    if(h&&h!==last){last=h;window.parent.postMessage({kovchegHeight:h},'*');}
+  }
+  send();
+  addEventListener('load',send);
+  addEventListener('resize',send);
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(send);
+  if(window.ResizeObserver)new ResizeObserver(send).observe(box);
+})();
+</script>
+</body>
+</html>
