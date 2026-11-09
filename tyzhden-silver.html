@@ -62,6 +62,10 @@ h2{margin:48px 0 20px;font:700 34px/1.1 var(--display);letter-spacing:-.03em}
 .foot>div{padding:20px 24px;border-radius:18px;background:var(--panel);box-shadow:0 10px 30px rgba(21,16,12,.05);font-size:15px;line-height:1.5;color:var(--mid)}
 .foot b{display:block;margin-bottom:2px;font-weight:600;color:var(--cream)}
 .foot a{color:var(--ink);font-weight:600;text-decoration-color:var(--gold);text-decoration-thickness:2px;text-underline-offset:3px}
+.foot .ct{display:flex;align-items:center;gap:10px;width:max-content;max-width:100%;margin-top:10px}
+.foot .ct i{flex:none;display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:#0b0c0e}
+.foot .ct svg{width:15px;height:15px}
+.foot .ct span{min-width:0;overflow-wrap:anywhere}
 .foot a:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 
 .sep{height:1px;margin:48px 0 0;border:0;background:var(--hair)}
@@ -109,10 +113,11 @@ h2+.mark{margin-top:0}
 .lms li{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;font-size:clamp(14px,1.5vw,16px)}
 .lms li span{display:flex;gap:8px}
 @media (max-width:600px){.mark{margin-top:32px;padding:24px 20px}.mark-row{grid-template-columns:minmax(0,1fr);gap:20px}.mark-row+.mark-row{margin-top:24px;padding-top:24px}.mark-pic,.mark-pic.alt,.mark-pic.alt.neg{transform:none}}
-.sayrow{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:12px;align-items:stretch;margin-top:32px}
-.sayrow .say{margin-top:0;font-size:clamp(24px,2.8vw,34px)}
+.sayrow{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,2fr);gap:12px;align-items:stretch;margin-top:32px}
+.sayrow .say{display:flex;align-items:center;margin-top:0;font-size:clamp(24px,2.8vw,34px)}
 .sayrow .foot{grid-template-columns:minmax(0,1fr);margin-top:0}
 .sayrow .foot>div{display:flex;flex-direction:column;justify-content:center}
+@media (max-width:860px){.sayrow{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
 @media (max-width:600px){.sayrow{grid-template-columns:minmax(0,1fr);margin-top:24px}}
 .calm{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:32px;align-items:start;margin-top:56px}
 .calm-l{position:sticky;top:24px}
@@ -255,7 +260,7 @@ h2{margin:36px 0 16px;font-size:30px}
   <p class="fears-end rv"><span class="uk">Ми даємо програму, інструменти й середовище.<br>Наступний крок за тобою.<span class="last">Обирай діяти, а не пасивно спостерігати</span></span><span class="ru">Мы даем программу, инструменты и среду.<br>Следующий шаг за тобой.<span class="last">Выбирай действовать, а не пассивно наблюдать</span></span></p>
   <div class="sayrow">
     <p class="say rv"><span class="uk">Кожен тиждень&nbsp;– <strong>новий рівень</strong>, нові смисли й прокачування нових навичок</span><span class="ru">Каждая неделя&nbsp;– <strong>новый уровень</strong>, новые смыслы и прокачка новых навыков</span></p>
-    <div class="foot rv"><div><b><span class="uk">Залишилися запитання або потрібна допомога?</span><span class="ru">Остались вопросы или нужна помощь?</span></b><span class="uk">Пиши: </span><span class="ru">Пиши: </span><a href="https://t.me/AIOperatoragent" target="_blank" rel="noopener">@AIOperatoragent</a></div></div>
+    <div class="foot rv"><div><b><span class="uk">Залишилися запитання або потрібна допомога?</span><span class="ru">Остались вопросы или нужна помощь?</span></b><span class="uk">Пиши: </span><span class="ru">Пиши: </span><a class="ct" href="https://t.me/AIOperatoragent" target="_blank" rel="noopener"><i><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" d="M4.6 11.4 17.9 6.3c.6-.2 1.2.2 1 1l-2.3 10.7c-.2.8-.6.9-1.2.6l-3.3-2.4-1.6 1.5c-.2.2-.3.3-.6.3l.2-3.4 6.2-5.6c.3-.2-.1-.4-.4-.2l-7.6 4.8-3.3-1c-.7-.2-.7-.7.1-1z"/></svg></i><span>@AIOperatoragent</span></a><a class="ct" href="mailto:info@ai-operator.online"><i><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="6" width="16" height="12" rx="2"/><path d="m4.5 7 7.5 6 7.5-6"/></svg></i><span>info@ai-operator.online</span></a></div></div>
   </div>
 </main>
 <script>
