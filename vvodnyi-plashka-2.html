@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Часть 2 – Программа: три уровня</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#15100c;--text-dim:rgba(21,16,12,.46);--gold:#fdd506;--gold-rgb:253,213,6;
+  --display:"Inter Tight","Inter",system-ui,sans-serif;--mono:"JetBrains Mono",ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:transparent;color:var(--ink);-webkit-font-smoothing:antialiased}
+html[lang="uk"] .ru,html[lang="ru"] .uk{display:none!important}
+.pl{padding:8px 0 16px}
+.mk{font:500 11px var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--text-dim)}
+.mk b{font-weight:600;color:var(--ink)}
+h1{margin-top:12px;font:700 clamp(24px,2.6vw,30px)/1.1 var(--display);letter-spacing:-.03em;text-wrap:balance}
+.lab{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;max-width:420px;margin-top:20px;list-style:none}
+.lab li{display:flex;flex-direction:column;gap:8px;font:500 11px var(--mono);letter-spacing:.12em;color:var(--text-dim)}
+.lab li:after{content:"";height:6px;border-radius:99px;background:rgba(21,16,12,.1)}
+.lab li.past:after{background:rgba(var(--gold-rgb),.45)}
+.lab li.on{color:var(--ink);font-weight:600}
+.lab li.on:after{background:var(--gold)}
+</style>
+</head>
+<body>
+<main class="pl">
+  <p class="mk"><b><span class="uk">Частина 2</span><span class="ru">Часть 2</span></b>&nbsp;<span class="uk">з</span><span class="ru">из</span>&nbsp;4</p>
+  <h1><span class="uk">Програма: три рівні</span><span class="ru">Программа: три уровня</span></h1>
+  <ol class="lab" aria-label="Прогресс"><li class="past">01</li><li class="on">02</li><li>03</li><li>04</li></ol>
+</main>
+<script>
+(function(){
+  var l=new URLSearchParams(location.search).get('lang')==='uk'?'uk':'ru';
+  document.documentElement.lang=l;
+  document.title=l==='uk'?'Частина 2 – Програма: три рівні':'Часть 2 – Программа: три уровня';
+})();
+</script>
+<script>
+/* Сообщает платформе высоту содержимого, чтобы фрейм был без пустого места и обрезки */
+(function(){
+  if(window.parent===window)return;
+  var box=document.querySelector('.pl'),last=0;
+  function send(){
+    var h=Math.ceil(box.getBoundingClientRect().height)+2;
+    if(h&&h!==last){last=h;window.parent.postMessage({kovchegHeight:h},'*');}
+  }
+  send();
+  addEventListener('load',send);
+  addEventListener('resize',send);
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(send);
+  if(window.ResizeObserver)new ResizeObserver(send).observe(box);
+})();
+</script>
+</body>
+</html>
