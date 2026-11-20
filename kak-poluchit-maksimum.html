@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Как получить максимум · AI-Оператор</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef1f4;--panel:#fff;--panel-2:#fbfaf7;--tile:#f4f3ee;--ink:#15100c;--k:#0b0c0e;--mid:rgba(21,16,12,.68);--hair:rgba(21,16,12,.12);--gold:#fdd506;--gold-rgb:253,213,6;--display:"Inter Tight","Inter",system-ui,sans-serif;--sans:"Inter",system-ui,sans-serif;--mono:"JetBrains Mono",ui-monospace,monospace;--ease:cubic-bezier(.22,.61,.36,1);--sp:cubic-bezier(.32,.72,0,1)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;overflow-x:hidden;scroll-behavior:smooth}
+html[lang="uk"] .ru,html[lang="ru"] .uk{display:none!important}
+body{background:var(--bg);color:var(--ink);font:400 15px/1.5 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+ul,ol{list-style:none}
+svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.page{position:relative;max-width:1120px;margin:0 auto;padding:24px 32px 48px}
+.page:before{content:"";position:absolute;z-index:0;top:-140px;right:-140px;width:760px;height:760px;background:radial-gradient(closest-side,rgba(var(--gold-rgb),.3),transparent 72%);pointer-events:none}
+.page>*{position:relative}
+
+.bar{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.tier{padding:6px 12px;border-radius:8px;background:var(--k);color:var(--gold);font:600 12px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase}
+#lang{display:flex;gap:2px;padding:3px;border-radius:999px;background:rgba(21,16,12,.08)}
+#lang button{min-width:44px;min-height:34px;padding:0 10px;border:0;border-radius:999px;background:none;color:var(--mid);font:600 12px/1 var(--sans);cursor:pointer;transition:background .25s var(--ease),color .25s var(--ease)}
+#lang button:hover{color:var(--ink)}
+#lang button[aria-pressed="true"]{background:var(--k);color:#f4efe7}
+#lang button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+
+h1{margin-top:28px;font:700 clamp(44px,6.2vw,76px)/1 var(--display);letter-spacing:-.04em;text-wrap:balance}
+h1 em{font-style:normal;background:linear-gradient(transparent 62%,var(--gold) 62%,var(--gold) 94%,transparent 94%);-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.lead{max-width:640px;margin-top:20px;font-size:18px;line-height:1.45;color:var(--mid);text-wrap:pretty}
+.toc ol{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-top:32px}
+.toc a{display:flex;flex-direction:column;gap:10px;height:100%;padding:16px 18px;border-radius:16px;background:var(--panel);box-shadow:0 10px 30px rgba(21,16,12,.05);color:var(--ink);font:700 15px/1.25 var(--display);letter-spacing:-.01em;text-decoration:none;transition:transform .35s var(--sp),background .35s var(--sp)}
+.toc a b{font:600 12px/1 var(--mono);color:rgba(21,16,12,.45);letter-spacing:.08em}
+.toc a:hover{transform:translateY(-3px);background:var(--gold)}
+.toc a:hover b{color:var(--ink)}
+.toc a:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+
+.step{margin-top:32px;padding:32px;border-radius:28px;background:rgba(255,255,255,.55);box-shadow:inset 0 0 0 1px rgba(255,255,255,.7)}
+.sh{scroll-margin-top:16px}
+.sn{display:inline-flex;align-items:center;gap:8px;font:600 12px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--mid)}
+.sn:before{content:"";width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 3px rgba(var(--gold-rgb),.3)}
+h2{margin-top:12px;font:700 clamp(26px,3vw,34px)/1.1 var(--display);letter-spacing:-.03em;text-wrap:balance}
+.sub{max-width:680px;margin-top:12px;font-size:16px;line-height:1.5;color:var(--mid);text-wrap:pretty}
+.h3{margin-top:32px;padding-top:32px;border-top:1px solid var(--hair);font:700 22px/1.2 var(--display);letter-spacing:-.02em}
+.sub2{max-width:680px;margin-top:8px;font-size:15px;color:var(--mid)}
+
+.week{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:24px}
+.week li{display:flex;flex-direction:column;padding:20px;border-radius:20px;background:var(--panel);box-shadow:0 10px 30px rgba(21,16,12,.05);transition:transform .35s var(--sp)}
+.week li:hover{transform:translateY(-4px)}
+.wk-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.wk-d{padding:6px 10px;border-radius:8px;background:var(--gold);font:600 12px/1 var(--mono);letter-spacing:.06em}
+.week li:nth-child(3) .wk-d{background:var(--k);color:var(--gold)}
+.week i,.tiles i,.sp-h i{display:grid;place-items:center;width:36px;height:36px;border-radius:11px;background:var(--k);color:var(--gold)}
+.week i svg,.tiles i svg,.sp-h i svg{width:18px;height:18px}
+.week b{margin-top:20px;font:700 19px/1.2 var(--display);letter-spacing:-.02em}
+.week p{margin-top:8px;font-size:14px;line-height:1.45;color:var(--mid)}
+.note,.warn{display:flex;align-items:flex-start;gap:14px;margin-top:16px;padding:18px 20px;border-radius:16px;font-size:15px;line-height:1.5}
+.note{background:var(--panel);box-shadow:0 10px 30px rgba(21,16,12,.05);color:var(--mid)}
+.note b,.warn b{color:var(--ink);font-weight:600}
+.note i,.warn i{flex:none;display:grid;place-items:center;width:28px;height:28px}
+.note svg,.warn svg{width:22px;height:22px}
+
+.path{position:relative;margin-top:24px}
+.path:before{content:"";position:absolute;left:11px;top:14px;bottom:14px;width:2px;background:linear-gradient(var(--gold),rgba(var(--gold-rgb),.25))}
+.path>li{position:relative;display:grid;grid-template-columns:24px minmax(0,1fr);gap:20px}
+.path>li+li{margin-top:12px}
+.pt{position:relative;margin-top:22px;width:24px;height:24px;border-radius:50%;background:var(--bg);box-shadow:inset 0 0 0 2px var(--gold)}
+.pt:after{content:"";position:absolute;inset:6px;border-radius:50%;background:var(--gold);transition:transform .35s var(--sp)}
+.path>li:hover .pt:after{transform:scale(1.35)}
+.pc{padding:18px 22px;border-radius:18px;background:var(--panel);box-shadow:0 10px 30px rgba(21,16,12,.05);transition:transform .35s var(--sp)}
+.path>li:hover .pc{transform:translateX(4px)}
+.pc-h{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px}
+.pc-h b{font:700 18px/1.2 var(--display);letter-spacing:-.02em}
+.mods{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.mods li{padding:7px 12px;border-radius:10px;background:var(--tile);font-size:14px;line-height:1.3}
+.res{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;margin-top:14px;font-size:14px;font-weight:500}
+.res>span:first-child{font:600 11px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:rgba(21,16,12,.5)}
+.chips{display:inline-flex;flex-wrap:wrap;gap:4px;vertical-align:middle}
+.chips em{padding:4px 8px;border-radius:7px;font:600 11px/1 var(--mono);font-style:normal;letter-spacing:.06em}
+.c-bronze{background:#f1e2cf;color:#7a4a17}
+.c-silver{background:#e6e8ec;color:#4a505c}
+.c-gold{background:var(--gold);color:var(--ink)}
+
+.vs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:24px}
+.vs>div{padding:20px 22px;border-radius:20px}
+.vs-bad{background:var(--panel);box-shadow:inset 0 0 0 1px var(--hair)}
+.vs-good{background:var(--k);color:#f4efe7}
+.vs-h{font:600 12px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase}
+.vs-bad .vs-h{color:rgba(21,16,12,.5)}
+.vs-good .vs-h{color:var(--gold)}
+.vs ul{display:grid;gap:12px;margin-top:16px}
+.vs li{display:flex;align-items:flex-start;gap:12px;font-size:15px;line-height:1.4}
+.vs li i{flex:none;display:grid;place-items:center;width:22px;height:22px;margin-top:-1px;border-radius:50%}
+.vs li svg{width:13px;height:13px;stroke-width:2.4}
+.vs-bad li{color:var(--mid);text-decoration:line-through;text-decoration-color:rgba(21,16,12,.25)}
+.vs-bad li i{background:rgba(21,16,12,.08);color:var(--mid)}
+.vs-good li i{background:var(--gold);color:var(--ink)}
+.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:16px}
+.tiles li{display:flex;align-items:flex-start;gap:14px;padding:18px 20px;border-radius:18px;background:var(--panel);box-shadow:0 10px 30px rgba(21,16,12,.05)}
+.tiles i{flex:none}
+.tiles b,.prio b,.qa b,.sup b{display:block;font:700 17px/1.25 var(--display);letter-spacing:-.015em}
+.tiles p,.prio p,.qa p{margin-top:6px;font-size:14px;line-height:1.45;color:var(--mid)}
+.hack{display:flex;align-items:flex-start;gap:16px;margin-top:16px;padding:28px 30px;border-radius:20px;background:var(--gold)}
+.hack>i{flex:none;display:grid;place-items:center;width:44px;height:44px;border-radius:14px;background:var(--k);color:var(--gold)}
+.hack>i svg{width:22px;height:22px;animation:tw 3.2s var(--ease) infinite}
+@keyframes tw{50%{transform:rotate(14deg) scale(1.08)}}
+.hk-h{font:700 19px/1.2 var(--display);letter-spacing:-.02em}
+.hack p+p{margin-top:8px;font-size:15px;line-height:1.5;color:#3d3204}
+
+.prio{display:grid;gap:12px;margin-top:24px}
+.prio li{display:flex;align-items:flex-start;gap:16px;padding:18px 20px;border-radius:18px;background:var(--panel);box-shadow:0 10px 30px rgba(21,16,12,.05);transition:transform .35s var(--sp)}
+.prio li:hover{transform:translateX(4px)}
+.pn{flex:none;display:grid;place-items:center;width:36px;height:36px;border-radius:11px;background:var(--gold);font:700 16px/1 var(--display)}
+.warn{background:#fff4c2;box-shadow:inset 0 0 0 1px rgba(var(--gold-rgb),.9)}
+
+.qa{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:24px}
+.qa li{padding:20px;border-radius:18px;background:var(--panel);box-shadow:0 10px 30px rgba(21,16,12,.05);transition:transform .35s var(--sp)}
+.qa li:hover{transform:translateY(-4px)}
+.qa-h{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:24px;margin-bottom:16px}
+.qn{font:600 13px/1 var(--mono);color:rgba(21,16,12,.4)}
+.gold{display:flex;align-items:center;gap:24px;margin-top:16px;padding:24px 28px;border-radius:20px;background:var(--k);color:#f4efe7}
+.g-n{flex:none;font:700 56px/1 var(--display);letter-spacing:-.04em;color:var(--gold)}
+.g-h{display:flex;flex-wrap:wrap;align-items:center;gap:10px;font:700 19px/1.2 var(--display);letter-spacing:-.02em}
+.gold p+p{margin-top:8px;font-size:15px;line-height:1.5;color:rgba(244,239,231,.72)}
+
+.sup{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:24px}
+.sup article{display:flex;flex-direction:column;padding:20px;border-radius:20px;background:var(--panel);box-shadow:0 10px 30px rgba(21,16,12,.05)}
+.sp-h{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.sup b{margin-top:16px}
+.sup ul{display:grid;gap:8px;margin-top:12px}
+.sup li{position:relative;padding-left:16px;font-size:14px;line-height:1.4;color:var(--mid)}
+.sup li:before{content:"";position:absolute;left:0;top:.55em;width:6px;height:6px;border-radius:50%;background:var(--gold)}
+.tg{display:inline-flex;align-items:center;gap:10px;align-self:flex-start;margin-top:auto;padding:5px 14px 5px 5px;border-radius:999px;background:var(--k);color:#f4efe7;font:600 14px/1 var(--display);text-decoration:none;transition:transform .3s var(--sp)}
+.sup ul+.tg{margin-top:20px}
+.tg i{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--gold);color:var(--ink)}
+.tg svg{width:15px;height:15px}
+.tg:hover{transform:translateY(-2px)}
+.tg:active{transform:scale(.98)}
+.tg:focus-visible,.foot a:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.how{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px}
+.how>div{padding:18px 20px;border-radius:18px;background:var(--tile)}
+.how b{font:700 16px/1.25 var(--display)}
+.how p{margin-top:6px;font-size:14px;line-height:1.45;color:var(--mid)}
+
+.say{margin-top:32px;padding:32px 36px;border-radius:24px;background:var(--gold);font:700 clamp(24px,3.2vw,36px)/1.15 var(--display);letter-spacing:-.03em;text-wrap:balance}
+.say strong{padding:0 .16em;border-radius:8px;background:var(--k);color:var(--gold);-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.foot{margin-top:16px;padding:18px 22px;border-radius:18px;background:var(--panel);font-size:15px;color:var(--mid)}
+.foot a{color:var(--ink);font-weight:600;text-decoration-color:var(--gold);text-decoration-thickness:2px;text-underline-offset:3px}
+
+.rv{opacity:0;transform:translateY(24px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+.rv.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}html{scroll-behavior:auto}}
+
+@media (max-width:860px){
+  .toc ol{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .qa{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:640px){
+  .page{padding:16px 16px 32px}
+  h1{margin-top:20px}
+  .lead{font-size:16px}
+  .toc ol{grid-template-columns:minmax(0,1fr);gap:8px;margin-top:24px}
+  .toc a{flex-direction:row;align-items:center;gap:14px;padding:14px 16px}
+  .step{margin-top:24px;padding:20px 16px;border-radius:22px}
+  .week,.vs,.tiles,.qa,.sup,.how{grid-template-columns:minmax(0,1fr)}
+  .week b{margin-top:16px}
+  .path>li{gap:14px}
+  .pc{padding:16px 18px}
+  .hack{padding:22px 20px}
+  .gold{flex-direction:column;align-items:flex-start;gap:12px;padding:22px 20px}
+  .say{padding:24px 22px}
+}
+</style>
+</head>
+<body>
+<main class="page">
+<header class="hero">
+  <div class="bar"><p class="tier">AI-Оператор</p><div id="lang" role="group" aria-label="Язык / Мова"><button type="button" data-lang="uk" aria-pressed="false">UA</button><button type="button" data-lang="ru" aria-pressed="true">RU</button></div></div>
+  <h1><span class="ru">Как получить <em>максимум</em></span><span class="uk">Як отримати <em>максимум</em></span></h1>
+  <p class="lead"><span class="ru">Программа даст тебе столько, сколько ты возьмешь. Здесь – как устроена неделя, как проходить модуль, что делать, если не успеваешь, и к кому идти с вопросом.</span><span class="uk">Програма дасть тобі стільки, скільки ти візьмеш. Тут – як влаштований тиждень, як проходити модуль, що робити, якщо не встигаєш, і до кого йти з питанням.</span></p>
+  <nav class="toc" aria-label="Шаги"><ol>
+    <li><a href="#s1"><b>01</b><span class="ru">Ритм недели</span><span class="uk">Ритм тижня</span></a></li>
+    <li><a href="#s2"><b>02</b><span class="ru">Как проходить модуль</span><span class="uk">Як проходити модуль</span></a></li>
+    <li><a href="#s3"><b>03</b><span class="ru">Если не успеваешь</span><span class="uk">Якщо не встигаєш</span></a></li>
+    <li><a href="#s4"><b>04</b><span class="ru">Как использовать Q&amp;A</span><span class="uk">Як використовувати Q&amp;A</span></a></li>
+    <li><a href="#s5"><b>05</b><span class="ru">Твоя поддержка</span><span class="uk">Твоя підтримка</span></a></li>
+  </ol></nav>
+</header>
+<section class="step rv">
+<header class="sh" id="s1"><p class="sn"><span class="ru">Шаг</span><span class="uk">Крок</span> 1</p><h2><span class="ru">Ритм недели. Держи один порядок</span><span class="uk">Ритм тижня. Тримай один порядок</span></h2><p class="sub"><span class="ru">Каждая неделя устроена одинаково. Когда знаешь порядок, не копишь долги и двигаешься ровно.</span><span class="uk">Кожен тиждень влаштований однаково. Коли знаєш порядок, не накопичуєш борги й рухаєшся рівно.</span></p></header>
+<ol class="week">
+<li><div class="wk-top"><span class="wk-d"><span class="ru">Пн</span><span class="uk">Пн</span></span><i><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="14" rx="3"/><path d="m10 9.5 5 2.5-5 2.5z"/></svg></i></div><b><span class="ru">Новый модуль</span><span class="uk">Новий модуль</span></b><p><span class="ru">Открывается воркшоп модуля и гайд к нему. В неделю агента приходит и сам агент: ставишь его по шагам за один вечер.</span><span class="uk">Відкривається воркшоп модуля і гайд до нього. У тиждень агента приходить і сам агент: ставиш його покроково за один вечір.</span></p></li>
+<li><div class="wk-top"><span class="wk-d"><span class="ru">Вт–Ср</span><span class="uk">Вт–Ср</span></span><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 6.5a4 4 0 0 0-5.3 5.3L4 17l3 3 5.2-5.2a4 4 0 0 0 5.3-5.3l-2.6 2.6-2.4-.6-.6-2.4z"/></svg></i></div><b><span class="ru">Практика</span><span class="uk">Практика</span></b><p><span class="ru">Делаешь задание для внедрения на своем проекте, а не на абстрактном примере. Не получается – записываешь вопрос к Q&amp;A.</span><span class="uk">Робиш завдання для впровадження на своєму проєкті, а не на абстрактному прикладі. Не виходить – записуєш питання до Q&amp;A.</span></p></li>
+<li><div class="wk-top"><span class="wk-d"><span class="ru">Чт–Сб</span><span class="uk">Чт–Сб</span></span><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5h14a1.5 1.5 0 0 1 1.5 1.5v9A1.5 1.5 0 0 1 19 17h-8l-4.5 3.5V17H5a1.5 1.5 0 0 1-1.5-1.5v-9A1.5 1.5 0 0 1 5 5z"/></svg></i></div><b><span class="ru">Q&amp;A</span><span class="uk">Q&amp;A</span></b><p><span class="ru">Онлайн-разбор результатов и ответы на вопросы. День и время сообщаем заранее, запись появляется в кабинете на следующий день.</span><span class="uk">Онлайн-розбір результатів і відповіді на питання. День і час повідомляємо заздалегідь, запис з'являється в кабінеті наступного дня.</span></p></li>
+<li><div class="wk-top"><span class="wk-d"><span class="ru">Вс</span><span class="uk">Нд</span></span><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 8a7.5 7.5 0 0 0-13.4 1"/><path d="M5 16a7.5 7.5 0 0 0 13.4-1"/><path d="M19 4v4h-4"/><path d="M5 20v-4h4"/></svg></i></div><b><span class="ru">Докрутка</span><span class="uk">Докрутка</span></b><p><span class="ru">Внедряешь то, что услышал на разборе, и доделываешь задание. В понедельник – следующий модуль.</span><span class="uk">Впроваджуєш те, що почув на розборі, і доробляєш завдання. У понеділок – наступний модуль.</span></p></li>
+</ol>
+<p class="note"><i><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg></i><span><span class="ru"><b>Сколько времени.</b> Минимум – три раза по полчаса в неделю на модуль. Когда дойдешь до продаж, добавь около 30 минут в день на поиск клиентов. Ровный темп важнее рывков.</span><span class="uk"><b>Скільки часу.</b> Мінімум – три рази по пів години на тиждень на модуль. Коли дійдеш до продажів, додай близько 30 хвилин на день на пошук клієнтів. Рівний темп важливіший за ривки.</span></span></p>
+<h3 class="h3"><span class="ru">Программа: Предобучение и 11 модулей</span><span class="uk">Програма: Підготовка до старту і 11 модулів</span></h3>
+<p class="sub2"><span class="ru">Модули идут по порядку: каждый следующий опирается на предыдущий. После каждого уровня у тебя остаются рабочие AI-агенты и новые услуги в прайсе.</span><span class="uk">Модулі йдуть по черзі: кожен наступний спирається на попередній. Після кожного рівня в тебе залишаються робочі AI-агенти й нові послуги в прайсі.</span></p>
+<ol class="path">
+<li><span class="pt" aria-hidden="true"></span><div class="pc"><div class="pc-h"><b><span class="ru">Предобучение</span><span class="uk">Підготовка до старту</span></b><span class="chips"><em class="c-bronze">Bronze</em><em class="c-silver">Silver</em><em class="c-gold">Gold</em></span></div><ul class="mods"><li><span class="ru">Вводный урок</span><span class="uk">Вступний урок</span></li><li><span class="ru">Экосистема Claude</span><span class="uk">Екосистема Claude</span></li><li><span class="ru">Gemini Notebook</span><span class="uk">Gemini Notebook</span></li></ul><p class="res"><span><span class="ru">Результат</span><span class="uk">Результат</span></span><span class="ru">Нейросети установлены, Claude знает тебя и твою работу</span><span class="uk">Нейромережі встановлені, Claude знає тебе і твою роботу</span></p></div></li>
+<li><span class="pt" aria-hidden="true"></span><div class="pc"><div class="pc-h"><b><span class="ru">Уровень 1. Маркетинг и сайты</span><span class="uk">Рівень 1. Маркетинг і сайти</span></b><span class="chips"><em class="c-bronze">Bronze</em><em class="c-silver">Silver</em><em class="c-gold">Gold</em></span></div><ul class="mods"><li><span class="ru">Модуль 1. Создание AI-ассистентов</span><span class="uk">Модуль 1. Створення AI-асистентів</span></li><li><span class="ru">Модуль 2. Deep Research</span><span class="uk">Модуль 2. Deep Research</span></li><li><span class="ru">Модуль 3. Маркетинг</span><span class="uk">Модуль 3. Маркетинг</span></li><li><span class="ru">Модуль 4. Сайты</span><span class="uk">Модуль 4. Сайти</span></li></ul><p class="res"><span><span class="ru">Результат</span><span class="uk">Результат</span></span><span class="ru">Первый агент – AI-сайты. Первую услугу уже можно продавать</span><span class="uk">Перший агент – AI-сайти. Першу послугу вже можна продавати</span></p></div></li>
+<li><span class="pt" aria-hidden="true"></span><div class="pc"><div class="pc-h"><b><span class="ru">Уровень 2. Контент-завод</span><span class="uk">Рівень 2. Контент-завод</span></b><span class="chips"><em class="c-silver">Silver</em><em class="c-gold">Gold</em></span></div><ul class="mods"><li><span class="ru">Модуль 5. 16 форматов контента</span><span class="uk">Модуль 5. 16 форматів контенту</span></li><li><span class="ru">Модуль 6. Видео, фото, голос, аватар</span><span class="uk">Модуль 6. Відео, фото, голос, аватар</span></li><li><span class="ru">Модуль 7. AI-монтаж</span><span class="uk">Модуль 7. AI-монтаж</span></li></ul><p class="res"><span><span class="ru">Результат</span><span class="uk">Результат</span></span><span class="ru">Плюс три услуги в прайсе: дизайн, видео, контент-завод</span><span class="uk">Плюс три послуги в прайсі: дизайн, відео, контент-завод</span></p></div></li>
+<li><span class="pt" aria-hidden="true"></span><div class="pc"><div class="pc-h"><b><span class="ru">Уровень 3. Клиенты и продажи</span><span class="uk">Рівень 3. Клієнти і продажі</span></b><span class="chips"><em class="c-gold">Gold</em></span></div><ul class="mods"><li><span class="ru">Модуль 8. AI-таргетолог</span><span class="uk">Модуль 8. AI-таргетолог</span></li><li><span class="ru">Модуль 9. AI-SEO</span><span class="uk">Модуль 9. AI-SEO</span></li><li><span class="ru">Модуль 10. AI-продавец</span><span class="uk">Модуль 10. AI-продавець</span></li><li><span class="ru">Модуль 11. Поиск клиентов и связки</span><span class="uk">Модуль 11. Пошук клієнтів і зв'язки</span></li></ul><p class="res"><span><span class="ru">Результат</span><span class="uk">Результат</span></span><span class="ru">7 услуг в прайсе: плюс реклама, SEO и AI-продавец, который доводит клиента до оплаты</span><span class="uk">7 послуг у прайсі: плюс реклама, SEO і AI-продавець, який доводить клієнта до оплати</span></p></div></li>
+</ol></section>
+<section class="step rv">
+<header class="sh" id="s2"><p class="sn"><span class="ru">Шаг</span><span class="uk">Крок</span> 2</p><h2><span class="ru">Как проходить модуль. Делай вместе с видео</span><span class="uk">Як проходити модуль. Роби разом із відео</span></h2><p class="sub"><span class="ru">Воркшоп – не видео, которое смотришь, а инструкция, которую выполняешь параллельно. Разница в результате кратная.</span><span class="uk">Воркшоп – не відео, яке дивишся, а інструкція, яку виконуєш паралельно. Різниця в результаті кратна.</span></p></header>
+<div class="vs"><div class="vs-bad"><p class="vs-h"><span class="ru">Не работает</span><span class="uk">Не працює</span></p><ul><li><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17"/></svg></i><span class="ru">Посмотреть на 2x «для общего понимания»</span><span class="uk">Подивитися на 2x «для загального розуміння»</span></li><li><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17"/></svg></i><span class="ru">Решить, что «потом разберусь»</span><span class="uk">Вирішити, що «потім розберуся»</span></li><li><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17"/></svg></i><span class="ru">Копить три модуля на выходные</span><span class="uk">Накопичити три модулі на вихідні</span></li></ul></div><div class="vs-good"><p class="vs-h"><span class="ru">Работает</span><span class="uk">Працює</span></p><ul><li><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5.5 12.5 4 4 9-9"/></svg></i><span class="ru">Первый просмотр на 1.5x – чтобы увидеть картину целиком</span><span class="uk">Перший перегляд на 1.5x – щоб побачити картину цілком</span></li><li><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5.5 12.5 4 4 9-9"/></svg></i><span class="ru">Второй – с паузами, повторяя у себя</span><span class="uk">Другий – з паузами, повторюючи у себе</span></li><li><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5.5 12.5 4 4 9-9"/></svg></i><span class="ru">Сразу записать, что применишь в своем проекте</span><span class="uk">Одразу записати, що застосуєш у своєму проєкті</span></li></ul></div></div>
+<ul class="tiles">
+<li><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5h7l4 4V20a.5.5 0 0 1-.5.5h-10.5A.5.5 0 0 1 6.5 20V4a.5.5 0 0 1 .5-.5z"/><path d="M13.5 3.5V8h4.5"/><path d="M9.5 12.5h5M9.5 16h5"/></svg></i><div><b><span class="ru">Гайд к воркшопу</span><span class="uk">Гайд до воркшопу</span></b><p><span class="ru">Пошаговый конспект: промпты для копирования, ссылки на нейросети, чек-лист задания. Все ключевые шаги уже собраны в тексте.</span><span class="uk">Покроковий конспект: промпти для копіювання, посилання на нейромережі, чек-лист завдання. Усі ключові кроки вже зібрані в тексті.</span></p></div></li>
+<li><i><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r=".6"/></svg></i><div><b><span class="ru">Задание для внедрения</span><span class="uk">Завдання для впровадження</span></b><p><span class="ru">После каждого модуля – задание на твоем проекте. Своего бизнеса нет – направление выберешь на втором модуле. Как сдать, написано в самом задании.</span><span class="uk">Після кожного модуля – завдання на твоєму проєкті. Свого бізнесу немає – напрям обереш на другому модулі. Як здати, написано в самому завданні.</span></p></div></li>
+<li><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 6h14M5 10h14M5 14h9M5 18h6"/></svg></i><div><b><span class="ru">Транскрибация</span><span class="uk">Транскрибація</span></b><p><span class="ru">Текст видео с тайм-кодами. Найти нужный момент поиском быстрее, чем перематывать.</span><span class="uk">Текст відео з тайм-кодами. Знайти потрібний момент пошуком швидше, ніж перемотувати.</span></p></div></li>
+<li><i><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg></i><div><b><span class="ru">Отметка «Пройдено»</span><span class="uk">Позначка «Пройдено»</span></b><p><span class="ru">В конце урока поставь оценку и нажми «Отметить пройденным» – так в кабинете виден твой прогресс.</span><span class="uk">Наприкінці уроку постав оцінку й натисни «Позначити пройденим» – так у кабінеті видно твій прогрес.</span></p></div></li>
+</ul>
+<div class="hack"><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5c.7 4.3 2.2 5.8 6.5 6.5-4.3.7-5.8 2.2-6.5 6.5-.7-4.3-2.2-5.8-6.5-6.5 4.3-.7 5.8-2.2 6.5-6.5z"/><path d="M18.5 15.5c.3 1.6.9 2.2 2.5 2.5-1.6.3-2.2.9-2.5 2.5-.3-1.6-.9-2.2-2.5-2.5 1.6-.3 2.2-.9 2.5-2.5z"/></svg></i><div><p class="hk-h"><span class="ru">Лайфхак от Влада</span><span class="uk">Лайфхак від Влада</span></p><p><span class="ru">Загрузи гайды и транскрибации в Gemini Notebook и задавай вопросы по материалу. Нейросеть найдет нужный момент и ответит со ссылкой на источник. Как собрать такой блокнот, Влад показывает в Предобучении, в уроке «Gemini Notebook».</span><span class="uk">Завантаж гайди й транскрибації в Gemini Notebook і став питання по матеріалу. Нейромережа знайде потрібний момент і відповість із посиланням на джерело. Як зібрати такий блокнот, Влад показує в Підготовці до старту, в уроці «Gemini Notebook».</span></p></div></div>
+</section>
+<section class="step rv">
+<header class="sh" id="s3"><p class="sn"><span class="ru">Шаг</span><span class="uk">Крок</span> 3</p><h2><span class="ru">Если не успеваешь. Выбери главное</span><span class="uk">Якщо не встигаєш. Обери головне</span></h2><p class="sub"><span class="ru">Отстаешь – ты не один. Это не значит, что программа не для тебя: значит, пора расставить приоритеты.</span><span class="uk">Відстаєш – ти не один. Це не означає, що програма не для тебе: означає, що час розставити пріоритети.</span></p></header>
+<ol class="prio">
+<li><span class="pn">1</span><div><b><span class="ru">Задание важнее Q&amp;A, Q&amp;A важнее пересмотра</span><span class="uk">Завдання важливіше за Q&amp;A, Q&amp;A важливіше за перегляд</span></b><p><span class="ru">Времени мало – сделай задание для внедрения. Q&amp;A можно посмотреть в записи, пересматривать воркшоп целиком не обязательно.</span><span class="uk">Часу мало – зроби завдання для впровадження. Q&amp;A можна подивитися в записі, переглядати воркшоп повністю не обов'язково.</span></p></div></li>
+<li><span class="pn">2</span><div><b><span class="ru">Не копи долг</span><span class="uk">Не накопичуй борг</span></b><p><span class="ru">Модуль выходит каждую неделю. Один пропущенный – догонишь, три подряд – уже сложно. Лучше сделать задание на 70% вовремя, чем на 100% через две недели.</span><span class="uk">Модуль виходить щотижня. Один пропущений – наздоженеш, три поспіль – уже складно. Краще зробити завдання на 70% вчасно, ніж на 100% через два тижні.</span></p></div></li>
+<li><span class="pn">3</span><div><b><span class="ru">Начни с простого</span><span class="uk">Почни з простого</span></b><p><span class="ru">Не усложняй: один сайт, один ассистент, один рабочий промпт. Улучшать будешь потом.</span><span class="uk">Не ускладнюй: один сайт, один асистент, один робочий промпт. Покращувати будеш потім.</span></p></div></li>
+<li><span class="pn">4</span><div><b><span class="ru">Напиши, а не молчи</span><span class="uk">Напиши, а не мовчи</span></b><p><span class="ru">Один вопрос в комьюнити или куратору экономит часы. Совсем выпал из ритма – пиши в отдел заботы, поможем вернуться.</span><span class="uk">Одне питання в ком'юніті чи куратору заощаджує години. Зовсім випав із ритму – пиши у відділ турботи, допоможемо повернутися.</span></p></div></li>
+<li><span class="pn">5</span><div><b><span class="ru">Записи остаются у тебя</span><span class="uk">Записи залишаються в тебе</span></b><p><span class="ru">Воркшопы, гайды и записи Q&amp;A доступны в кабинете и после окончания обучения: Bronze – 4 месяца, Silver – 8, Gold – 12.</span><span class="uk">Воркшопи, гайди й записи Q&amp;A доступні в кабінеті й після закінчення навчання: Bronze – 4 місяці, Silver – 8, Gold – 12.</span></p></div></li>
+</ol>
+<p class="warn"><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4 21 19.5H3z"/><path d="M12 10v4.5M12 17.2v.1"/></svg></i><span><span class="ru"><b>Главная ошибка</b> – перестать заходить в кабинет, потому что «уже отстал». Даже 20 минут в неделю на один шаг гайда лучше, чем ноль.</span><span class="uk"><b>Головна помилка</b> – перестати заходити в кабінет, бо «вже відстав». Навіть 20 хвилин на тиждень на один крок гайду краще, ніж нуль.</span></span></p>
+</section>
+<section class="step rv">
+<header class="sh" id="s4"><p class="sn"><span class="ru">Шаг</span><span class="uk">Крок</span> 4</p><h2><span class="ru">Как использовать Q&amp;A. Приходи с вопросом</span><span class="uk">Як використовувати Q&amp;A. Приходь із питанням</span></h2><p class="sub"><span class="ru">Q&amp;A – онлайн-разбор твоих результатов. Чем точнее вопрос и чем раньше сдано задание, тем полезнее разбор.</span><span class="uk">Q&amp;A – онлайн-розбір твоїх результатів. Що точніше питання і що раніше здане завдання, то корисніший розбір.</span></p></header>
+<ol class="qa">
+<li><div class="qa-h"><span class="qn">01</span></div><b><span class="ru">Сдай задание до Q&amp;A</span><span class="uk">Здай завдання до Q&amp;A</span></b><p><span class="ru">На эфире разбирают сданные задания и частые ошибки. Шанс на разбор своей работы есть у тех, кто сдал.</span><span class="uk">На ефірі розбирають здані завдання й часті помилки. Шанс на розбір своєї роботи є в тих, хто здав.</span></p></li>
+<li><div class="qa-h"><span class="qn">02</span></div><b><span class="ru">Готовь вопрос заранее</span><span class="uk">Готуй питання заздалегідь</span></b><p><span class="ru">Записывай его во вторник – среду, пока делаешь задание. Формула: «Я сделал X, получил Y, ожидал Z – что не так?»</span><span class="uk">Записуй його у вівторок – середу, поки робиш завдання. Формула: «Я зробив X, отримав Y, очікував Z – що не так?»</span></p></li>
+<li><div class="qa-h"><span class="qn">03</span></div><b><span class="ru">Спрашивай по текущему модулю</span><span class="uk">Питай по поточному модулю</span></b><p><span class="ru">Вопросы из будущих тем сбивают тебя и других участников. Не терпится – запиши и задай, когда дойдешь.</span><span class="uk">Питання з майбутніх тем збивають тебе й інших учасників. Не терпиться – запиши й постав, коли дійдеш.</span></p></li>
+<li><div class="qa-h"><span class="qn">04</span></div><b><span class="ru">Слушай чужие разборы</span><span class="uk">Слухай чужі розбори</span></b><p><span class="ru">Даже если вопрос не твой, ответ часто подходит и к твоей ситуации. Лучшие идеи приходят из чужих кейсов.</span><span class="uk">Навіть якщо питання не твоє, відповідь часто підходить і до твоєї ситуації. Найкращі ідеї приходять із чужих кейсів.</span></p></li>
+<li><div class="qa-h"><span class="qn">05</span></div><b><span class="ru">Не успеваешь онлайн</span><span class="uk">Не встигаєш онлайн</span></b><p><span class="ru">Запись Q&amp;A появится в кабинете на следующий день. Смотри на 1.5x и останавливайся на разборах, похожих на твой.</span><span class="uk">Запис Q&amp;A з'явиться в кабінеті наступного дня. Дивись на 1.5x і зупиняйся на розборах, схожих на твій.</span></p></li>
+<li><div class="qa-h"><span class="qn">06</span><span class="chips"><em class="c-silver">Silver</em><em class="c-gold">Gold</em></span></div><b><span class="ru">Будь активным</span><span class="uk">Будь активним</span></b><p><span class="ru">В комьюнити работает рейтинг участников. Лучшим – реклама или контракт с клиентом.</span><span class="uk">У ком'юніті працює рейтинг учасників. Найкращим – реклама або контракт із клієнтом.</span></p></li>
+</ol>
+<div class="gold"><div class="g-n">4×</div><div><p class="g-h"><span class="ru">Стратегические сессии с Владом</span><span class="uk">Стратегічні сесії з Владом</span> <span class="chips"><em class="c-gold">Gold</em></span></p><p><span class="ru">За 10 недель – 4 групповые сессии. На них разбираем твой проект: нишу, цену, первых клиентов и что исправить. Даты пришлем отдельно.</span><span class="uk">За 10 тижнів – 4 групові сесії. На них розбираємо твій проєкт: нішу, ціну, перших клієнтів і що виправити. Дати надішлемо окремо.</span></p></div></div>
+</section>
+<section class="step rv">
+<header class="sh" id="s5"><p class="sn"><span class="ru">Шаг</span><span class="uk">Крок</span> 5</p><h2><span class="ru">Твоя поддержка. Пиши тому, кто закроет вопрос</span><span class="uk">Твоя підтримка. Пиши тому, хто закриє питання</span></h2><p class="sub"><span class="ru">Застрять и остаться одному не получится: с тобой отдел заботы, а в Silver и Gold еще куратор и комьюнити.</span><span class="uk">Застрягти й залишитися самому не вийде: з тобою відділ турботи, а в Silver і Gold ще куратор і ком'юніті.</span></p></header>
+<div class="sup">
+<article><div class="sp-h"><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19.5s-7.5-4.4-7.5-10A4.2 4.2 0 0 1 12 7a4.2 4.2 0 0 1 7.5 2.5c0 5.6-7.5 10-7.5 10z"/></svg></i><span class="chips"><em class="c-bronze">Bronze</em><em class="c-silver">Silver</em><em class="c-gold">Gold</em></span></div><b><span class="ru">Отдел заботы</span><span class="uk">Відділ турботи</span></b><ul><li><span class="ru">Доступ к кабинету и технические вопросы</span><span class="uk">Доступ до кабінету й технічні питання</span></li><li><span class="ru">Выпал из ритма и нужно вернуться</span><span class="uk">Випав із ритму і треба повернутися</span></li><li><span class="ru">Вопросы по оплате и набору</span><span class="uk">Питання щодо оплати й набору</span></li></ul><a class="tg" href="https://t.me/AIOperatoragent" target="_blank" rel="noopener"><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m20.5 4.5-17 6.6 5.3 2 2 6.4 3-3.6 4.7 3.6z"/><path d="m8.8 13.1 8.2-5.7"/></svg></i>@AIOperatoragent</a></article>
+<article><div class="sp-h"><i><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 20a7 7 0 0 1 14 0"/></svg></i><span class="chips"><em class="c-silver">Silver</em><em class="c-gold">Gold</em></span></div><b><span class="ru">Куратор</span><span class="uk">Куратор</span></b><ul><li><span class="ru">Проверяет каждый шаг и задание</span><span class="uk">Перевіряє кожен крок і завдання</span></li><li><span class="ru">Разбирает, почему не получается</span><span class="uk">Розбирає, чому не виходить</span></li><li><span class="ru">Помогает с внедрением в твой проект</span><span class="uk">Допомагає з впровадженням у твій проєкт</span></li></ul></article>
+<article><div class="sp-h"><i><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="9" r="3"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><circle cx="17" cy="9.5" r="2.4"/><path d="M15.5 14.2a4.5 4.5 0 0 1 5 4.8"/></svg></i><span class="chips"><em class="c-silver">Silver</em><em class="c-gold">Gold</em></span></div><b><span class="ru">Комьюнити</span><span class="uk">Ком'юніті</span></b><ul><li><span class="ru">Вопросы по материалу – ответ увидят все</span><span class="uk">Питання по матеріалу – відповідь побачать усі</span></li><li><span class="ru">Обмен опытом и кейсами</span><span class="uk">Обмін досвідом і кейсами</span></li><li><span class="ru">Партнеры для общих проектов</span><span class="uk">Партнери для спільних проєктів</span></li></ul></article>
+</div>
+<div class="how"><div><b><span class="ru">Как писать</span><span class="uk">Як писати</span></b><p><span class="ru">Конкретно. Вместо «у меня ничего не работает» – «поставил агента AI-сайты, он не публикует сайт». Скриншот ускоряет ответ.</span><span class="uk">Конкретно. Замість «у мене нічого не працює» – «поставив агента AI-сайти, він не публікує сайт». Скриншот пришвидшує відповідь.</span></p></div><div><b><span class="ru">Куда писать</span><span class="uk">Куди писати</span></b><p><span class="ru">Вопрос по материалу – в комьюнити, чтобы ответ пригодился всем. Личное – куратору или в отдел заботы.</span><span class="uk">Питання по матеріалу – у ком'юніті, щоб відповідь знадобилася всім. Особисте – куратору або у відділ турботи.</span></p></div></div>
+</section>
+<p class="say rv"><span class="ru">Максимум получат не самые умные, а <strong>те, кто делал</strong>, даже когда было непонятно.</span><span class="uk">Максимум отримають не найрозумніші, а <strong>ті, хто робив</strong>, навіть коли було незрозуміло.</span></p>
+<footer class="foot"><span class="ru">Остались вопросы или нужна помощь? Пиши:</span><span class="uk">Залишилися питання чи потрібна допомога? Пиши:</span> <a href="https://t.me/AIOperatoragent" target="_blank" rel="noopener">@AIOperatoragent</a></footer>
+</main>
+<script>
+(function(){
+  var root=document.documentElement,langs=[].slice.call(document.querySelectorAll('[data-lang]'));
+  var T={ru:'Как получить максимум · AI-Оператор',uk:'Як отримати максимум · AI-Оператор'};
+  function store(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v);}catch(e){return null;}}
+  function setLang(l,keep){root.lang=l;document.title=T[l];langs.forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.lang===l));});if(keep)store('aio-lang',l);}
+  langs.forEach(function(b){b.addEventListener('click',function(){setLang(b.dataset.lang,true);});});
+  var q=new URLSearchParams(location.search).get('lang');
+  setLang(q==='uk'||q==='ru'?q:(store('aio-lang')==='uk'?'uk':'ru'));
+  var els=[].slice.call(document.querySelectorAll('.rv'));
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{rootMargin:'0px 0px -8% 0px'});
+    els.forEach(function(el){io.observe(el);});
+  }else els.forEach(function(el){el.classList.add('in');});
+  if(window.parent!==window){
+    var box=document.querySelector('.page'),last=0;
+    function send(){var h=Math.ceil(box.getBoundingClientRect().height)+2;if(h&&h!==last){last=h;window.parent.postMessage({kovchegHeight:h},'*');}}
+    send();addEventListener('load',send);addEventListener('resize',send);
+    if(document.fonts&&document.fonts.ready)document.fonts.ready.then(send);
+    if(window.ResizeObserver)new ResizeObserver(send).observe(box);
+  }
+})();
+</script>
+</body>
+</html>
