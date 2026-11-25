@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Словарь терминов</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&family=Inter+Tight:wght@700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0b0c0e;--ink-2:#15100c;--cream:#f4efe7;--gold:#fdd506;--gold-rgb:253,213,6;
+  --mid:#5f5a52;--line:rgba(21,16,12,.12);
+  --display:"Inter Tight",Inter,system-ui,sans-serif;--sans:Inter,system-ui,sans-serif;--mono:"JetBrains Mono",ui-monospace,monospace;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:transparent}
+html{-webkit-text-size-adjust:100%}
+body{color:var(--ink-2);font:500 15px/1.5 var(--sans);-webkit-font-smoothing:antialiased}
+html[lang="uk"] .ru,html[lang="ru"] .uk{display:none!important}
+.nb{white-space:nowrap}
+
+.task{padding:8px 16px 28px}
+.mk{display:inline-flex;align-items:center;gap:8px;font:500 11px var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--mid)}
+.mk:before{content:"";flex:none;width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 3px rgba(var(--gold-rgb),.3)}
+h1{margin-top:12px;font:700 clamp(28px,3.6vw,44px)/1.05 var(--display);letter-spacing:-.03em}
+.lead{max-width:640px;margin-top:12px;font-size:15px;color:var(--mid);text-wrap:pretty}
+
+.card{max-width:900px;margin-top:24px;padding:24px;border-radius:24px;background:#fff;box-shadow:inset 0 0 0 1px var(--line),0 10px 30px rgba(21,16,12,.07)}
+.intro{max-width:780px;font-size:16px;line-height:1.55;color:var(--ink-2);text-wrap:pretty}
+.say{font:700 clamp(18px,1.9vw,21px)/1.3 var(--display);letter-spacing:-.015em;text-wrap:balance}
+.intro+.say{margin-top:20px}
+.say.end{margin-top:24px}
+.two{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:20px;list-style:none}
+.two li{display:flex;flex-direction:column;align-items:flex-start;gap:14px;padding:16px 18px;border-radius:16px;background:#f7f4ee}
+.two i{flex:none;display:grid;place-items:center;width:40px;height:40px;border-radius:12px;background:var(--ink-2)}
+.two i svg{width:20px;height:20px;fill:none;stroke:var(--gold);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.two b{display:block;font:700 16px/1.25 var(--display);letter-spacing:-.01em}
+.two small{display:block;margin-top:6px;font-size:14px;line-height:1.45;color:var(--mid)}
+.cta{color:inherit;text-decoration:none;transition:transform .2s var(--ease),box-shadow .2s var(--ease);display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:16px;padding:18px 18px 18px 22px;border-radius:16px;background:var(--gold)}
+.cta b{display:block;font:700 17px/1.3 var(--display);letter-spacing:-.015em}
+.cta small{display:block;margin-top:4px;font-size:14px;line-height:1.4;color:#4a3d05}
+.cta i{flex:none;display:grid;place-items:center;width:44px;height:44px;border-radius:50%;background:var(--ink-2)}
+.cta svg{width:18px;height:18px;fill:none;stroke:var(--gold);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;animation:bob 1.6s var(--ease) infinite}
+@keyframes bob{50%{transform:translate(2px,-2px)}}
+.cta:hover{transform:translateY(-1px);box-shadow:0 8px 22px rgba(var(--gold-rgb),.45)}
+.cta:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.ttl{display:flex!important;align-items:center;gap:8px}
+.infw{position:relative;display:inline-flex}
+.inf{display:grid;place-items:center;width:22px;height:22px;padding:0;border:1px solid rgba(21,16,12,.35);border-radius:50%;background:transparent;color:var(--ink-2);font:700 12px/1 Georgia,"Times New Roman",serif;font-style:italic;cursor:pointer;transition:background .2s,border-color .2s}
+.inf:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.tipx{position:absolute;z-index:5;top:calc(100% + 10px);left:50%;width:min(280px,72vw);padding:14px 16px;border-radius:14px;background:#fff;box-shadow:0 0 0 1px rgba(21,16,12,.08),0 16px 40px rgba(21,16,12,.18);font:500 13.5px/1.45 var(--sans);color:var(--ink-2);letter-spacing:0;opacity:0;visibility:hidden;pointer-events:none;transform:translate(-50%,6px);transition:opacity .2s var(--ease),transform .2s var(--ease),visibility .2s}
+.infw:hover .tipx,.infw.open .tipx{opacity:1;visibility:visible;pointer-events:auto;transform:translate(-50%,0)}
+.infw:hover .inf,.infw.open .inf{background:var(--gold);border-color:var(--gold)}
+
+.task>*{animation:in .5s var(--ease) backwards}
+.task>:nth-child(2){animation-delay:.04s}.task>:nth-child(3){animation-delay:.08s}.task>:nth-child(4){animation-delay:.12s}
+.task>:nth-child(n+5){animation-delay:.18s}
+@keyframes in{from{opacity:0;transform:translateY(12px)}}
+@media (prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+
+.two ul{list-style:disc;margin-top:8px;padding-left:16px;font-size:14px;line-height:1.5;color:var(--mid)}
+.two ul li{display:list-item;padding:0;background:none;border-radius:0}
+.two ul li::marker{color:#c9a400}
+@media (max-width:600px){
+  .card{padding:18px;border-radius:20px}
+  .two{grid-template-columns:minmax(0,1fr)}
+  .two li{flex-direction:row;padding:14px 16px}
+  .cta{padding:16px}
+}
+</style>
+</head>
+<body>
+<main class="task">
+  <h1><span class="uk">Словник термінів</span><span class="ru">Словарь терминов</span></h1>
+  <p class="lead"><span class="uk">На воркшопах, Q&amp;A і в гайдах курсу можуть траплятися поки що незнайомі технічні й бізнес-терміни.</span><span class="ru">На воркшопах, Q&amp;A и в гайдах курса могут встречаться пока что не знакомые технические и бизнес-термины.</span></p>
+  <section class="card">
+    <p class="intro"><span class="uk">У словнику зібрані всі нові слова з простими й зрозумілими поясненнями в контексті курсу. А також він регулярно оновлюється і завжди актуальний.</span><span class="ru">В словаре собраны все новые слова с простыми и понятными объяснениями в контексте курса. А также он обновляется регулярно и всегда актуален.</span></p>
+    <p class="say"><span class="uk">Що всередині</span><span class="ru">Что внутри</span></p>
+    <ul class="two">
+      <li><i><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></svg></i><span><b><span class="uk">Пошук за звучанням слова</span><span class="ru">Поиск по звучанию слова</span></b><small><span class="uk">Пиши так, як почув: «клод», «промт», «дипресерч». Не обов'язково знати правильне написання терміна.</span><span class="ru">Пиши так, как услышал: «клод», «промт», «дипресерч». Необязательно знать правильное написание термина.</span></small></span></li>
+      <li><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h11"/><path d="M9 8h6"/></svg></i><span><b><span class="uk">Пояснення простими словами</span><span class="ru">Объяснения простыми словами</span></b><small><span class="uk">Що означає термін і навіщо він потрібен на курсі. Для англійських слів – підказки щодо вимови.</span><span class="ru">Что означает термин и зачем он нужен на курсе. Для английских слов – подсказки по произношению.</span></small></span></li>
+      <li><i><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg></i><span><b><span class="uk">5 тематичних розділів</span><span class="ru">5 тематических разделов</span></b><ul><li><span class="uk">Нейромережі й сервіси</span><span class="ru">Нейросети и сервисы</span></li><li><span class="uk">Робота з нейромережами</span><span class="ru">Работа с нейросетями</span></li><li><span class="uk">Комп'ютер, файли й сайти</span><span class="ru">Компьютер, файлы и сайты</span></li><li><span class="uk">Маркетинг і продажі</span><span class="ru">Маркетинг и продажи</span></li><li><span class="uk">Терміни курсу</span><span class="ru">Термины курса</span></li></ul></span></li>
+    </ul>
+    <p class="say end"><span class="uk">Зустрів незнайоме слово? Знайди його в словнику.</span><span class="ru">Встретил незнакомое слово? Найди его в словаре.</span></p>
+    <a class="cta" href="https://sofiialand.github.io/ai-operator/slovar.html" target="_blank" rel="noopener">
+      <b><span class="uk">Відкрити словник</span><span class="ru">Открыть словарь</span></b>
+      <i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></i>
+    </a>
+  </section>
+</main>
+<script>
+if(new URLSearchParams(location.search).get('lang')==='uk'){document.documentElement.lang='uk';document.title='Словник термінів';var c=document.querySelector('.cta');if(c)c.href+='?lang=uk';}
+</script>
+<script>
+(function(){var re=/(^|[\s(«])(в|с|и|к|у|а|о|на|по|за|до|от|из|не|для|без|й|і|та|з|що|щоб|й|під|над)\s+/gi;
+var w=document.createTreeWalker(document.querySelector('.task'),NodeFilter.SHOW_TEXT),n;
+while(n=w.nextNode()){n.nodeValue=n.nodeValue.replace(re,function(m,p,x){return p+x+'\u00a0';});}})();
+</script>
+<script>
+/* Сообщает платформе высоту содержимого, чтобы фрейм был без пустого места и обрезки */
+(function(){
+  if(window.parent===window)return;
+  var box=document.querySelector('.task'),last=0;
+  function send(){
+    var h=Math.ceil(box.getBoundingClientRect().height)+2;
+    if(h&&h!==last){last=h;window.parent.postMessage({kovchegHeight:h},'*');}
+  }
+  send();
+  addEventListener('load',send);
+  addEventListener('resize',send);
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(send);
+  if(window.ResizeObserver)new ResizeObserver(send).observe(box);
+})();
+</script>
+</body>
+</html>
