@@ -56,12 +56,6 @@ h1{margin-top:12px;font:700 clamp(28px,3.6vw,44px)/1.05 var(--display);letter-sp
 .when .d{font:800 clamp(40px,5vw,56px)/.9 var(--display);letter-spacing:-.04em;color:var(--gold)}
 .when .t{font:700 18px/1.25 var(--display);letter-spacing:-.01em}
 .when small{display:block;margin-top:6px;font-size:13.5px;color:rgba(255,255,255,.62)}
-.tier{display:flex;flex-direction:column;align-items:flex-start;gap:10px}
-.tier .lbl{font:500 11px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--mid)}
-.chips{display:flex;gap:8px;flex-wrap:wrap}
-.chip{padding:8px 14px;border-radius:999px;font:700 14px/1 var(--display);letter-spacing:-.01em}
-.chip.g{background:var(--gold);color:var(--ink-2)}
-.chip.s{background:#e6e8ec;color:var(--ink-2)}
 .intro.mt{margin-top:24px}
 .sep{height:1px;margin:28px 0;background:var(--line);border:0}
 .h3{font:700 18px/1.25 var(--display);letter-spacing:-.015em}
@@ -75,17 +69,12 @@ h1{margin-top:12px;font:700 clamp(28px,3.6vw,44px)/1.05 var(--display);letter-sp
 .fn a{color:inherit}
 .rows li{display:flex;align-items:center;gap:14px;font-size:15px;line-height:1.45}
 .up{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-top:16px;padding:22px 24px;border-radius:18px;background:linear-gradient(120deg,#f6ece1,#f7f4ee 60%);box-shadow:inset 0 0 0 1px rgba(168,112,63,.28)}
-.up-l{display:flex;align-items:center;gap:16px;min-width:0}
-.up .bz{flex:none;display:grid;place-items:center;width:48px;height:48px;border-radius:14px;background:linear-gradient(140deg,#c58b55,#8a5a2e);color:#fff;font:800 20px/1 var(--display)}
 .up b{display:block;font:700 18px/1.25 var(--display);letter-spacing:-.015em}
-.up small{display:block;margin-top:4px;font-size:14.5px;line-height:1.45;color:var(--mid)}
-.tg{flex:none;display:inline-flex;align-items:center;gap:12px;padding:6px 6px 6px 18px;border-radius:999px;background:#fff;color:var(--ink-2);box-shadow:inset 0 0 0 1px rgba(168,112,63,.35),0 4px 14px rgba(138,90,46,.10);font:700 15px/1 var(--display);text-decoration:none;white-space:nowrap;transition:transform .25s var(--ease),box-shadow .25s var(--ease)}
-.tg i{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:#2aabee;transition:transform .25s var(--ease)}
-.tg svg{width:17px;height:17px;fill:#fff}
-.tg:hover{box-shadow:inset 0 0 0 1px rgba(168,112,63,.55),0 8px 22px rgba(138,90,46,.18)}
-.tg:hover i{transform:translate(2px,-1px) scale(1.05)}
-.tg:active{transform:scale(.98)}
-.tg:focus-visible{outline:2px solid var(--ink-2);outline-offset:3px}
+.prep{display:grid;gap:12px;margin-top:16px;list-style:none;counter-reset:p}
+.prep li{display:flex;align-items:flex-start;gap:12px;font-size:14.5px;line-height:1.45;color:var(--ink-2)}
+.prep li:before{counter-increment:p;content:counter(p);flex:none;display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--ink-2);color:var(--gold);font:700 13px/1 var(--display)}
+.prep strong{font-weight:700}
+.prep a{color:inherit}
 .bye{position:relative;overflow:hidden;display:flex;align-items:center;gap:18px;margin-top:28px;padding:22px 24px;border-radius:18px;background:var(--gold);color:var(--ink-2)}
 .bye:after{content:"";position:absolute;right:-60px;top:-80px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.45),transparent 70%);pointer-events:none}
 .bye i{flex:none;display:grid;place-items:center;width:48px;height:48px;border-radius:14px;background:var(--ink-2)}
@@ -104,7 +93,6 @@ h1{margin-top:12px;font:700 clamp(28px,3.6vw,44px)/1.05 var(--display);letter-sp
   .when{padding:18px;gap:16px}
   .fmt{grid-template-columns:minmax(0,1fr)}
   .up{flex-direction:column;align-items:stretch;padding:18px}
-  .tg{justify-content:space-between}
 }
 
 .task>*{animation:in .5s var(--ease) backwards}
@@ -131,10 +119,6 @@ h1{margin-top:12px;font:700 clamp(28px,3.6vw,44px)/1.05 var(--display);letter-sp
         <span class="d">28.11</span>
         <span><span class="t"><span class="uk">сб, 11:00 за Києвом</span><span class="ru">сб, 11:00 по Киеву</span></span><small><span class="uk">*тривалість – до 2 годин</span><span class="ru">*длительность – до 2 часов</span></small></span>
       </div>
-      <div class="tier">
-        <span class="lbl"><span class="uk">Доступно в тарифах</span><span class="ru">Доступно в тарифах</span></span>
-        <div class="chips"><span class="chip g">Gold</span><span class="chip s">Silver</span></div>
-      </div>
     </div>
     <p class="intro mt"><span class="uk">Це жива сесія для тих, хто хоче отримати ще більше практики, заглибитися в можливості AI-інструментів, поставити запитання й отримати практичні рекомендації щодо своїх кейсів.</span><span class="ru">Это живая сессия для тех, кто хочет получить еще больше практики, глубже разобраться в возможностях AI-инструментов, задать вопросы и получить практические рекомендации по своим кейсам.</span></p>
     <hr class="sep">
@@ -148,7 +132,7 @@ h1{margin-top:12px;font:700 clamp(28px,3.6vw,44px)/1.05 var(--display);letter-sp
     <hr class="sep">
     <p class="h3"><span class="uk">Як підключитися?</span><span class="ru">Как подключиться?</span></p>
     <ul class="rows">
-      <li><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg></i><span><span class="uk">Посилання на Zoom з'явиться в ком'юніті* за <span class="nb">5–10 хвилин</span> до початку.<small class="fn">*Якщо ще не долучився до ком'юніті, повідом нам: <a href="https://t.me/AIOperatoragent" target="_blank" rel="noopener">@AIOperatoragent</a></small></span><span class="ru">Ссылка на Zoom появится в комьюнити* за <span class="nb">5–10 минут</span> до начала.<small class="fn">*Если еще не присоединился к комьюнити, сообщи нам: <a href="https://t.me/AIOperatoragent" target="_blank" rel="noopener">@AIOperatoragent</a></small></span></span></li>
+      <li><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg></i><span><span class="uk">Посилання на Zoom прийде в Телеграм перед ефіром: Silver і Gold – у Ком'юніті, Bronze – у боті. Підключайся за <span class="nb">5 хвилин</span> до початку.<small class="fn">Покрокова інструкція: <a href="https://sofiialand.github.io/ai-operator/kak-podklyuchitsya-k-qa.html?lang=uk" target="_blank" rel="noopener">як підключитися до Q&amp;A у Zoom</a></small></span><span class="ru">Ссылка на Zoom придет в Телеграм перед эфиром: Silver и Gold – в Комьюнити, Bronze – в боте. Подключайся за <span class="nb">5 минут</span> до начала.<small class="fn">Пошаговая инструкция: <a href="https://sofiialand.github.io/ai-operator/kak-podklyuchitsya-k-qa.html" target="_blank" rel="noopener">как подключиться к Q&amp;A в Zoom</a></small></span></span></li>
       <li><i><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="m10 9 5 3-5 3z"/></svg></i><span><span class="uk">Не встигнеш – запис буде в особистому кабінеті вже наступного дня.</span><span class="ru">Не успеешь – запись будет в личном кабинете уже на следующий день.</span></span></li>
     </ul>
     <div class="duo">
@@ -157,10 +141,12 @@ h1{margin-top:12px;font:700 clamp(28px,3.6vw,44px)/1.05 var(--display);letter-sp
       <span><span class="when-s">28.11 · СБ · 11:00</span><b><span class="uk">До зустрічі <em>онлайн</em></span><span class="ru">До встречи <em>онлайн</em></span></b><small><span class="uk">Буде дуже живо й корисно</span><span class="ru">Будет очень живо и полезно</span></small></span>
     </div>
     <div class="up">
-      <div class="up-l">
-        <span><b><span class="uk">Хочеш поставити запитання й узяти участь в онлайн-ефірі?</span><span class="ru">Хочешь задать вопросы и принять участие в онлайн эфире?</span></b><small><span class="uk">Напиши нам, щоб дізнатися як активувати доступ до ком'юніті та онлайн-ефірів.</span><span class="ru">Напиши нам, чтобы узнать как активировать доступ к комьюнити и онлайн эфирам.</span></small></span>
-      </div>
-      <a class="tg" href="https://t.me/AIOperatoragent" target="_blank" rel="noopener"><span><span class="uk">Написати @AIOperatoragent</span><span class="ru">Написать @AIOperatoragent</span></span><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.4 4.3 2.9 11.4c-1 .4-1 1.6 0 1.9l4.7 1.5 1.8 5.6c.2.7 1.1.9 1.6.4l2.6-2.5 4.9 3.6c.6.4 1.4.1 1.6-.6l3.2-15.3c.2-1-.8-1.8-1.9-1.7zM9.6 14.3l8.6-6.1-6.9 7.3-.3 3.1z"/></svg></i></a>
+      <b><span class="uk">Підготуйся заздалегідь</span><span class="ru">Подготовься заранее</span></b>
+      <ol class="prep">
+        <li><span><span class="uk"><strong>Завантаж Zoom і зареєструйся</strong>, краще за день до ефіру: <a href="https://sofiialand.github.io/ai-operator/kak-podklyuchitsya-k-qa.html?lang=uk" target="_blank" rel="noopener">інструкція</a>.</span><span class="ru"><strong>Скачай Zoom и зарегистрируйся</strong>, лучше за день до эфира: <a href="https://sofiialand.github.io/ai-operator/kak-podklyuchitsya-k-qa.html" target="_blank" rel="noopener">инструкция</a>.</span></span></li>
+        <li><span><span class="uk"><strong>Запиши запитання за формулою:</strong> «Я зробив X, отримав Y, очікував Z – що не так?»</span><span class="ru"><strong>Запиши вопросы по формуле:</strong> «Я сделал X, получил Y, ожидал Z – что не так?»</span></span></li>
+        <li><span><span class="uk"><strong>Підготуй свого асистента:</strong> посилання або скріни, щоб розібрати його наживо.</span><span class="ru"><strong>Подготовь своего ассистента:</strong> ссылку или скрины, чтобы разобрать его вживую.</span></span></li>
+      </ol>
     </div>
     </div>
   </section>
