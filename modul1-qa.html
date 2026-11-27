@@ -22,6 +22,11 @@ html[lang="uk"] .ru,html[lang="ru"] .uk{display:none!important}
 .nb{white-space:nowrap}
 
 .task{padding:8px 16px 28px}
+.hdr{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.switch{flex:none;display:flex;gap:2px;padding:3px;border-radius:999px;background:rgba(255,255,255,.72);border:1px solid rgba(21,16,12,.09);box-shadow:0 1px 0 rgba(255,255,255,.8) inset,0 10px 30px rgba(21,16,12,.06)}
+.switch button{min-width:40px;min-height:30px;padding:0 10px;border:0;border-radius:999px;background:none;color:rgba(21,16,12,.68);font:600 12px/1 var(--sans);cursor:pointer}
+.switch button[aria-pressed="true"]{background:var(--ink);color:var(--cream)}
+.switch button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 .mk{display:inline-flex;align-items:center;gap:8px;font:500 11px var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--mid)}
 .mk:before{content:"";flex:none;width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 3px rgba(var(--gold-rgb),.3)}
 h1{margin-top:12px;font:700 clamp(28px,3.6vw,44px)/1.05 var(--display);letter-spacing:-.03em}
@@ -122,7 +127,13 @@ h1{margin-top:12px;font:700 clamp(28px,3.6vw,44px)/1.05 var(--display);letter-sp
 </head>
 <body>
 <main class="task">
-  <p class="mk"><span class="uk">Q&amp;A · Модуль 1</span><span class="ru">Q&amp;A · Модуль 1</span></p>
+  <div class="hdr">
+    <p class="mk"><span class="uk">Q&amp;A · Модуль 1</span><span class="ru">Q&amp;A · Модуль 1</span></p>
+    <div class="switch" role="group" aria-label="Мова / Язык">
+      <button type="button" data-set="uk" aria-pressed="false">UA</button>
+      <button type="button" data-set="ru" aria-pressed="true">RU</button>
+    </div>
+  </div>
   <h1><span class="uk">Q&amp;A-сесія першого модуля</span><span class="ru">Q&amp;A-сессия первого модуля</span></h1>
   <section class="card">
     <div class="top">
@@ -159,7 +170,13 @@ h1{margin-top:12px;font:700 clamp(28px,3.6vw,44px)/1.05 var(--display);letter-sp
   </section>
 </main>
 <script>
-if(new URLSearchParams(location.search).get('lang')==='uk'){document.documentElement.lang='uk';document.title='Q&A-сесія першого модуля';}
+(function(){
+  var root=document.documentElement,buttons=document.querySelectorAll('[data-set]');
+  var titles={uk:'Q&A-сесія першого модуля',ru:'Q&A-сессия первого модуля'};
+  function setLang(l){root.lang=l;document.title=titles[l];buttons.forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.set===l));});}
+  buttons.forEach(function(b){b.addEventListener('click',function(){setLang(b.dataset.set);});});
+  setLang(new URLSearchParams(location.search).get('lang')==='uk'?'uk':'ru');
+})();
 </script>
 <script>
 (function(){var re=/(^|[\s(«])(в|с|и|к|у|а|о|на|по|за|до|от|из|не|для|без|й|і|та|з|що|щоб|й|під|над)\s+/gi;
